@@ -6,4 +6,8 @@ router.get('/', function(req, res, next) {
 	res.render('textbox.ejs');
 });
 
+router.get('/combobox', function(req, res, next) {
+	res.render('combobox.ejs');
+});
+
 module.exports = router;
