@@ -1,4 +1,4 @@
-# Logs
+# Logs Home
 logs
 *.log
 
@@ -33,3 +33,4 @@ node_modules
 /restart.bat
 /start-server.bat
 /stop-server.bat
+/public/sass/component/.sass-cache

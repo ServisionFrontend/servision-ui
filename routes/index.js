@@ -6,4 +6,8 @@ router.get('/', function(req, res, next) {
 	res.render('treeview.ejs');
 });
 
+router.get('/combobox', function(req, res, next) {
+	res.render('combobox.ejs');
+});
+
 module.exports = router;
