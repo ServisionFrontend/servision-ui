@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-	res.render('textbox.ejs');
+	res.render('treeview.ejs');
 });
 
 router.get('/combobox', function(req, res, next) {

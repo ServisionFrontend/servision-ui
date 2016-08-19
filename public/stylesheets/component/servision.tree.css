@@ -1,0 +1,59 @@
+.tree {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.tree li {
+    text-align: left;
+    white-space: nowrap;
+}
+.tree li ul {
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+}
+.tree-node {
+    cursor: pointer;
+    height: 18px;
+    font-size: 0px;
+    white-space: nowrap;
+}
+.tree-hit {
+    cursor: pointer;
+}
+.tree-expanded {
+    background: url('/stylesheets/images/tree/tree_icons.png') no-repeat -113px 0px;
+}
+.tree-collapsed {
+    background: url('/stylesheets/images/tree/tree_icons.png') no-repeat -97px 0px;
+}
+.tree-folder {
+    background: url('/stylesheets/images/tree/tree_icons.png') no-repeat -208px 0px;
+}
+.tree-folder-open {
+    background: url('/stylesheets/images/tree/tree_icons.png') no-repeat -224px 0px;
+}
+.tree-file {
+    background: url('/stylesheets/images/tree/tree_icons.png') no-repeat -240px 0px;
+}
+.tree-text {
+    display: inline-block;
+    height: 18px;
+    line-height: 18px;
+    font-size: 12px;
+    padding: 0 2px 0 2px;
+    vertical-align: top;
+    white-space: nowrap;
+}
+.link {
+    text-decoration: none;
+    color: #333;
+}
+.tree-expanded, .tree-collapsed, .tree-folder, .tree-file, .tree-indent {
+    display: inline-block;
+    height: 18px;
+    width: 16px;
+    overflow: hidden;
+    vertical-align: top;
+    margin: 0px;
+}

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+
+	<style type="text/css">
+		.tree-wrap {
+			display:block;
+			text-align: left;
+			margin: 0px;
+		}
+
+		.tree-container {
+			padding: 5px;
+			width: 399px;
+			border: 1px solid #95b8e7;
+			margin: 0 0 10px 0;
+		}
+	</style>
+	
+	<link rel="stylesheet" href="/res/stylesheets/component/servision.tree.css" />
+	<script type="text/javascript" src="/scripts/libs/public/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="/scripts/component/jquery.servision.tree.js"></script>
+</head>
+<body>
+	<div class="tree-wrap">
+		<input id="btnExpandAll" type="button" value="全部展开" />
+		<input id="btnCollapseAll" type="button" value="全部收起" />
+
+		<div id="tree-container1" class="tree-container">
+		</div>
+
+		<div id="tree-container2" class="tree-container">
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var $tbcontainer1 = $('#tree-container1');
+			var $tbcontainer2 = $('#tree-container2');
+			
+			var data1 = [{
+				id: '1',
+				text: 'node-1',
+				children: [{
+					id: 2,
+					text: 'node-2'
+				}, {
+					id: 3,
+					text: 'node-3',
+					children: [{
+						id: 4,
+						text: 'node-4'
+					}, {
+						id: 5,
+						text: 'node-5',
+						url: 'http://wwww.baidu.com'
+					}]
+				}]
+			}];
+			var data2 = [{
+				id: 11,
+				text: 'node-11',
+				children: [{
+					id: 22,
+					text: 'node-22'
+				}, {
+					id: 33,
+					text: 'node-33',
+					children: [{
+						id: 66,
+						text: 'node-66',
+						children:[{
+						id: 77,
+						text: 'node-77'
+						}, {
+							id: 88,
+							text: 'node-88'
+						}]
+					}, {
+						id: 55,
+						text: 'node-55'
+					}]
+				}]
+			}];
+
+			$tbcontainer1.tree({
+				data:data1,
+				onClickNode:function(node){
+					alert(node.text);
+
+					return false;
+				}
+			});
+
+			$tbcontainer2.tree({
+				data:data2,
+				onClickNode:function(node){
+					alert(node.text);
+
+					return false;
+				}
+			});
+
+			$('#btnExpandAll').on('click', function(){
+
+				$tbcontainer1.tree('expandAll');
+				$tbcontainer2.tree('expandAll');
+			});
+
+			$('#btnCollapseAll').on('click', function(){
+
+				$tbcontainer1.tree('collapseAll');
+				$tbcontainer2.tree('collapseAll');
+			});
+		});
+	</script>
+</body>
+</html>
