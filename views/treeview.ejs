@@ -15,7 +15,7 @@
 			padding: 5px;
 			width: 399px;
 			border: 1px solid #95b8e7;
-			margin: 0 0 10px 0;
+			margin: 10px 0 0 0;
 		}
 	</style>
 	
@@ -25,9 +25,10 @@
 </head>
 <body>
 	<div class="tree-wrap">
+	    <input id="btnCollapseAll" type="button" value="全部收起" />
 		<input id="btnExpandAll" type="button" value="全部展开" />
-		<input id="btnCollapseAll" type="button" value="全部收起" />
-
+		<input id="btnUp" type="button" value="节点上移" />
+		<input id="btnDown" type="button" value="节点下移" />
 		<div id="tree-container1" class="tree-container">
 		</div>
 
@@ -38,7 +39,7 @@
 		$(document).ready(function(){
 			var $tbcontainer1 = $('#tree-container1');
 			var $tbcontainer2 = $('#tree-container2');
-			
+
 			var data1 = [{
 				id: '1',
 				text: 'node-1',
@@ -86,19 +87,39 @@
 
 			$tbcontainer1.tree({
 				data:data1,
-				onClickNode:function(node){
-					alert(node.text);
-
-					return false;
+				folderCls:'tree-file',
+				folderOpenCls:'tree-file',
+				leafCls:'tree-file',
+				onClickRow:function(e, node){
+					// alert(this.outerHTML);
+				},
+				onClickNode:function(e, node){
+					// alert(node.text);
+				},
+				onExpanded:function(e, node){
+					//alert(node.text);
+				},
+				onCollapsed:function(e, node){
+					// alert(node.text);
+				},
+				onExpandAll:function(){
+					//alert('expand all');
+				},
+				onCollapseAll:function(){
+					//alert('collapse all');
 				}
 			});
 
 			$tbcontainer2.tree({
 				data:data2,
-				onClickNode:function(node){
-					alert(node.text);
-
-					return false;
+				onClickNode:function(e, node){
+					//alert(node.text);
+				},
+				onExpanded:function(){
+					// alert('expanded');
+				},
+				onCollapsed:function(){
+					// alert('collapsed');
 				}
 			});
 
@@ -112,6 +133,13 @@
 
 				$tbcontainer1.tree('collapseAll');
 				$tbcontainer2.tree('collapseAll');
+			});
+
+			$('#btnUp').on('click', function(){
+				$tbcontainer1.tree('nodeMoveUp');
+			});
+			$('#btnDown').on('click', function(){
+				$tbcontainer1.tree('nodeMoveDown');
 			});
 		});
 	</script>
