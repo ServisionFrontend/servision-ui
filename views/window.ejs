@@ -3,20 +3,76 @@
 <head>
 	<meta charset="UTF-8">
 	<title>弹出层</title>
+	<link rel="stylesheet" href="/stylesheets/component/servision.window.css">
 	<script type="text/javascript" src="/scripts/libs/public/jquery-1.11.3.min.js"></script>
 	<script type="text/javascript" src="/scripts/component/jquery.servision.window.js"></script>
+	<style type="text/css">
+		.btnWrapper {
+			width: 200px ;
+			height: 200px;
+			background-color: #ed3;
+			position: absolute;
+			z-index: 2000;
+		}
+	</style>
 </head>
 
 <body>
-	<div id="layer">fdsfdjsfksjf</div>
+	<div id="layer">这是一个弹层</div>
+	<div class="btnWrapper">
+		<button id="btn1">打开弹层1</button>
+		<button id="btn2">打开弹层2</button>
+		<button id="btn3">打开弹层3</button>
+		<button id="btn4">关闭弹层1</button>
+		<button id="btn5">关闭弹层2</button>
+		<button id="btn6">关闭弹层3</button>
+	</div>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#layer').window({
-				name: '23'
+			$('#btn1').click(function() {
+				$.window({
+					name: 'test1',
+					message: '<div style="width:300px;height: 300px; background-color: #fff;"></div>',
+					onBeforeOpen: function() {
+						console.log('弹层1即将打开');
+					}
+				});
 			});
-			$('#layer').window({
-				name: 'rr'
-			})
+			$('#btn2').click(function() {
+				$('#layer').window({
+					name: 'test2',
+					onBeforeOpen: function() {
+						console.log('弹层2即将打开');
+					}
+				});
+			});
+			$('#btn3').click(function() {
+				$.window({
+					name: 'test3',
+					dialog: true,
+					content: 'tishi ',
+					onBeforeOpen: function() {
+						console.log('弹层3即将打开');
+					}
+				});
+			});
+			$('#btn4').click(function() {
+				$.unWindow({
+					name: 'test1'
+				})
+			});
+			$('#btn5').click(function() {
+				$.unWindow({
+					name: 'test2'
+				})
+			});
+			$('#btn6').click(function() {
+				$.unWindow({
+					name: 'test3'
+				})
+			});
+			
+
 		})
 	</script>
 </body>
