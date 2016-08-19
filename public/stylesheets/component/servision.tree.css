@@ -22,10 +22,10 @@
     cursor: pointer;
 }
 .tree-expanded {
-    background: url('/stylesheets/images/tree/tree_icons.png') no-repeat -113px 0px;
+    background: url('/stylesheets/images/tree/tree_icons.png') no-repeat -113px 1px;
 }
 .tree-collapsed {
-    background: url('/stylesheets/images/tree/tree_icons.png') no-repeat -97px 0px;
+    background: url('/stylesheets/images/tree/tree_icons.png') no-repeat -97px 1px;
 }
 .tree-folder {
     background: url('/stylesheets/images/tree/tree_icons.png') no-repeat -208px 0px;
@@ -56,4 +56,12 @@
     overflow: hidden;
     vertical-align: top;
     margin: 0px;
+}
+.tree-node-hover {
+    background: #eaf2ff;
+    color: #000000;
+}
+.tree-node-selected {
+    background: #ffe48d;
+    color: #000000;
 }

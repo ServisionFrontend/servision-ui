@@ -1,4 +1,4 @@
-(function($) {
+(function($, global) {
 	function setup() {
 		var openedLayers = {};
 		var currentLayerId = '';
@@ -8,7 +8,14 @@
 				var self = this;
 
 				self.opts = options;
+				self.initAttrs();
 				self.bindData();
+			},
+
+			initAttrs: function() { //记录要关闭的弹层关联的层
+				var self = this;
+				self.layers = [];
+				self.nameArr = [];
 			},
 
 			bindData: function() {
@@ -22,6 +29,7 @@
 				if(isEmptyObject(openedLayers)) { //判断是否为顶层类。以此作为z-index的基准
 					baseZ = self.opts.baseZ;
 					self.opts.top = true;
+					self.initGeneralEvents();
 				} else {
 					baseZ++;
 					self.opts.top = false;
@@ -42,7 +50,7 @@
 				var self = this;
 
 				if(!self.opts.dialog) { return; }
-				self.dialogTempl = $('<div class="dialog" style="z-index:'+ baseZ + '"><div class="dialog-title"><a href="javascript:;" class="close-btn" data-action="cancel"></a><span class="text">'+ self.opts.title +'</span></div><div class="dialog-content"><div class="content-text"><span class="icon"></span><span class="text">'+ self.opts.content +'</span></div></div><div class="dialog-btn-wrapper"><a href="javascript:;" class="btn" data-action="confirm">确定</a><a href="javascript:;" class="btn" data-action="cancel">取消</a></div></div>');
+				self.dialogTempl = $('<div class="dialog"><div class="dialog-title"><a href="javascript:;" class="close-btn" data-action="cancel"></a><span class="text">'+ self.opts.title +'</span></div><div class="dialog-content"><div class="content-text"><span class="icon"></span><span class="text">'+ self.opts.content +'</span></div></div><div class="dialog-btn-wrapper"><a href="javascript:;" class="btn" data-action="confirm">确定</a><a href="javascript:;" class="btn" data-action="cancel">取消</a></div></div>');
 				self.opts.$dialog = self.dialogTempl.eq(0);
 				self.opts.$confirmBtn = self.opts.$dialog.find(self.opts.confirmBtn);
 				self.opts.$cancelBtn = self.opts.$dialog.find(self.opts.cancelBtn);
@@ -64,40 +72,55 @@
 
 				self.opts.layers = [layer1, layer2];
 				
-				if(!self.opts.top) {layer1=null;self.opts.layers.shift();}
+				if(!self.opts.top) {self.opts.layers.shift();layer1=null;}
 
 				$.each(self.opts.layers, function() {
-					this.attr('data-layer', self.opts.name);
+					this[0].id = self.opts.name;
 					$(self.opts.layerWrapper).append(this);
 				});
 				if(self.opts.message) {
 					var wrapDiv = $('<div class="contentWrapper" style="position:absolute"></div>');
 					$(layer2).empty().append(wrapDiv);
-					$(self.opts.message).appendTo(wrapDiv);
+					wrapDiv.html(self.opts.message);
 					self.opts.msgBox = wrapDiv;
 				}
-				if(layer1 && isEmptyObject(self.opts.overlayCss)) {
+				if(layer1 && !isEmptyObject(self.opts.overlayCss)) {
 					layer1.css(self.opts.overlayCss);
 				}
-				if(isEmptyObject(self.opts.css)) {
-					layer2.css(self.opts.css);
+				if(!isEmptyObject(self.opts.css)) {
+					self.opts.msgBox.css(self.opts.css);
+				}
+				if(self.opts.needCloseBtn) {
+					var closeBtnHtml = $('<a href="javascript:;" style="display: block; position:absolute;width:20px;height:20px;background-color:#fff; right: 20px; top: 20px; color: #fff; text-decoration: none;" data-action="close"><span class="icon-remove icon-4x"></span></a>');
+					$(layer2).append(closeBtnHtml);
 				}
 
-				openedLayers[name]['opts'] = self.opts;  //记录所有的配置
+				openedLayers[self.opts.name] = {opts: self.opts};  //记录所有的配置
 				self.initEvents();
+			},
+
+			initGeneralEvents: function() {
+				var self = this;
+				$(global).on('resize', debounce(function(e) {
+					    self.setLayerPosition();
+					}, 200)
+				);
 			},
 
 			initEvents: function() {
 				var self = this,
-					spaceName = '.' + self.opts.name;
+					opts = self.opts;
+					spaceName = '.' + opts.name;
 
-				$(document).on('click' + spaceName, self.opts.closeBtn, function() {
-					self.close();
+				$(document).on('click' + spaceName, '#' + opts.name + ' ' + opts.closeBtn, function() {
+					self.close(opts);
 				});
-				$(window).on('resize' + spaceName, debounce(function() {
-						self.setLayerPosition();
-					}, 200)
-				);
+				$(document).on('click' + spaceName, '#' + opts.name + ' ' + opts.confirmBtn, function() {
+					self.onConfirm(opts);
+				});
+				$(document).on('click' + spaceName, '#' + opts.name + ' ' + opts.cancelBtn, function() {
+					self.onCancel(opts);
+				});
 			},
 
 			open: function() {
@@ -134,15 +157,109 @@
 				}
 			},
 
-			setLayerPosition: function() {
-				var self = this,
-					layer = self.opts.msgBox,
-					wrapDom = self.opts.layerWrapper === 'body' ? window : self.opts.layerWrapper;
-				
-				layer.css({
-					left: $(wrapDom).outerWidth()/2 - layer.outerWidth()/2,
-					top: $(wrapDom).outerHeight()/2 - layer.outerHeight()/2
+			reset: function(nameArr) { //注销关闭的层已注册的事件
+				var self = this;
+
+				$.each(nameArr, function(index, name) {
+					currentLayerId = openedLayers[name].parent || '';
+					delete openedLayers[name];
+					$(global).off('resize' + '.' +name);
+					$(document).off('click' + '.' + name);
 				});
+			},
+			close: function(options) {
+				var self = this,
+					name = options.name || 'default',
+					layers = [openedLayers[name]],nameArr = [name];
+
+					if(!openedLayers[name]) {return;}
+					self.getParentLayer(name);
+					layers = self.layers.concat(layers);
+					nameArr = nameArr.concat(self.nameArr);
+
+				if(typeof options.onBeforeClose === 'function') {
+					options.onBeforeClose.apply(self, [options]);
+				}
+
+				$.each(layers, function(index,item) {
+					var exsitLayers = item.opts.layers;
+					$.each(exsitLayers, function(index, item) {
+						item.fadeOut(options.speed, function() {
+							item.remove();
+							if(index === exsitLayers.length-1) {
+								self.timer = null;
+							}
+						});
+					})
+				});
+
+				self.reset(nameArr);
+
+				if(typeof options.onAfterClose === 'function') {
+					options.onAfterClose.apply(self, [options]);
+				}
+
+			},
+
+			getParentLayer: function(name) {
+				var self = this;
+
+				for(var i in openedLayers) {
+					var item = openedLayers[i];
+
+					if(item.opts.parent == name) {  
+						self.layers.push(item);
+						self.nameArr.push(item.opts.name);
+						self.getParentLayer(item.opts.name);
+						return false;
+					}
+				}
+			},
+
+			setLayerPosition: function(options) {
+				var self = this;
+
+				for(var i in openedLayers) {
+					var single = options &&　options.name;
+					var layer = single ? openedLayers[options.name] :openedLayers[i],
+						msgBox = layer.opts.msgBox,
+						wrapDom = layer.opts.layerWrapper === 'body' ? global : layer.opts.layerWrapper;
+
+					msgBox.css({
+						left: $(wrapDom).outerWidth()/2 - msgBox.outerWidth()/2,
+						top: $(wrapDom).outerHeight()/2 - msgBox.outerHeight()/2
+					});
+					if(single) {break;}
+
+				}
+			},
+
+			onConfirm: function(options) {
+				var self = this;
+
+				if(typeof options.onBeforeConfirm === 'function') {
+					options.onBeforeConfirm.apply(self, [options]);
+				}
+
+				self.close(options);
+
+				if(typeof options.onAfterConfirm === 'function') {
+					options.onAfterConfirm.apply(self, [options]);
+				}
+			},
+
+			onCancel: function(options) {
+				var self = this;
+
+				if(typeof options.onBeforeCancel === 'function') {
+					options.onBeforeCancel.apply(self, [options]);
+				}
+
+				self.close(options);
+
+				if(typeof options.onAfterCancel === 'function') {
+					options.onAfterCancel.apply(self, [options]);
+				}
 			},
 
 			removeAll: function(layerObj) {
@@ -181,10 +298,7 @@
 			window.init(opts);
 		};
 		$.unWindow = function(options) {
-			window.remove(options);
-		};
-		$.fn.unWindow = function(options, param) {
-
+			window.close(options);
 		};
 		$.fn.window.methods = {
 
@@ -193,14 +307,14 @@
 			name: '', //必填
 			message: '',
 			parent: '',
-			title: '',
+			title: '提示',
 			baseZ: 1000,
 			speed: 300,
 			delay: 0,
 			overlayCss: {},
 			css: {},
 			layerWrapper: 'body',
-			needCloseBtn: false,
+			needCloseBtn: true,
 			needLeftBtn: false,
 			needRightBtn: false,
 			closeBtn: '[data-action="close"]',
@@ -223,7 +337,7 @@
 			onBeforeConfirm: null,
 			onAfterConfirm: null,
 			confirmBtn: '[data-action="confirm"]',
-			cancelBtn: '[data-action="cancel]'
+			cancelBtn: '[data-action="cancel"]'
 		};
 
 		function debounce(fun, wait, immediate) {
@@ -251,7 +365,7 @@
 			for(var i in obj) {
 				count++;
 			}
-			return !!count ? true : false;
+			return !count ? true : false;
 		}
 	};
 
@@ -261,4 +375,4 @@
 		setup();
 	}
 	
-})(jQuery);
+})(jQuery, window);

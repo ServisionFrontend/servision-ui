@@ -1,0 +1,89 @@
+.dialog {
+  width: 400px;
+  height: auto;
+  background-color: #fff;
+  box-shadow: 0px 0px 3px #f8f8f8; }
+
+.dialog .dialog-title {
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
+  padding: 0 10px;
+  background-color: #f8f8f8;
+  color: #3e3e3e;
+  border-bottom: solid 1px #ebebeb; }
+
+.dialog .dialog-title .close-btn {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  float: right;
+  text-decoration: none;
+  background: url("../images/window/close_btn.png") no-repeat;
+  color: #fff;
+  margin-top: 13px; }
+
+.dialog .dialog-title .close-btn:hover {
+  color: #27EADA; }
+
+.dialog .dialog-content {
+  background-color: #fff;
+  padding: 20px 20px;
+  min-height: 70px;
+  line-height: 70px; }
+
+.dialog .dialog-btn-wrapper {
+  height: 50px;
+  line-height: 50px;
+  background-color: #f8f8f8;
+  text-align: center;
+  vertical-align: middle; }
+
+.dialog .dialog-btn-wrapper .btn {
+  width: 60px;
+  min-width: 70px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  margin-right: 10px;
+  vertical-align: middle; }
+
+.dialog .dialog-content .content-text {
+  font-size: 0;
+  text-align: center; }
+
+.dialog .dialog-content .content-text .icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background: url("../images/window/dialog_icons.png");
+  margin-right: -24px;
+  vertical-align: middle; }
+
+.dialog .dialog-content .content-text .text {
+  display: inline-block;
+  font-size: 18px;
+  padding-left: 34px;
+  vertical-align: middle;
+  line-height: 24px;
+  text-align: left; }
+
+.dialog.ok .dialog-content .content-text .icon {
+  background-position: -34px -0; }
+
+.dialog.ok .dialog-content .content-text .text {
+  color: #57c400; }
+
+.dialog.warn .dialog-content .content-text .icon {
+  background-position: -68px -0; }
+
+.dialog.warn .dialog-content .content-text .text {
+  color: #ffbc07; }
+
+.dialog.error .dialog-content .content-text .icon {
+  background-position: -0 -0; }
+
+.dialog.error .dialog-content .content-text .text {
+  color: #ff1a1a; }
+
+/*# sourceMappingURL=servision.window.css.map */
