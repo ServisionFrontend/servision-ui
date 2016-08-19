@@ -2,9 +2,59 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+<<<<<<< HEAD
+	<title>Combobox-Demo</title>
+	<link rel="stylesheet" href="./stylesheets/component/servision.combobox.css">
+	<script src="./scripts/libs/public/jquery-1.11.3.min.js"></script>
+	<script>
+		$(function(){
+			// $.getJSON("data/combobox.json",function(data){
+			// 	debugger;
+			// });
+			$("#msg").combobox({
+				url:'data/combobox.json',
+				method:'GET',
+				textField:'Description',
+				valueField:'Code',
+				queryParams:{DealerGroup:'sgmw',lang:'zh_CN',BrandCode:'Wuling'},
+				loadFilter:function(data){
+					
+					return data.Data.data;
+				},
+				onBeforeLoad:function(){},
+				onLoadSuccess:function(data){
+				},
+				onLoadError:function(){}
+			});
+		});
+	</script>
+</head>
+<body>
+	<span class="s-textbox">
+		<span class="s-textbox-addon s-textbox-addon-right"><a class="s-textbox-icon s-combobox-arrow" href="javascript:;"></a></span>
+			<input type="text" class="s-textbox-text">
+			<input type="hidden" class='s-textbox-value'>
+	</span>
+	<input type="text" data-id="1" id="msg">
+	<!-- 	<div id="autocomplete_source_wrap" class="s-combobox-container" data-field='autocomplete_panel'>
+	<div class="s-combobox-inner">
+		<div class="s-combobo-group">一大类</div>
+		<div class="s-combobo-item s-combobo-gitem">1小类</div>
+		<div class="s-combobo-item s-combobo-gitem">2小类</div>
+		<div class="s-combobo-group">二大类</div>
+		<div class="s-combobo-item s-combobo-gitem">2.1小类</div>
+		<div class="s-combobo-item s-combobo-gitem">2.2小类</div>
+		<div class="s-combobo-item">***小类</div>
+		<div class="s-combobo-item">*****小类</div>
+	</div>
+</div>
+-->
+<script src="./scripts/component/jquery.servision.combobox.js"></script>
+=======
 	<title>combobox example</title>
 </head>
 <body>
 	
+>>>>>>> 07e498cebd958fdadc9dddedb7706616ca7b8723
 </body>
 </html>
