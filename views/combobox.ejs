@@ -2,23 +2,29 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-<<<<<<< HEAD
 	<title>Combobox-Demo</title>
 	<link rel="stylesheet" href="./stylesheets/component/servision.combobox.css">
 	<script src="./scripts/libs/public/jquery-1.11.3.min.js"></script>
+	<style>
+	.msg{position: absolute;top:100px;left:300px;}
+	#msg{padding:4px;}
+	</style>
 	<script>
 		$(function(){
+			// alert($("#msg").offset().top);
 			// $.getJSON("data/combobox.json",function(data){
 			// 	debugger;
 			// });
+			// $(document).on("keydown",function(e){alert(e.keyCode)})
 			$("#msg").combobox({
+				width:500,
+				heght:300,
 				url:'data/combobox.json',
 				method:'GET',
 				textField:'Description',
 				valueField:'Code',
 				queryParams:{DealerGroup:'sgmw',lang:'zh_CN',BrandCode:'Wuling'},
 				loadFilter:function(data){
-					
 					return data.Data.data;
 				},
 				onBeforeLoad:function(){},
@@ -26,16 +32,33 @@
 				},
 				onLoadError:function(){}
 			});
+
+			// var count=10;
+			// (function(){
+			// 	var args=arguments;
+			// 	setTimeout(function(){
+			// 		$(".msg").css({
+			// 			top:count*5,
+			// 			left:count*6
+			// 		});
+			// 		count+=2;
+			// 		console.log(count)
+			// 		args.callee();
+			// 	},4*1000);
+			// })()
+
 		});
 	</script>
 </head>
 <body>
-	<span class="s-textbox">
+	<!-- <span class="s-textbox">
 		<span class="s-textbox-addon s-textbox-addon-right"><a class="s-textbox-icon s-combobox-arrow" href="javascript:;"></a></span>
 			<input type="text" class="s-textbox-text">
 			<input type="hidden" class='s-textbox-value'>
-	</span>
-	<input type="text" data-id="1" id="msg">
+	</span> -->
+	<div class="msg">
+		<input type="text" data-id="1" id="msg">
+	</div>
 	<!-- 	<div id="autocomplete_source_wrap" class="s-combobox-container" data-field='autocomplete_panel'>
 	<div class="s-combobox-inner">
 		<div class="s-combobo-group">一大类</div>
@@ -50,11 +73,8 @@
 </div>
 -->
 <script src="./scripts/component/jquery.servision.combobox.js"></script>
-=======
-	<title>combobox example</title>
+
 </head>
 <body>
-	
->>>>>>> 07e498cebd958fdadc9dddedb7706616ca7b8723
 </body>
 </html>
