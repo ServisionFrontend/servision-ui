@@ -65,7 +65,9 @@
 				$(that).removeClass(opts.collapseCls);
 				$(that).addClass(opts.expandCls);
 				$(that).parent().next().slideDown();
-				$(that).parent().find(opts.folderCls).addClass(opts.folderOpenCls);
+				if (opts.folderOpenCls !== opts.folderCls) {
+					$(that).parent().find('.tree-icon').addClass(opts.folderOpenCls);
+				}
 				if (typeof opts.onExpanded === 'function') {
 					opts.onExpanded.apply(that, [e, node]);
 				}
@@ -73,7 +75,9 @@
 				$(that).addClass(opts.collapseCls);
 				$(that).removeClass(opts.expandCls);
 				$(that).parent().next().slideUp();
-				$(that).parent().find(opts.folderCls).removeClass(opts.folderOpenCls);
+				if (opts.folderOpenCls !== opts.folderCls) {
+					$(that).parent().find('.tree-icon').removeClass(opts.folderOpenCls);
+				}
 				if (typeof opts.onCollapsed === 'function') {
 					opts.onCollapsed.apply(that, [e, node]);
 				}
@@ -195,7 +199,7 @@
 			$(target).find('.tree').find('ul').slideDown();
 			$(target).find('.tree-hit').addClass(opts.expandCls);
 			$(target).find('.tree-hit').removeClass(opts.collapseCls);
-			$(target).find(opts.folderCls).addClass(opts.folderOpenCls);
+			$(target).find('.' + opts.folderCls).addClass(opts.folderOpenCls);
 
 			if (typeof opts.onExpandAll === 'function') {
 				opts.onExpandAll();
@@ -209,7 +213,7 @@
 			$(target).find('.tree').find('ul').slideUp();
 			$(target).find('.tree-hit').removeClass(opts.expandCls);
 			$(target).find('.tree-hit').addClass(opts.collapseCls);
-			$(target).find(opts.folderCls).removeClass(opts.folderOpenCls);
+			$(target).find('.' + opts.folderCls).removeClass(opts.folderOpenCls);
 
 			if (typeof opts.onCollapseAll === 'function') {
 				opts.onCollapseAll();
