@@ -12,10 +12,12 @@
 				self.bindData();
 			},
 
-			initAttrs: function() { //记录要关闭的弹层关联的层
+			initAttrs: function() { 
 				var self = this;
-				self.layers = [];
+				self.layers = []; //记录要关闭的弹层关联的层
 				self.nameArr = [];
+				self.draggable = false;
+				self.move = {x: 0,y: 0}
 			},
 
 			bindData: function() {
@@ -29,7 +31,6 @@
 				if(isEmptyObject(openedLayers)) { //判断是否为顶层类。以此作为z-index的基准
 					baseZ = self.opts.baseZ;
 					self.opts.top = true;
-					self.initGeneralEvents();
 				} else {
 					baseZ++;
 					self.opts.top = false;
@@ -46,7 +47,7 @@
 				self.open();
 			},
 
-			diffLayerType: function() {
+			diffLayerType: function() {  //弹出层类型为dialog时做出额外的初始化
 				var self = this;
 
 				if(!self.opts.dialog) { return; }
@@ -56,6 +57,7 @@
 				self.opts.$cancelBtn = self.opts.$dialog.find(self.opts.cancelBtn);
 				if(!self.opts.confirm) {self.opts.$confirmBtn.remove();}
 				if(!self.opts.cancel) {self.opts.$cancelBtn.remove();}
+				if(self.opts.type !== 'info') {self.opts.$dialog.addClass(self.opts.type);}
 				self.opts.message = self.dialogTempl;
 			},
 
@@ -91,20 +93,22 @@
 					self.opts.msgBox.css(self.opts.css);
 				}
 				if(self.opts.needCloseBtn) {
-					var closeBtnHtml = $('<a href="javascript:;" style="display: block; position:absolute;width:20px;height:20px;background-color:#fff; right: 20px; top: 20px; color: #fff; text-decoration: none;" data-action="close"><span class="icon-remove icon-4x"></span></a>');
+					var closeBtnHtml = $('<a class="icon-remove" href="javascript:;" style=" right: 20px; top: 20px;" data-action="close"></a>');
 					$(layer2).append(closeBtnHtml);
+				}
+				if(self.opts.needLeftBtn) {
+					var leftBtnHtml = $('<a class="icon-left" href="javascript:;" style="left: 20px; top: 50%;" data-action="left"></span></a>');
+					$(layer2).append(leftBtnHtml);
+				}
+				if(self.opts.needRightBtn) {
+					var rightBtnHtml = $('<a class="icon-right" href="javascript:;" style="right: 20px; top: 50%;" data-action="right"></a>');
+					$(layer2).append(rightBtnHtml);
 				}
 
 				openedLayers[self.opts.name] = {opts: self.opts};  //记录所有的配置
 				self.initEvents();
-			},
-
-			initGeneralEvents: function() {
-				var self = this;
-				$(global).on('resize', debounce(function(e) {
-					    self.setLayerPosition();
-					}, 200)
-				);
+				if(!self.opts.draggable || self.opts.layerWrapper != 'body') { return;}	
+				self.initDraggle(self.opts);
 			},
 
 			initEvents: function() {
@@ -121,6 +125,69 @@
 				$(document).on('click' + spaceName, '#' + opts.name + ' ' + opts.cancelBtn, function() {
 					self.onCancel(opts);
 				});
+				$(document).on('click' + spaceName, '#' + opts.name + ' ' + opts.leftBtn, function() {
+					if(typeof opts.leftBtnEvent === 'function') {
+						opts.leftBtnEvent.apply(self, [opts]);
+					}
+					return;
+				});
+				$(document).on('click' + spaceName, '#' + opts.name + ' ' + opts.rightBtn, function() {
+					if(typeof opts.rightBtnEvent === 'function') {
+						opts.rightBtnEvent.apply(self, [opts]);
+					}
+					return;
+				});
+			},
+
+			initDraggle: function(opts) {
+				var self = this,
+					spaceName = '.' + opts.name,
+					$draggableDom = $('#' + opts.name + ' ' + opts.dragController),
+					draggable = false;
+					$blockDom = $('<div style="position:absolute;width:100%;height:100%;top:0;left:0;background: #eee;z-index:19000;display:none"></div>');
+
+				if($draggableDom.length <= 0) {return;}
+				$draggableDom.css({cursor: 'move'});
+				//self.opts.msgBox.append($blockDom)
+				$(document).on('mousedown' + spaceName, '#' + opts.name + ' ' + opts.dragController, function(e) {
+					draggable = true;
+					self.move.x = e.clientX;
+					self.move.y = e.clientY;
+					return false;
+				});
+				$(document).on('mousemove' + spaceName, function(e) {
+					if(!draggable) {return;}
+					self.moveDom($('#' + opts.name + ' ' + opts.dragController), e);
+					return false;
+				});
+				$(document).on('mouseup' + spaceName, function() {
+					draggable = false;
+					return false;
+				});
+
+			},
+
+			moveDom: function($dom, e) {
+				console.log($dom);
+				var self = this,
+					$domWrapper = $dom.closest('.contentWrapper'),
+					domPos = $domWrapper.offset(),calPos = {},
+					maxLeft = $(global).outerWidth() - $domWrapper.outerWidth(),
+					maxTop = $(global).outerHeight() - $domWrapper.outerHeight();
+
+				calPos = {left: domPos.left + e.clientX - self.move.x,
+							top: domPos.top + e.clientY - self.move.y};
+				calPos.left  = calPos.left < 0 ? 0 : calPos.left;
+				calPos.left  = calPos.left > maxLeft ? maxLeft : calPos.left;
+				calPos.top  = calPos.top < 0 ? 0 : calPos.top;
+				calPos.top  = calPos.top > maxTop ? maxTop : calPos.top;
+
+				$domWrapper.css({
+					left: calPos.left + 'px',
+					top: calPos.top + 'px'
+				});
+				self.move.x = e.clientX;
+				self.move.y = e.clientY;
 			},
 
 			open: function() {
@@ -148,8 +215,7 @@
 				$.each(layers, function(index) {
 					$(this).fadeIn(self.opts.speed);
 					if(index === layers.length-1) {
-						self.setLayerPosition();
-						//self.setBtnsPosition();
+						self.setLayerPosition(self.opts);
 					}
 				});
 				if(typeof self.opts.onAfterOpen === 'function') {
@@ -161,10 +227,14 @@
 				var self = this;
 
 				$.each(nameArr, function(index, name) {
-					currentLayerId = openedLayers[name].parent || '';
+					currentLayerId = (openedLayers[name] && openedLayers[name].opts.parent) || '';
+
 					delete openedLayers[name];
 					$(global).off('resize' + '.' +name);
 					$(document).off('click' + '.' + name);
+					$(document).off('mousedown' + '.' + name);
+					$(document).off('mousemove' + '.' + name);
+					$(document).off('mouseup' + '.' + name);
 				});
 			},
 			close: function(options) {
@@ -174,8 +244,8 @@
 
 					if(!openedLayers[name]) {return;}
 					self.getParentLayer(name);
-					layers = self.layers.concat(layers);
-					nameArr = nameArr.concat(self.nameArr);
+					layers = self.layers.concat(layers).reverse(); //获得正确的关闭顺序
+					nameArr = nameArr.concat(self.nameArr).reverse();
 
 				if(typeof options.onBeforeClose === 'function') {
 					options.onBeforeClose.apply(self, [options]);
@@ -230,7 +300,6 @@
 						top: $(wrapDom).outerHeight()/2 - msgBox.outerHeight()/2
 					});
 					if(single) {break;}
-
 				}
 			},
 
@@ -282,6 +351,21 @@
 			
 		};
 
+		(function initGlobalEvents() {
+			$(document).on('keyup', function(e) {
+				if(e.which == 27 && currentLayerId) {
+					if(openedLayers[currentLayerId].opts.layerWrapper != 'body') {
+						return window.close({name: openedLayers[currentLayerId].opts.parent || currentLayerId});
+					}
+					window.close({name: currentLayerId});
+				}
+			});
+			$(global).on('resize', debounce(function(e) {
+				    window.setLayerPosition();
+				}, 200)
+			);
+		})();
+
 		$.fn.window = function(options, param) {
 			if(typeof options == 'string') {
 				return $.fn.window.methods[options].apply(this, [param]);
@@ -311,10 +395,12 @@
 			baseZ: 1000,
 			speed: 300,
 			delay: 0,
+			draggable: true,
+			dragController: '[data-action="drag"]',
 			overlayCss: {},
 			css: {},
 			layerWrapper: 'body',
-			needCloseBtn: true,
+			needCloseBtn: false,
 			needLeftBtn: false,
 			needRightBtn: false,
 			closeBtn: '[data-action="close"]',
@@ -326,7 +412,7 @@
 			onAfterClose: null,
 			leftBtnEvent: null,
 			rightBtnEvent: null,
-			//dialog的配置
+			//dialog的配置,若是dialog,不需要配置meassage
 			dialog: false,
 			type: 'info',
 			content: '提示',
@@ -366,7 +452,7 @@
 				count++;
 			}
 			return !count ? true : false;
-		}
+		};
 	};
 
 	if(typeof define === 'function') {

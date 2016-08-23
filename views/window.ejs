@@ -14,25 +14,46 @@
 			position: absolute;
 			z-index: 2000;
 		}
+		.layer {
+			width: 500px;
+			height: auto;
+			border: solid 1px #4CCD4C;
+		}
+		.layer .title {
+			height: 30px;
+			line-height: 30px;
+			background-color: #4CCD4C;
+		}
+		.layer .content {
+			background-color: #fff;
+			min-height: 100px;
+			position: relative;
+		}
+		.layer .content table {
+			width: 100%;
+			text-align: center;
+		}
 	</style>
 </head>
 
 <body>
-	<div id="layer">这是一个弹层</div>
+	<div id="layer">这是一个弹层,你可以简单的展示一些东西</div>
 	<div class="btnWrapper">
 		<button id="btn1">打开弹层1</button>
 		<button id="btn2">打开弹层2</button>
 		<button id="btn3">打开弹层3</button>
-		<button id="btn4">关闭弹层1</button>
-		<button id="btn5">关闭弹层2</button>
-		<button id="btn6">关闭弹层3</button>
+		<button id="btn4">打开弹层4</button>
+		<button id="btn8">打开弹层5</button>
+		<button id="btn5">关闭弹层1</button>
+		<button id="btn6">关闭弹层2</button>
+		<button id="btn7">关闭弹层3</button>
 	</div>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#btn1').click(function() {
 				$.window({
 					name: 'test1',
-					message: '<div style="width:300px;height: 300px; background-color: #fff;"></div>',
+					message: '<div class="loading"></div>',
 					onBeforeOpen: function() {
 						console.log('弹层1即将打开');
 					}
@@ -57,16 +78,35 @@
 				});
 			});
 			$('#btn4').click(function() {
+				$.window({
+					name: 'test4',
+					message: $('#part-layer').html()
+				});
+			});
+			$('#btn8').click(function() {
+				$.window({
+					name: 'test5',
+					message: $('#test-layer').html(),
+					onAfterOpen: function() {
+						$.window({
+							name: 'test6',
+							message: '<div class="loading"></div>',
+							layerWrapper: '#loading-layer'
+					 	});
+					}
+				});
+			});
+			$('#btn5').click(function() {
 				$.unWindow({
 					name: 'test1'
 				})
 			});
-			$('#btn5').click(function() {
+			$('#btn6').click(function() {
 				$.unWindow({
 					name: 'test2'
 				})
 			});
-			$('#btn6').click(function() {
+			$('#btn7').click(function() {
 				$.unWindow({
 					name: 'test3'
 				})
@@ -74,6 +114,28 @@
 			
 
 		})
+	</script>
+	<script id="part-layer" type="text/tempalte">
+		<div class="layer">
+			<div class="title" data-action="drag">零件详情</div>
+			<div class="content">
+				<table>
+					<tr><th>序号</th><th>零件编码</th><th>零件数量</th></tr>
+					<tr><td>1</td><td>677fffd8s78</td><td>2232</td></tr>
+					<tr><td>2</td><td>677fffd8s78</td><td>2232</td></tr>
+					<tr><td>3</td><td>677fffd8s78</td><td>2232</td></tr>
+					<tr><td>4</td><td>677fffd8s78</td><td>2232</td></tr>
+				</table>
+			</div>
+		</div>
+	</script>
+	<script id="test-layer" type="text/tempalte">
+		<div class="layer">
+			<div class="title" data-action="drag">零件详情</div>
+					<div id="loading-layer" class="content">
+				
+					</div>
+			</div>
 	</script>
 </body>
 </html>
