@@ -3,6 +3,8 @@
 		var openedLayers = {};
 		var currentLayerId = '';
 		var baseZ = 1000;
+		var canOpen = true;
+		var overLayer = null;
 		var window = {
 			init: function(options) {
 				var self = this;
@@ -16,18 +18,19 @@
 				var self = this;
 				self.layers = []; //记录要关闭的弹层关联的层
 				self.nameArr = [];
-				self.draggable = false;
 				self.move = {x: 0,y: 0}
 			},
 
 			bindData: function() {
 				var self = this,
 					name = self.opts.name = self.opts.name || 'default';
-
+				
 				if(openedLayers[name] && name!=='default') {
 					return console.log('该层已创建');
 				}
-				//self.opts.baseZ = ++baseZ;
+
+				if(name === 'default') { self.removeAll();} //若没有给name。则默认为default。并且关闭之前所有打开的弹层
+
 				if(isEmptyObject(openedLayers)) { //判断是否为顶层类。以此作为z-index的基准
 					baseZ = self.opts.baseZ;
 					self.opts.top = true;
@@ -38,20 +41,25 @@
 				if(!self.opts.parent) {  //确定父亲
 					self.opts.parent = currentLayerId;
 				}
+				self.opts.baseZ = baseZ;
 				
-				if(name === 'default') { self.removeAll();} //若没有给name。则默认为default。并且关闭之前所有打开的弹层
-	
 				currentLayerId = name;
 
 				self.diffLayerType();
-				self.open();
+				if(!canOpen) {
+					setTimeout(function() {
+						self.open();
+					},self.opts.speed);
+				} else {
+					self.open();
+				}		
 			},
 
 			diffLayerType: function() {  //弹出层类型为dialog时做出额外的初始化
 				var self = this;
 
 				if(!self.opts.dialog) { return; }
-				self.dialogTempl = $('<div class="dialog"><div class="dialog-title"><a href="javascript:;" class="close-btn" data-action="cancel"></a><span class="text">'+ self.opts.title +'</span></div><div class="dialog-content"><div class="content-text"><span class="icon"></span><span class="text">'+ self.opts.content +'</span></div></div><div class="dialog-btn-wrapper"><a href="javascript:;" class="btn" data-action="confirm">确定</a><a href="javascript:;" class="btn" data-action="cancel">取消</a></div></div>');
+				self.dialogTempl = $('<div class="dialog"><div class="dialog-title" data-action="drag"><a href="javascript:;" class="close-btn" data-action="cancel"></a><span class="text">'+ self.opts.title +'</span></div><div class="dialog-content"><div class="content-text"><span class="icon"></span><span class="text">'+ self.opts.content +'</span></div></div><div class="dialog-btn-wrapper"><a href="javascript:;" class="btn" data-action="confirm">确定</a><a href="javascript:;" class="btn" data-action="cancel">取消</a></div></div>');
 				self.opts.$dialog = self.dialogTempl.eq(0);
 				self.opts.$confirmBtn = self.opts.$dialog.find(self.opts.confirmBtn);
 				self.opts.$cancelBtn = self.opts.$dialog.find(self.opts.cancelBtn);
@@ -62,7 +70,8 @@
 			},
 
 			create: function() {
-				var self = this, layer1, layer2;
+				var self = this, layer1, layer2,
+					wrapDiv = $('<div class="contentWrapper" style="position:absolute"></div>');;
 
 				if(self.opts.layerWrapper === 'body') {
 					layer1 = $('<div class="overLayer" style="display: none; position: fixed; z-index:'+ baseZ +'; margin: 0; padding: 0; width: 100%;height: 100%; top:0; left: 0;opacity: 0.5;filter: alpha(opacity=50); background-color: #000"></div>');
@@ -71,21 +80,25 @@
 					layer1 = $('<div class="overLayer" style="display: none; position: absolute; z-index:'+ baseZ +'; margin: 0; padding: 0; width: 100%;height: 100%; top:0; left: 0;opacity: 0;filter: alpha(opacity=0); background-color: #000"></div>');
 					layer2 = $('<div class="contentLayer" style="display: none; position: absolute; z-index: '+ baseZ +'; margin: 0; padding: 0; width: 100%;height: 100%; top:0; left: 0;"></div>');
 				}
-
+				$(self.opts.layerWrapper).css('position','relative');
 				self.opts.layers = [layer1, layer2];
 				
-				if(!self.opts.top) {self.opts.layers.shift();layer1=null;}
+				if(self.opts.top) {overLayer = layer1;}
+				if(!self.opts.top && self.opts.layerWrapper === 'body') {
+					self.opts.layers.shift();
+					layer1=null;
+					overLayer.css({zIndex: baseZ});
+				}
 
 				$.each(self.opts.layers, function() {
 					this[0].id = self.opts.name;
 					$(self.opts.layerWrapper).append(this);
 				});
-				if(self.opts.message) {
-					var wrapDiv = $('<div class="contentWrapper" style="position:absolute"></div>');
-					$(layer2).empty().append(wrapDiv);
-					wrapDiv.html(self.opts.message);
-					self.opts.msgBox = wrapDiv;
-				}
+
+				layer2.attr("data-id", self.opts.name).empty().append(wrapDiv);
+				wrapDiv.html(self.opts.message);
+				self.opts.msgBox = wrapDiv;
+
 				if(layer1 && !isEmptyObject(self.opts.overlayCss)) {
 					layer1.css(self.opts.overlayCss);
 				}
@@ -143,37 +156,73 @@
 				var self = this,
 					spaceName = '.' + opts.name,
 					$draggableDom = $('#' + opts.name + ' ' + opts.dragController),
-					draggable = false;
-					$blockDom = $('<div style="position:absolute;width:100%;height:100%;top:0;left:0;background: #eee;z-index:19000;display:none"></div>');
+					timer = 0,
+					time = 0;
+					opts.draggable = false;
+					opts.$blockDom = $('<div style="position:absolute;width:100%;height:100%;top:0;left:0;background:#eee;opacity:0.5;cursor:move;z-index:19000;display:none"></div>');
 
 				if($draggableDom.length <= 0) {return;}
 				$draggableDom.css({cursor: 'move'});
-				//self.opts.msgBox.append($blockDom)
+				opts.$blockDom.insertAfter(opts.msgBox);
 				$(document).on('mousedown' + spaceName, '#' + opts.name + ' ' + opts.dragController, function(e) {
-					draggable = true;
-					self.move.x = e.clientX;
-					self.move.y = e.clientY;
+					time = (new Date()).getTime();
+					timer = setTimeout(function() {
+						self.moveStart(opts, e);
+					}, 1000);
 					return false;
 				});
 				$(document).on('mousemove' + spaceName, function(e) {
-					if(!draggable) {return;}
-					self.moveDom($('#' + opts.name + ' ' + opts.dragController), e);
+					if((new Date()).getTime() - time < 1000) {
+						time = 0;
+						clearTimeout(timer);
+						self.moveStart(opts, e);
+					}
+					self.moveDom(opts, e);
 					return false;
 				});
 				$(document).on('mouseup' + spaceName, function() {
-					draggable = false;
+					clearTimeout(timer);
+					self.moveEnd(opts);
 					return false;
 				});
-
 			},
 
-			moveDom: function($dom, e) {
-				console.log($dom);
+			moveStart: function(opts, e) {
 				var self = this,
-					$domWrapper = $dom.closest('.contentWrapper'),
+					$blockDom = opts.$blockDom;
+					opts.draggable = true;
+					self.move.x = e.clientX;
+					self.move.y = e.clientY;
+
+				$blockDom.css({
+					width: opts.msgBox.outerWidth(),
+					height: opts.msgBox.outerHeight(),
+					top: opts.msgBox.offset().top,
+					left: opts.msgBox.offset().left
+				}).show();
+				opts.msgBox.hide();
+			},
+
+			moveEnd: function(opts) {
+				var $blockDom = opts.$blockDom;
+
+				if(!opts.draggable) {return;}
+				opts.msgBox.css({
+					top: $blockDom.offset().top,
+					left: $blockDom.offset().left
+				}).show();
+				$blockDom.hide();
+				opts.draggable = false;
+			},
+
+			moveDom: function(opts, e) {
+				var self = this,
+					$domWrapper = opts.$blockDom,
 					domPos = $domWrapper.offset(),calPos = {},
 					maxLeft = $(global).outerWidth() - $domWrapper.outerWidth(),
 					maxTop = $(global).outerHeight() - $domWrapper.outerHeight();
+
+				if(!opts.draggable) {return;}
 
 				calPos = {left: domPos.left + e.clientX - self.move.x,
 							top: domPos.top + e.clientY - self.move.y};
@@ -230,6 +279,12 @@
 					currentLayerId = (openedLayers[name] && openedLayers[name].opts.parent) || '';
 
 					delete openedLayers[name];
+					if(currentLayerId) {
+						overLayer.css({zIndex: openedLayers[self.getBodyparent(currentLayerId)].opts.baseZ});
+					} else {
+						overLayer = null;
+					}
+					
 					$(global).off('resize' + '.' +name);
 					$(document).off('click' + '.' + name);
 					$(document).off('mousedown' + '.' + name);
@@ -250,14 +305,16 @@
 				if(typeof options.onBeforeClose === 'function') {
 					options.onBeforeClose.apply(self, [options]);
 				}
-
+				
 				$.each(layers, function(index,item) {
+					canOpen = false;
 					var exsitLayers = item.opts.layers;
 					$.each(exsitLayers, function(index, item) {
 						item.fadeOut(options.speed, function() {
 							item.remove();
 							if(index === exsitLayers.length-1) {
-								self.timer = null;
+								canOpen = true;
+								clearTimeout(self.timer);
 							}
 						});
 					})
@@ -268,7 +325,6 @@
 				if(typeof options.onAfterClose === 'function') {
 					options.onAfterClose.apply(self, [options]);
 				}
-
 			},
 
 			getParentLayer: function(name) {
@@ -332,32 +388,31 @@
 			},
 
 			removeAll: function(layerObj) {
-				var layerObj = layerObj || openedLayers;
+				var self = this,
+					layerObj = layerObj || openedLayers;
 
 				for(var i in layerObj) {
 					var exsitLayer = layerObj[i];
-					$.each(exsitLayer.layers, function(index, item) {
-						item.remove();
-					});
+					self.close(exsitLayer.opts);
 				}
 			},
 
-			removeByName: function(layerName) {
-				var exsitLayer = layerObj[layerName];
-				$.each(exsitLayer.layers, function(index, item) {
-					item.remove();
-				});
+			getBodyparent: function(currentLayerId) {
+				var self = this;
+				if(currentLayerId && openedLayers[currentLayerId].opts.layerWrapper != 'body') {
+					return self.getBodyparent(openedLayers[currentLayerId].opts.parent);
+				} else {
+					return currentLayerId;
+				}
 			}
 			
 		};
 
 		(function initGlobalEvents() {
 			$(document).on('keyup', function(e) {
+
 				if(e.which == 27 && currentLayerId) {
-					if(openedLayers[currentLayerId].opts.layerWrapper != 'body') {
-						return window.close({name: openedLayers[currentLayerId].opts.parent || currentLayerId});
-					}
-					window.close({name: currentLayerId});
+					window.close({name: window.getBodyparent(currentLayerId)});
 				}
 			});
 			$(global).on('resize', debounce(function(e) {
@@ -371,7 +426,13 @@
 				return $.fn.window.methods[options].apply(this, [param]);
 			}
 			if(Object.prototype.toString.apply(options,[]) === '[object Object]') {
-				options.message = $(this).eq(0).html();
+				if(options.name) {
+					options.message = $(this).eq(0).html();
+				} else {
+					options.parent = $(this).eq(0).closest('.contentLayer').attr("data-id");
+					options.layerWrapper = $(this).eq(0);
+					options.name = 'layer_' + new Date().getTime() + Math.round(Math.random() * 1000);
+				}
 			}
 			$.window(options, param);
 			
@@ -385,7 +446,12 @@
 			window.close(options);
 		};
 		$.fn.window.methods = {
-
+			unWindow: function(options) {
+				return window.close(options);
+			},
+			setLayerPosition: function(options) {
+				return window.setLayerPosition(options);
+			}
 		};
 		$.fn.window.defaults = {
 			name: '', //必填

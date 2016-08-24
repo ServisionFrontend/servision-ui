@@ -48,17 +48,21 @@
 		<button id="btn6">关闭弹层2</button>
 		<button id="btn7">关闭弹层3</button>
 	</div>
+	<div>
+		
+	</div>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#btn1').click(function() {
 				$.window({
-					name: 'test1',
-					message: '<div class="loading"></div>',
-					onBeforeOpen: function() {
-						console.log('弹层1即将打开');
-					}
+				 //   name: 'test1',
+					// message: '<div class="loading"></div>',
+					// onBeforeOpen: function() {
+					// 	console.log('弹层1即将打开');
+					// }
 				});
 			});
+
 			$('#btn2').click(function() {
 				$('#layer').window({
 					name: 'test2',
@@ -83,22 +87,35 @@
 					message: $('#part-layer').html()
 				});
 			});
+		//$('#btn8').click(function() {
+		// 	$.window({
+		// 	//	name: 'test5',
+		// 		message: $('#test-layer').html(),
+		// 		onAfterOpen: function() {
+		// 			$.window({
+		// 				name: 'test6',
+		// 				message: '<div class="loading"></div>',
+		// 				layerWrapper: '#loading-layer'
+		// 		 	});
+		// 		}
+		// 	});
+		// });
 			$('#btn8').click(function() {
 				$.window({
-					name: 'test5',
 					message: $('#test-layer').html(),
 					onAfterOpen: function() {
-						$.window({
-							name: 'test6',
-							message: '<div class="loading"></div>',
-							layerWrapper: '#loading-layer'
-					 	});
+						console.log(22222);
+
+						$('#loading-layer').window({
+						    message: '<div class="loading"></div>'
+					    })
 					}
 				});
+
 			});
 			$('#btn5').click(function() {
 				$.unWindow({
-					name: 'test1'
+					//name: 'test1'
 				})
 			});
 			$('#btn6').click(function() {
