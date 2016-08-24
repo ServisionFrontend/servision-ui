@@ -13,13 +13,123 @@ window 组件功能需求
 
 实现需求：
 
-两种调用方式
+多种调用方式
 可配置遮罩层是否具备关闭以及左右按钮,以及相应的回调函数
-可拖动（单独引入）
+可拖动
 关闭
 打开
 移动
 窗口移动时自动居中定位
 识别父亲弹出层，保证父亲时子弹出层也关闭.如果给参数的时候没有定义父亲则默认当前打开的窗口为父窗口
-延迟出现（500ms内不出现）
+延迟出现
 确定、取消回调函数
+
+
+$.fn.window.defaults = {
+	//弹出层的名字，若不配置则默认只能打开一个全局的弹出层。
+	//若配置name,则在以jquery对象方式调用的时候将调用对象作为message。若不配置，则在以jquery对象方式调用的时候将调用对象作为弹出层的包裹对象
+	name: '', 
+
+	//需要放入弹层的信息
+	message: '',
+
+	//弹出层的父层。默认为前一个弹出的层。父层关闭子层将会一起关闭
+	parent: '',
+
+	//弹出层的z-index.若是有父层，则忽略
+	baseZ: 1000,
+
+	//弹出层打开关闭的速度
+	speed: 300,
+
+	//弹出层延迟出现的时间
+	delay: 0,
+
+	//为true代表可拖动
+	draggable: true,
+
+	//配置可触发拖动事件的元素
+	dragController: '[data-action="drag"]', 
+
+	//覆盖层的样式 
+	overlayCss: {},
+
+	//显示层的样式
+	css: {},
+
+	//配置弹出层的包裹对象
+	layerWrapper: 'body',
+
+	//是否需要全局的关闭按钮
+	needCloseBtn: false,
+
+	//是否需要全局的左按钮
+	needLeftBtn: false,
+
+	//是否需要全局的右按钮
+	needRightBtn: false,
+
+	//关闭按钮
+	closeBtn: '[data-action="close"]',
+
+	//左按钮
+	leftBtn: '[data-action="left"]',
+
+	//有按钮
+	rightBtn: '[data-action="right"]',
+
+	//层打开之前的回调
+	onBeforeOpen: null,
+
+	//层打开之后的回调
+	onAfterOpen: null,
+
+	//层关闭之前的回调
+	onBeforeClose: null,
+
+	//层关闭之后的回调
+	onAfterClose: null,
+
+	//添加左按钮事件
+	leftBtnEvent: null,
+
+	//添加右按钮事件
+	rightBtnEvent: null,
+
+	//确认按钮
+	confirmBtn: '[data-action="confirm"]',
+
+	//取消按钮
+	cancelBtn: '[data-action="cancel"]',
+
+	//取消之前的回调
+	onBeforeCancel: null,
+
+	//取消之后的回调
+	onAfterCancel: null,
+
+	//确认之前的回调
+	onBeforeConfirm: null,
+
+	//确认之后的回调
+	onAfterConfirm: null,
+	
+	//为true代表使用默认样式的提示框。不需要配置messgae
+	dialog: false,
+
+	//提示框的类型info.warn,ok,error
+	type: 'info',
+
+	//提示框的标题
+	title: '提示',
+
+	//放入提示框的提示内容
+	content: '提示',
+
+	//提示框是否需要确认按钮
+	confirm: true,
+
+	//提示框是否需要取消按钮
+	cancel: true
+	
+};
