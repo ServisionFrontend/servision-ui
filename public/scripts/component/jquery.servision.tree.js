@@ -11,15 +11,18 @@
 	var tree = {
 		init: function(target) {
 			var self = this,
-				url,
-				opts = $.data(target, 'tree').options;
+				opts = $.data(target, 'tree').options,
+				url = opts.url,
+				data = opts.data,
+				nodePathList = opts.nodePathList;
 
 			self.initEvents(target);
 
-			if (opts.data) {
-				self.render(opts.data, target, opts);
-			} else if (opts.url) {
-				self.loadData(opts.url);
+			if (data) {
+				self.buildData(data, 0, [], nodePathList);
+				self.render(data, target, opts);
+			} else if (url) {
+				self.loadData(url);
 			}
 		},
 
@@ -56,6 +59,12 @@
 			});
 		},
 
+		clearAllSelection: function(target) {
+			var self = this;
+
+			$(target).find('.tree-node').removeClass('tree-node-selected');
+		},
+
 		toggleNode: function(e, that, target) {
 			var self = this,
 				opts = $.data(target, 'tree').options,
@@ -85,10 +94,24 @@
 		},
 
 		selectRow: function(that, target) {
-			var self = this;
+			var self = this,
+				id, node,
+				opts = $.data(target, 'tree').options;
 
-			$(target).find('.tree-node').removeClass('tree-node-selected');
-			$(that).parent().addClass('tree-node-selected');
+			self.clearAllSelection(target);
+
+			if (typeof that === 'string' || typeof that === 'number') {
+				id = that;
+				$(target).find('[data-id=' + that + ']').addClass('tree-node-selected');
+			} else {
+				id = $(that).parent().attr('data-id');
+				$(that).parent().addClass('tree-node-selected');
+			}
+
+			if (typeof opts.onSelectedNode === 'function') {
+				node = self.getNode(opts.data, id);
+				opts.onSelectedNode.apply(self, [node]);
+			}
 		},
 
 		clickNode: function(e, that, target) {
@@ -144,7 +167,7 @@
 			if (data.length === 0) return;
 
 			var self = this,
-				node,
+				node, result,
 				nodes = [];
 
 			for (var i = 0; i < data.length; i++) {
@@ -156,7 +179,7 @@
 					nodes.push(node);
 				}
 
-				var result = self.getNode(data[i].children || [], id);
+				result = self.getNode(data[i].children || [], id);
 
 				if (result) {
 					nodes.push(result);
@@ -175,21 +198,65 @@
 
 			for (var i = 0; i < data.length; i++) {
 				node = {};
-				if (ids.indexOf(data[i].id) > -1) {
+				if (ids.indexOf(data[i].id.toString()) > -1) {
 					for (key in data[i]) {
 						if (key !== 'children') node[key] = data[i][key];
 					}
 					nodes.push(node);
 				}
 
-				var result = self.getNode(data[i].children || [], ids);
+				var result = self.getNodes(data[i].children || [], ids);
 
-				if (result.length) {
+				if (result && result.length) {
 					nodes = nodes.concat(result);
 				}
 			}
 
 			return nodes;
+		},
+
+		getLastLeafNode: function(data) {
+			if (data.length === 0) return [];
+
+			var self = this,
+				nodes = [],
+				result,
+				item = data[data.length - 1],
+				children = item.children || [];
+
+			if (children.length > 0) {
+				result = self.getLastLeafNode(children);
+
+				if (result) {
+					nodes.push(result);
+				}
+			} else {
+				nodes.push(item)
+			}
+
+			return nodes.length ? nodes[0] : null;;
+		},
+
+		getFirstLeafNode: function(data) {
+			if (data.length === 0) return [];
+
+			var self = this,
+				nodes = [],
+				result,
+				item = data[0],
+				children = item.children || [];
+
+			if (children.length > 0) {
+				result = self.getFirstLeafNode(children);
+
+				if (result) {
+					nodes.push(result);
+				}
+			} else {
+				nodes.push(item)
+			}
+
+			return nodes.length ? nodes[0] : null;;
 		},
 
 		expandAll: function(target) {
@@ -199,8 +266,10 @@
 			$(target).find('.tree').find('ul').slideDown();
 			$(target).find('.tree-hit').addClass(opts.expandCls);
 			$(target).find('.tree-hit').removeClass(opts.collapseCls);
-			$(target).find('.' + opts.folderCls).addClass(opts.folderOpenCls);
 
+			if (opts.folderCls !== opts.folderOpenCls) {
+				$(target).find('.' + opts.folderCls).addClass(opts.folderOpenCls);
+			}
 			if (typeof opts.onExpandAll === 'function') {
 				opts.onExpandAll();
 			}
@@ -213,44 +282,138 @@
 			$(target).find('.tree').find('ul').slideUp();
 			$(target).find('.tree-hit').removeClass(opts.expandCls);
 			$(target).find('.tree-hit').addClass(opts.collapseCls);
-			$(target).find('.' + opts.folderCls).removeClass(opts.folderOpenCls);
 
+			if (opts.folderCls !== opts.folderOpenCls) {
+				$(target).find('.' + opts.folderCls).removeClass(opts.folderOpenCls);
+			}
 			if (typeof opts.onCollapseAll === 'function') {
 				opts.onCollapseAll();
 			}
 		},
 
-		nodeMoveUp: function(target) {
+		prevNodeSelection: function(target, isSelectionFolder) {
 			var self = this,
-				prevNode = me.getPrevNode(target);
+				id, prevNode,
+				selectedNode = self.getSelectedNode(target);
 
-			if (prevNode) {
-				self.selectRow(prevNode, target);
+			if (selectedNode.length > 0) {
+				id = selectedNode[0].id;
+				prevNode = self.getPrevNode(target, id, isSelectionFolder);
+
+				if (prevNode) {
+					self.selectRow(prevNode.id, target);
+
+					return true;
+				}
 			}
+
+			return false;
 		},
 
-		nodeMoveDown: function(target) {
+		nextNodeSelection: function(target, isSelectionFolder) {
 			var self = this,
-				nextNode = me.getNextNode(target);
+				id, nextNode,
+				selectedNode = self.getSelectedNode(target);
 
-			if (nextNode) {
-				self.selectRow(nextNode, target);
+			if (selectedNode.length > 0) {
+				id = selectedNode[0].id;
+				nextNode = self.getNextNode(target, id, isSelectionFolder);
+
+				if (nextNode) {
+					self.selectRow(nextNode.id, target);
+
+					return true;
+				}
 			}
+
+			return false;
 		},
 
-		getPrevNode: function(target) {
-			var self = this;
+		getPrevNode: function(target, id, isSelectionFolder) {
+			var self = this,
+				siblingNode,
+				prevLeafNode,
+				opts = $.data(target, 'tree').options,
+				data = opts.data,
+				node = self.getNode(data, id),
+				level = node.level,
+				parent = false,
+				nodePath = $.extend([], node.nodePath);
+
+			while (!siblingNode && level > -1) {
+				nodePath[level - 1] = nodePath[level - 1] - 1;
+
+				if (self.getPathNode(nodePath, data)) {
+					siblingNode = self.getPathNode(nodePath, data);
+				} else {
+					nodePath = nodePath.slice(0, --level);
+					if (isSelectionFolder) {
+						return self.getPathNode(nodePath, data);
+					}
+				}
+			}
+
+			if (siblingNode) {
+				prevLeafNode = self.getLastLeafNode([siblingNode]);
+			}
+
+			return prevLeafNode;
 		},
 
-		getNextNode: function(target) {
-			var self = this;
+		getNextNode: function(target, id, isSelectionFolder) {
+			var self = this,
+				index = 0,
+				siblingNode,
+				nextLeafNode,
+				opts = $.data(target, 'tree').options,
+				data = opts.data,
+				node = self.getNode(data, id),
+				level = node.level,
+				nodePath = $.extend([], node.nodePath);
+
+			while (!siblingNode && level > -1) {
+
+				if (node.isLeaf) {
+					nodePath[level - 1] = nodePath[level - 1] + 1;
+				} else {
+					nodePath.push(0);
+				}
+				nextLeafNode = self.getPathNode(nodePath, data);
+				if (nextLeafNode) {
+					node = nextLeafNode;
+					if (isSelectionFolder) {
+						siblingNode = nextLeafNode;
+					} else {
+						if (nextLeafNode.isLeaf) {
+							siblingNode = nextLeafNode;
+						}
+					}
+				} else {
+					nodePath = nodePath.slice(0, --level);
+				}
+			}
+
+			return siblingNode;
+		},
+
+		getPathNode: function(path, data) {
+			var self = this,
+				node, i = 0;
+
+			while (typeof path[i] !== 'undefined') {
+				node = $.extend({}, data[path[i]]);
+				data = node.children;
+				i++;
+			}
+
+			return $.isEmptyObject(node) ? null : node;
 		},
 
 		getSelectedNode: function(target) {
 			var self = this,
 				ids = self.getSelectedIds(target),
 				opts = $.data(target, 'tree').options,
-				nodes = me.getNodes(opts.data, ids);
+				nodes = self.getNodes(opts.data, ids);
 
 			return nodes;
 		},
@@ -268,26 +431,43 @@
 			return ids;
 		},
 
+		buildData: function(data, level, parentNodePath, nodePathList) {
+			var self = this,
+				id, newNodePath,
+				children;
+
+			level++;
+			for (var i = 0; i < data.length; i++) {
+				children = data[i].children || [];
+				data[i].level = level;
+				newNodePath = $.extend([], parentNodePath);
+				newNodePath.push(i)
+				data[i].nodePath = $.extend([], newNodePath);
+				data[i].isLeaf = children.length > 0 ? false : true;
+				nodePathList[data[i].id] = data[i].nodePath;
+				self.buildData(children, level, newNodePath, nodePathList);
+			}
+		},
+
 		render: function(data, target, opts) {
 			var self = this,
-				html = self.getTreeHtml(data, 0, opts);
+				html = self.getTreeHtml(data, opts);
 
 			$(target).html(html);
 		},
 
-		getTreeHtml: function(data, level, opts) {
+		getTreeHtml: function(data, opts) {
 			if (data.length === 0) return '';
 
-			level++;
-
 			var self = this,
-				html = level === 1 ? ['<ul class="tree">'] : ['<ul style="display:none;">'];
+				children,
+				html = data[0].level === 1 ? ['<ul class="tree">'] : ['<ul style="display:none;">'];
 
 			for (var i = 0; i < data.length; i++) {
-				var children = data[i].children || [];
+				children = data[i].children || [];
 				html.push('<li>');
-				html.push(self.getNodeHtml(data[i], level, opts));
-				html.push(self.getTreeHtml(children, level, opts));
+				html.push(self.getNodeHtml(data[i], opts));
+				html.push(self.getTreeHtml(children, opts));
 				html.push('</li>');
 			}
 			html.push('</ul>');
@@ -295,14 +475,11 @@
 			return html.join('');
 		},
 
-		getNodeHtml: function(item, level, opts) {
+		getNodeHtml: function(item, opts) {
 			var self = this,
 				html = ['<div class="tree-node" data-id=' + item.id + '>'],
-				children = item.children || [];
-
-			if (children.length == 0) {
-				level = level + 1;
-			}
+				children = item.children || [],
+				level = children.length == 0 ? item.level + 1 : item.level;
 
 			// 添加缩进
 			for (var i = 0; i < level; i++) {
@@ -361,17 +538,21 @@
 
 			tree.collapseAll(jq[0]);
 		},
-		nodeMoveUp: function(jq) {
+		prevNodeSelection: function(jq, isSelectionFolder) {
 
-			tree.nodeMoveUp(jq[0]);
+			return tree.prevNodeSelection(jq[0], isSelectionFolder);
 		},
-		nodeMoveDown: function(jq) {
+		nextNodeSelection: function(jq, isSelectionFolder) {
 
-			tree.nodeMoveDown(jq[0]);
+			return tree.nextNodeSelection(jq[0], isSelectionFolder);
 		},
 		getSelectedNode: function(jq) {
 
 			return tree.getSelectedNode(jq[0]);
+		},
+		clearAllSelection: function(jq) {
+
+			tree.clearAllSelection(jq[0]);
 		}
 	};
 
@@ -386,10 +567,12 @@
 		folderOpenCls: 'tree-folder-open',
 		hasNodeIcon: true,
 		queryParams: {},
+		nodePathList: {},
 		onClickNode: function(e, node) {},
 		onClickRow: function(e, ndoe) {},
 		onExpanded: function(e, node) {},
 		onCollapsed: function(e, node) {},
+		onSelectedNode: function(node) {},
 		onExpandedAll: function() {},
 		onCollapseAll: function() {},
 	};
