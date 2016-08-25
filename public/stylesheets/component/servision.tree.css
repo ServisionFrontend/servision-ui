@@ -36,6 +36,15 @@
 .tree-file {
     background: url('/stylesheets/images/tree/tree_icons.png') no-repeat -240px 0px;
 }
+.tree-checkbox0 {
+    background: url('/stylesheets/images/tree/tree_icons.png') no-repeat -208px -18px;
+}
+.tree-checkbox1 {
+    background: url('/stylesheets/images/tree/tree_icons.png') no-repeat -224px -18px;
+}
+.tree-checkbox2 {
+    background: url('/stylesheets/images/tree/tree_icons.png') no-repeat -240px -18px;
+}
 .tree-text {
     display: inline-block;
     height: 18px;
@@ -49,7 +58,7 @@
     text-decoration: none;
     color: #333;
 }
-.tree-expanded, .tree-collapsed, .tree-folder, .tree-file, .tree-indent {
+.tree-expanded, .tree-collapsed, .tree-folder, .tree-file, .tree-indent, .tree-checkbox {
     display: inline-block;
     height: 18px;
     width: 16px;
