@@ -77,10 +77,11 @@
 					layer1 = $('<div class="overLayer" style="display: none; position: fixed; z-index:'+ baseZ +'; margin: 0; padding: 0; width: 100%;height: 100%; top:0; left: 0;opacity: 0.5;filter: alpha(opacity=50); background-color: #000"></div>');
 					layer2 = $('<div class="contentLayer" style="display: none; position: fixed; z-index: '+ baseZ +'; margin: 0; padding: 0; width: 100%;height: 100%; top:0; left: 0;"></div>');
 				} else {
-					layer1 = $('<div class="overLayer" style="display: none; position: absolute; z-index:'+ baseZ +'; margin: 0; padding: 0; width: 100%;height: 100%; top:0; left: 0;opacity: 0;filter: alpha(opacity=0); background-color: #000"></div>');
+					layer1 = $('<div class="overLayer" style="display: none; position: absolute; z-index:'+ baseZ +'; margin: 0; padding: 0; width: 100%;height: 100%; top:0; left: 0;opacity: 0.5;filter: alpha(opacity=50); background-color: #000"></div>');
 					layer2 = $('<div class="contentLayer" style="display: none; position: absolute; z-index: '+ baseZ +'; margin: 0; padding: 0; width: 100%;height: 100%; top:0; left: 0;"></div>');
+					$(self.opts.layerWrapper).css('position','relative');
 				}
-				$(self.opts.layerWrapper).css('position','relative');
+				
 				self.opts.layers = [layer1, layer2];
 				
 				if(self.opts.top) {overLayer = layer1;}
@@ -120,7 +121,7 @@
 
 				openedLayers[self.opts.name] = {opts: self.opts};  //记录所有的配置
 				self.initEvents();
-				if(!self.opts.draggable || self.opts.layerWrapper != 'body') { return;}	
+			//	if(!self.opts.draggable || self.opts.layerWrapper != 'body') { return;}	
 				self.initDraggle(self.opts);
 			},
 
@@ -129,7 +130,7 @@
 					opts = self.opts;
 					spaceName = '.' + opts.name;
 
-				$(document).on('click' + spaceName, '#' + opts.name + ' ' + opts.closeBtn, function() {
+				$('#' + opts.name + ' ' + opts.closeBtn).on('click' + spaceName, function() {
 					self.close(opts);
 				});
 				$(document).on('click' + spaceName, '#' + opts.name + ' ' + opts.confirmBtn, function() {
@@ -197,8 +198,8 @@
 				$blockDom.css({
 					width: opts.msgBox.outerWidth(),
 					height: opts.msgBox.outerHeight(),
-					top: opts.msgBox.offset().top,
-					left: opts.msgBox.offset().left
+					top: opts.msgBox.position().top,
+					left: opts.msgBox.position().left
 				}).show();
 				opts.msgBox.hide();
 			},
@@ -208,8 +209,8 @@
 
 				if(!opts.draggable) {return;}
 				opts.msgBox.css({
-					top: $blockDom.offset().top,
-					left: $blockDom.offset().left
+					top: $blockDom.position().top,
+					left: $blockDom.position().left
 				}).show();
 				$blockDom.hide();
 				opts.draggable = false;
@@ -218,7 +219,7 @@
 			moveDom: function(opts, e) {
 				var self = this,
 					$domWrapper = opts.$blockDom,
-					domPos = $domWrapper.offset(),calPos = {},
+					domPos = $domWrapper.position(),calPos = {},
 					maxLeft = $(global).outerWidth() - $domWrapper.outerWidth(),
 					maxTop = $(global).outerHeight() - $domWrapper.outerHeight();
 
@@ -226,9 +227,14 @@
 
 				calPos = {left: domPos.left + e.clientX - self.move.x,
 							top: domPos.top + e.clientY - self.move.y};
-				calPos.left  = calPos.left < 0 ? 0 : calPos.left;
+
+				if(opts.layerWrapper === 'body') {
+					calPos.left  = calPos.left < 0 ? 0 : calPos.left;
+					calPos.top  = calPos.top < 0 ? 0 : calPos.top;
+				}
+				
 				calPos.left  = calPos.left > maxLeft ? maxLeft : calPos.left;
-				calPos.top  = calPos.top < 0 ? 0 : calPos.top;
+				
 				calPos.top  = calPos.top > maxTop ? maxTop : calPos.top;
 
 				$domWrapper.css({
@@ -443,14 +449,14 @@
 			window.init(opts);
 		};
 		$.unWindow = function(options) {
-			window.close(options);
+			window.close(options || {});
 		};
 		$.fn.window.methods = {
 			unWindow: function(options) {
-				return window.close(options);
+				return window.close(options || {});
 			},
 			setLayerPosition: function(options) {
-				return window.setLayerPosition(options);
+				return window.setLayerPosition(options || {});
 			}
 		};
 		$.fn.window.defaults = {
