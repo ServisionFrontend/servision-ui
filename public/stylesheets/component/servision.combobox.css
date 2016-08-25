@@ -1,27 +1,26 @@
 .s-combobox-container {
   position: absolute;
   border: 1px solid #95B8E7;
-  width: 200px;
   overflow: hidden;
   display: block;
   font-family: 'Microsoft YaHei,Verdana,Arial,Helvetica,AppleGothic,sans-serif'; }
   .s-combobox-container .s-combobox-inner {
+    width: 200px;
     list-style: none;
     padding: 0;
     margin: 0;
-    overflow: auto;
-    height: 200px; }
+    overflow: auto; }
     .s-combobox-container .s-combobox-inner .s-combobox-item, .s-combobox-container .s-combobox-inner .s-combobox-group, .s-combobox-container .s-combobox-inner .s-combobox-gitem {
       padding: 6px;
       font-size: 12px; }
-    .s-combobox-container .s-combobox-inner .s-combobox-item:hover {
+    .s-combobox-container .s-combobox-inner .s-combobox-item.s-combobox-item-hover {
       background: #d0cfcf; }
+    .s-combobox-container .s-combobox-inner .s-combobox-selected {
+      background: #ffe48d; }
     .s-combobox-container .s-combobox-inner .s-combobox-group {
       font-weight: bold; }
     .s-combobox-container .s-combobox-inner .s-combobox-gitem {
       padding-left: 12px; }
-    .s-combobox-container .s-combobox-inner .s-combobox-selected {
-      background: #ffe48d; }
 
 .s-combobox-p {
   z-index: 1000; }
@@ -55,6 +54,8 @@
     vertical-align: top;
     cursor: pointer;
     opacity: .6; }
+    .s-textbox .s-combobox-arrow:hover {
+      opacity: 1; }
   .s-textbox .s-textbox-text {
     font-size: 12px;
     border: none;

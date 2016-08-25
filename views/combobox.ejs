@@ -4,34 +4,196 @@
 	<meta charset="UTF-8">
 	<title>Combobox-Demo</title>
 	<link rel="stylesheet" href="./stylesheets/component/servision.combobox.css">
-	<script src="./scripts/libs/public/jquery-1.11.3.min.js"></script>
+	<!-- <script src="./scripts/libs/public/jquery-1.11.3.min.js"></script> -->
+	<script src="./scripts/libs/public/jquery-1.9.0.js"></script>
 	<style>
 	.msg{position: absolute;top:100px;left:300px;}
-	#msg{padding:4px;}
+	input{width:200px;}
 	</style>
 	<script>
+	var data = {
+	"Data": [{
+		"Sort": 1,
+		"IcoFileName": "CN050V.gif",
+		"BrandCode": "Wuling",
+		"CodeDesc": "CN050V - 五菱之光V(CN050V)",
+		"Code": "CN050V",
+		"Description": "五菱之光V(CN050V)"
+	}, {
+		"Sort": 2,
+		"IcoFileName": "CN113.gif",
+		"BrandCode": "Wuling",
+		"CodeDesc": "CN113 - 五菱宏光S1",
+		"Code": "CN113",
+		"Description": "五菱宏光S1"
+	}, {
+		"Sort": 3,
+		"IcoFileName": "N120.gif",
+		"BrandCode": "Wuling",
+		"CodeDesc": "N120 - 五菱之光S",
+		"Code": "N120",
+		"Description": "五菱之光S"
+	}, {
+		"Sort": 4,
+		"IcoFileName": "CN100V.gif",
+		"BrandCode": "Wuling",
+		"CodeDesc": "CN100V - 五菱荣光V(原五菱宏光V)",
+		"Code": "CN100V",
+		"Description": "五菱荣光V(原五菱宏光V)"
+	}, {
+		"Sort": 5,
+		"IcoFileName": "CN101.gif",
+		"BrandCode": "Wuling",
+		"CodeDesc": "CN101 - 五菱宏光2014款",
+		"Code": "CN101",
+		"Description": "五菱宏光2014款"
+	}, {
+		"Sort": 6,
+		"IcoFileName": "CN100.gif",
+		"BrandCode": "Wuling-0253",
+		"CodeDesc": "CN100 - 五菱宏光",
+		"Code": "CN100",
+		"Description": "五菱宏光"
+	}, {
+		"Sort": 7,
+		"IcoFileName": "CN112.gif",
+		"BrandCode": "Wuling-0253",
+		"CodeDesc": "CN112 - 五菱宏光S",
+		"Code": "CN112",
+		"Description": "五菱宏光S"
+	}]};
 		$(function(){
-			// alert($("#msg").offset().top);
-			// $.getJSON("data/combobox.json",function(data){
-			// 	debugger;
-			// });
-			// $(document).on("keydown",function(e){alert(e.keyCode)})
+
 			$("#msg").combobox({
 				width:500,
 				heght:300,
-				url:'data/combobox.json',
+				//data:data,
+				url:'/getComboList/brand',
+				mode:'remote',
 				method:'GET',
 				textField:'Description',
 				valueField:'Code',
-				queryParams:{DealerGroup:'sgmw',lang:'zh_CN',BrandCode:'Wuling'},
-				loadFilter:function(data){
-					return data.Data.data;
+				groupField:'BrandCode',
+				queryMatch:'Description',
+				separator:',',
+				dependenciesIds:[],
+				clearIds:["#msg2","#msg3"],
+				multiple:true,
+				queryParams:{},
+				dependenciesParams: function(vs) {
+					return {
+						parentId: vs
+					};
 				},
-				onBeforeLoad:function(){},
+				// groupFormatter:function(g){},
+				//formatter:function(row){return row.Code+'==='+row.Sort},
+				// loader: function(params, success, error){},
+				loadFilter:function(data){
+					return data.Data;
+				},
+				onBeforeLoad:function(param){},
 				onLoadSuccess:function(data){
 				},
-				onLoadError:function(){}
+				onLoadError:function(){},
+				onSelect: function(record) {
+					// //debugger;
+					// console.log(record)
+					//console.info($("#msg").combobox('getValues'));
+				},
+				onUnselect: function(record) {
+					//debugger;
+				},
+				onOpenPanel: function() {},
+				onHidePanel:function(){
+					console.log($(this).combobox("getValues"));
+				}
 			});
+
+			$("#msg2").combobox({
+				//data:data,
+				url:'/getComboList/series',
+				mode:'remote',
+				method:'GET',
+				textField:'Description',
+				valueField:'Code',
+				groupField:'BrandCode',
+				queryMatch:'Description',
+				separator:',',
+				dependenciesIds:["#msg"],
+				clearIds:["#msg3"],
+				multiple:true,
+				queryParams:{},
+				dependenciesParams: function(vs) {
+					return {
+						parentId: vs
+					};
+				},
+				// groupFormatter:function(g){},
+				//formatter:function(row){return row.Code+'==='+row.Sort},
+				// loader: function(params, success, error){},
+				loadFilter:function(data){
+					return data.Data;
+				},
+				onBeforeLoad:function(param){},
+				onLoadSuccess:function(data){
+				},
+				onLoadError:function(){},
+				onSelect: function(record) {
+					// //debugger;
+					// console.log(record)
+					//console.info($("#msg").combobox('getValues'));
+				},
+				onUnselect: function(record) {
+					//debugger;
+				},
+				onOpenPanel: function() {},
+				onHidePanel:function(){
+					console.log($(this).combobox("getValues"));
+				}
+			});
+
+			// $("#msg3").combobox({
+			// 	//data:data,
+			// 	url:'/getComboList',
+			// 	mode:'remote',
+			// 	method:'GET',
+			// 	textField:'Description',
+			// 	valueField:'Code',
+			// 	groupField:'BrandCode',
+			// 	queryMatch:'Description',
+			// 	separator:',',
+			// 	dependenciesIds:["#msg2"],
+			// 	clearIds:[],
+			// 	multiple:true,
+			// 	queryParams:{},
+			// 	dependenciesParams: function(vs) {
+			// 		return {
+			// 			parentId: vs
+			// 		};
+			// 	},
+			// 	// groupFormatter:function(g){},
+			// 	//formatter:function(row){return row.Code+'==='+row.Sort},
+			// 	// loader: function(params, success, error){},
+			// 	loadFilter:function(data){
+			// 		return data.Data;
+			// 	},
+			// 	onBeforeLoad:function(param){},
+			// 	onLoadSuccess:function(data){
+			// 	},
+			// 	onLoadError:function(){},
+			// 	onSelect: function(record) {
+			// 		// //debugger;
+			// 		// console.log(record)
+			// 		//console.info($("#msg").combobox('getValues'));
+			// 	},
+			// 	onUnselect: function(record) {
+			// 		//debugger;
+			// 	},
+			// 	onOpenPanel: function() {},
+			// 	onHidePanel:function(){
+			// 		console.log($(this).combobox("getValues"));
+			// 	}
+			// });
 
 			// var count=10;
 			// (function(){
@@ -57,7 +219,9 @@
 			<input type="hidden" class='s-textbox-value'>
 	</span> -->
 	<div class="msg">
-		<input type="text" data-id="1" id="msg">
+		<input type="text" id="msg">
+		<input type="text" id="msg2">
+		<input type="text" id="msg3">
 	</div>
 	<!-- 	<div id="autocomplete_source_wrap" class="s-combobox-container" data-field='autocomplete_panel'>
 	<div class="s-combobox-inner">
