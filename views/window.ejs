@@ -7,73 +7,610 @@
 	<script type="text/javascript" src="/scripts/libs/public/jquery-1.11.3.min.js"></script>
 	<script type="text/javascript" src="/scripts/component/jquery.servision.window.js"></script>
 	<style type="text/css">
+		html,body {
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+		body{
+			/* background: linear-gradient(to bottom, #83cb7c, #f0fbef); */
+			font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+			font-size: 14px;
+			background-color: #3c4252;
+			color: #fff;
+		}
+		#header {
+			height: 100px;
+			line-height: 100px;
+			border-bottom: solid 1px #488a88;
+			border-radius: 10px;
+			text-align: center;
+			font-size: 24px;
+			margin-bottom: 30px;
+		}
+		h2,h3 {
+			margin: 0;
+		}
+		.wrapper {
+			width: 1200px;
+			margin: 0 auto;
+			padding: 20px 0;
+		}
 		.btnWrapper {
 			width: 200px ;
 			height: 200px;
-			background-color: #ed3;
-			position: absolute;
+			position: fixed;
 			z-index: 2000;
+			top: 200px;
+			left: 0;
 		}
+		.btnWrapper .btn {
+			background: #1a5257;
+		}
+		.layer {
+			width: 500px;
+			height: auto;
+			border: solid 1px #4CCD4C;
+		}
+		.layer .title {
+			height: 30px;
+			line-height: 30px;
+			padding: 0 10px;
+			background-color: #4CCD4C;
+		}
+		.layer .title span[data-action="close"] {
+			display: inline-block;
+			float: right;
+			font-size: 24px;
+		}
+		.layer .content {
+			background-color: #fff;
+			min-height: 100px;
+			position: relative;
+		}
+		.layer .content table {
+			width: 100%;
+			text-align: center;
+		}
+		ul {
+			margin: 0;
+			padding: 0;
+			list-style-type: none;
+		}
+		.clearfix:before,.clearfix:after {
+			content: ".";
+			display: block;
+			height: 0;
+			overflow: hidden;
+		}
+		.clearfix:after {
+			clear: both;
+		}
+		.clearfix {
+			zoom:1;
+		}
+		ul li {
+			width: 200px;
+			height: 200px;
+			margin-right: 10px;
+		 	float: left;
+		}
+		ul li img{
+			width: 100%;
+			height: 100%;
+		}
+		.item {
+			min-height: 300px;
+			background: #4b5264;
+			margin-bottom: 50px;
+		}
+		.item .title {
+			height: 40px;
+			line-height: 40px;
+			padding: 0 10px; 
+			background: #555d71;
+			color: #00D2CA;
+			font-size: 16px;
+		}
+		.item .content {
+			padding: 10px 10px 20px;
+		}
+		.code-wrapper {
+			width: 1100px;
+			max-height: 300px;
+			overflow: auto;
+			margin: 0 auto;
+			padding: 5px 0;
+			border-radius: 8px;
+			background: #2d2828;
+		}
+		p {
+			margin-top: 1em;
+			line-height: 100%;
+			margin-left: 0.8em;
+		}
+		.btn-wrapper {
+			padding-left: 40px;
+			margin-bottom: 10px;
+		}
+		.btn {
+			min-width: 80px;
+			height: 30px;
+			line-height: 30px;
+			display: inline-block;
+			background: #e61d61;
+			text-align: center;
+			border-radius: 4px;
+			box-shadow: 1px 1px 3px #555;
+			color: #fff;
+			margin: 5px 5px 5px 0;
+			padding: 0 10px;
+			cursor: pointer;
+			*zoom: 1;
+			*display: inline;
+		}
+		.btn:hover {
+			background: #488a88;
+		}
+		table {
+			color: #000;
+		}
+
 	</style>
 </head>
 
 <body>
-	<div id="layer">这是一个弹层</div>
-	<div class="btnWrapper">
-		<button id="btn1">打开弹层1</button>
-		<button id="btn2">打开弹层2</button>
-		<button id="btn3">打开弹层3</button>
-		<button id="btn4">关闭弹层1</button>
-		<button id="btn5">关闭弹层2</button>
-		<button id="btn6">关闭弹层3</button>
+	<div class="wrapper">
+		<div id="header">
+			<h2>window Demo Display</h2> 
+		</div>
+		<div class="item">
+			<div class="title"><h3>打开一个全局的window</h3></div>
+			<div class="content">
+				<h4>方式一</h4>
+				<p>只需传入需要展示的信息。以这种方式调用时，层打开之前会关闭之前所有打开的层。</p>
+				<div class="btn-wrapper">
+					<div class="btn btn1">查看效果</div>
+				</div>
+				<div class="code-wrapper">
+					<blockquote>
+						<p>$.window({</p>
+						<p>  message: '按ESC退出'</p>
+						<p>})</p>
+					</blockquote>
+				</div>
+				<h4>方式二</h4>
+				<p>需要传入name属性，name属性唯一。以这种方式创建的层不会对已创建的层有任何的影响。可以创建多个。</p>
+				<div class="btn-wrapper">
+					<div class="btn btn2">查看效果</div>
+				</div>
+				<div class="code-wrapper">
+					<blockquote>
+						<p>$.window({</p>
+						<p>name: 'test2',</p>
+						<p>message: '&lt;div&gt; class="loading"&lt;/div&gt;',</p>
+						<p>onBeforeOpen: function() {</p>
+						<p>console.log('弹层test2即将打开');</p>
+						<p>}</p>
+						<p>});</p>	
+					</blockquote>
+				</div>
+				<h4>方式三</h4>
+				<p>以这种方式创建全局window，必须传入name。否则创建的是层上弹出的层，会取调用对象的内容当做弹出的信息。</p>
+				<div class="btn-wrapper">
+					<div class="btn btn3">查看效果</div>
+				</div>
+				<div class="code-wrapper">
+					<blockquote>
+						<p>$('#header').window({</p>
+						<p> name: 'test3',</p>
+						<p>onBeforeOpen: function() {</p>
+						<p>console.log('弹层2即将打开');</p>
+						<p>}</p>
+						<p>});</p>	
+					</blockquote>
+				</div>
+			</div>
+		</div>
+		<div class="item">
+			<div class="title"><h3>打开局部的window,多个层</h3></div>
+			<div class="content">
+				<h4>方式一</h4>
+				<p>此方式调用的时候必须给出name。</p>
+				<div class="btn-wrapper">
+					<div class="btn btn4">查看效果</div>
+				</div>
+				<div class="code-wrapper">
+					<blockquote>
+						<p>$.window({</p>
+						<p>message: $('#test-layer').html(),</p>
+						<p>onAfterOpen: function() {</p>
+						<p>$.window({</p>
+						<p>name: 'test5',</p>
+						<p>message: '&lt;div&gt; class="loading"&lt;/div&gt;',</p>
+						<p>layerWrapper: '#loading-layer'</p>
+						<p>});</p>
+						<p>}</p>
+						<p>});</p>
+					</blockquote>
+				</div>
+				<h4>方式二</h4>
+				<p>不需要传入name。但必须以jquery对象方式调用。当前jquery对象代表放置新弹出的层的容器。</p>
+				<div class="btn-wrapper">
+					<div class="btn btn5">查看效果1</div>
+					<div class="btn btn8">查看效果2</div>
+				</div>
+				<div class="code-wrapper">
+					<blockquote>
+						<p>$.window({</p>
+						<p>message: $('#test-layer').html(),</p>
+						<p>onAfterOpen: function() {</p>
+						<p>$('#loading-layer').window({</p>
+						<p>message: '&lt;div&gt; class="loading"&lt;/div&gt;',</p>
+						<p>});</p>
+						<p>}</p>
+						<p>});</p>
+					</blockquote>
+				</div>
+			</div>
+		</div>
+		<div class="item">
+			<div class="title"><h3>配置title可拖动</h3></div>
+			<div class="content">
+				<p>将需要配置可多拖动的元素加上 data-action="drag" 属性</p>
+				<div class="btn-wrapper">
+					<div class="btn btn6">查看效果</div>
+				</div>
+				<div class="code-wrapper">
+					<blockquote>
+						<p>$.window({</p>
+						<p>name: 'test6',</p>
+						<p>message: $('#part-layer').html()</p>
+						<p>});</p>
+					</blockquote>
+				</div>
+			</div>
+		</div>
+		<div class="item">
+			<div class="title"><h3>打开默认样式的对话框</h3></div>
+			<div class="content">
+				<p>需要配置dialog属性为true,并且不需要配置message</p>
+				<div class="btn-wrapper">
+					<div class="btn btn7">查看效果</div>
+				</div>
+				<div class="code-wrapper">
+					<blockquote>
+						<p>$.window({</p>
+						<p>name: 'test7',</p>
+						<p>dialog: true,</p>
+						<p>content: 'tishi ',</p>
+						<p>});</p>
+					</blockquote>
+				</div>
+			</div>
+		</div>
+		<div class="item">
+			<div class="title"><h3>纯展示性的层</h3></div>
+			<div class="content">
+				<p>请点击一下图片</p>
+				<ul class="list clearfix">
+					<li data-img="stylesheets/images/window/1.jpg">
+						<img src="stylesheets/images/window/1.jpg">
+					</li>
+					<li data-img="stylesheets/images/window/2.jpg">
+						<img src="stylesheets/images/window/2.jpg">
+					</li>
+					<li data-img="stylesheets/images/window/3.jpg">
+						<img src="stylesheets/images/window/3.jpg">
+					</li>
+					<li data-img="stylesheets/images/window/4.jpg">
+						<img src="stylesheets/images/window/4.jpg">
+					</li>
+					<li data-img="stylesheets/images/window/5.jpg">
+						<img src="stylesheets/images/window/5.jpg">
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="item">
+			<div class="title"><h3>关闭弹层</h3></div>
+			<div class="content">
+				<p>不加参数则代表关闭没有name属性的层</p>
+				<div class="code-wrapper">
+					<blockquote>
+						<p>$.unWindow();</p>
+						<p></p>
+					</blockquote>
+					<blockquote>
+						<p>//或者</p>
+					</blockquote>
+					<br/>
+					<blockquote>
+						<p>$.unWindow({</p>
+						<p>name: 'test1',</p>
+						<p>});</p>
+					</blockquote>
+				</div>
+			</div>
+		</div>
+		<div class="item">
+			<div class="title"><h3>配置展示</h3></div>
+			<div class="content">
+				<div class="code-wrapper">
+					<blockquote>
+					    <p>$.fn.window.defaults = {</p>
+						<p>//弹出层的名字，若不配置则默认只能打开一个全局的弹出层。</p>
+						<p>//若配置name,则在以jquery对象方式调用的时候将调用对象作为message。若不配置，则在以jquery对象方式调用的时候将调用对象作为弹出层的包裹对象</p>
+						<p>name: '', </p>
+						<p>//需要放入弹层的信息</p>
+						<p>message: '',</p>
+						<p>//弹出层的父层。默认为前一个弹出的层。父层关闭子层将会一起关闭</p>
+						<p>parent: '',</p>
+						<p>//弹出层的z-index.若是有父层，则忽略</p>
+						<p>baseZ: 1000,</p>
+
+						<p>//弹出层打开关闭的速度</p>
+						<p>speed: 300,</p>
+						<p>//弹出层延迟出现的时间</p>
+						<p>delay: 0,</p>
+
+						<p>//为true代表可拖动</p>
+						<p>draggable: true,</p>
+						<p>//配置可触发拖动事件的元素</p>
+						<p>dragController: '[data-action="drag"]', </p>
+						<p>//覆盖层的样式 </p>
+						<p>overlayCss: {},</p>
+						<p>//显示层的样式</p>
+						<p>css: {},</p>
+						<p>//配置弹出层的包裹对象</p>
+						<p>layerWrapper: 'body',</p>
+						<p>//是否需要全局的关闭按钮</p>
+						<p>needCloseBtn: false,</p>
+						<p>//是否需要全局的左按钮</p>
+						<p>needLeftBtn: false,</p>
+						<p>//是否需要全局的右按钮</p>
+						<p>needRightBtn: false,</p>
+						<p>//关闭按钮</p>
+						<p>closeBtn: '[data-action="close"]',</p>
+						<p>//左按钮</p>
+						<p>leftBtn: '[data-action="left"]',</p>
+						<p>//右按钮</p>
+						<p>rightBtn: '[data-action="right"]',</p>
+						<p>//层打开之前的回调</p>
+						<p>onBeforeOpen: null,</p>
+						<p>//层打开之后的回调</p>
+						<p>onAfterOpen: null,</p>
+						<p>//层关闭之前的回调</p>
+						<p>onBeforeClose: null,</p>
+						<p>//层关闭之后的回调</p>
+						<p>onAfterClose: null,</p>
+						<p>//添加左按钮事件</p>
+
+						<p>leftBtnEvent: null,</p>
+						<p>//添加右按钮事件</p>
+						<p>rightBtnEvent: null,</p>
+						<p>//确认按钮</p>
+						<p>confirmBtn: '[data-action="confirm"]',</p>
+						<p>cancelBtn: '[data-action="cancel"]',</p>
+						<p>//取消按钮</p>
+						<p>//取消之前的回调</p>
+						<p>onBeforeCancel: null,</p>
+						<p>//取消之后的回调</p>
+						<p>onAfterCancel: null,</p>
+
+						<p>//确认之前的回调</p>
+						<p>onBeforeConfirm: null,</p>
+						<p>//确认之后的回调</p>
+						<p>onAfterConfirm: null,</p>
+
+						<p>//为true代表使用默认样式的提示框。不需要配置messgae</p>
+						<p>dialog: false,</p>
+						<p>//提示框的类型info.warn,ok,error</p>
+						<p>type: 'info',</p>
+						<p>//提示框的标题</p>
+						<p>title: '提示',</p>
+						<p>//放入提示框的提示内容</p>
+						<p>content: '提示',</p>
+
+						<p>//提示框是否需要确认按钮</p>
+						<p>confirm: true,</p>
+						<p>//提示框是否需要取消按钮</p>
+						<p>cancel: true</p>
+						<p>};</p>
+					</blockquote>
+				</div>
+			</div>
+		</div>
+		<div class="btnWrapper">
+			<div class="btn btn1">打开无名弹层1</div>
+			<div class="btn btn2">打开有名弹层2</div>
+			<div class="btn btn3">打开有名弹层3</div>
+			<div class="btn btn4">打开无名弹层4</div>
+			<div class="btn btn5">打开无名弹层5</div>
+			<div class="btn btn6">打开有名弹层6</div>
+			<div class="btn btn7">打开有名弹层7</div>
+			<div class="btn btn8">打开弹层8</div>
+			<div class="btn btn9">关闭无名弹层1</div>
+			<div class="btn btn10">关闭有名弹层2</div>
+		</div>
+	</div>
+	
+	<div>
+		
 	</div>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#btn1').click(function() {
+			$('.btn1').click(function() {
 				$.window({
-					name: 'test1',
-					message: '<div style="width:300px;height: 300px; background-color: #fff;"></div>',
+					message: '按ESC退出'
+				})
+			});
+			$('.btn2').click(function() {
+				$.window({
+				   name: 'test2',
+					message: '<div class="loading"></div>',
 					onBeforeOpen: function() {
-						console.log('弹层1即将打开');
+						console.log('弹层test2即将打开');
 					}
 				});
-			});
-			$('#btn2').click(function() {
-				$('#layer').window({
-					name: 'test2',
+			})
+
+			$('.btn3').click(function() {
+				$('#header').window({
+					name: 'test3',
 					onBeforeOpen: function() {
 						console.log('弹层2即将打开');
 					}
 				});
 			});
-			$('#btn3').click(function() {
+			$('.btn4').click(function() {
 				$.window({
-					name: 'test3',
+					message: $('#test-layer').html(),
+					onAfterOpen: function() {
+						$.window({
+							name: 'test5',
+							message: '<div class="loading"></div>',
+							layerWrapper: '#loading-layer',
+							overlayCss: {
+						    	opacity: 0
+						    }
+					 	});
+					}
+				});
+			});
+			$('.btn5').click(function() {
+				$.window({
+					message: $('#test-layer').html(),
+					onAfterOpen: function() {
+						$('#loading-layer').window({
+						    message: '<div class="loading"></div>',
+						    overlayCss: {
+						    	opacity: 0
+						    }
+					    })
+					}
+				});
+			});
+			$('.btn6').click(function() {
+				$.window({
+					name: 'test6',
+					message: $('#part-layer').html()
+				});
+			});
+			$('.btn7').click(function() {
+				$.window({
+					name: 'test7',
 					dialog: true,
-					content: 'tishi ',
+					content: '请输入需要交流的内容 ',
 					onBeforeOpen: function() {
 						console.log('弹层3即将打开');
 					}
 				});
 			});
-			$('#btn4').click(function() {
-				$.unWindow({
-					name: 'test1'
-				})
+			$('.btn8').click(function() {
+				$.window({
+					message: $('#first-layer').html()
+				});
 			});
-			$('#btn5').click(function() {
+			$(document).on('click', '.btn11', function() {
+				$('#first-layer-wrapper').window({
+					message: $('#second-layer').html()
+				});
+			});
+			$(document).on('click', '.btn12', function() {
+				$('#second-layer-wrapper').window({
+					message: $('#third-layer').html()
+				});
+			});
+			$('.btn9').click(function() {
+				$.unWindow();
+			});
+			$('.btn10').click(function() {
 				$.unWindow({
 					name: 'test2'
 				})
 			});
-			$('#btn6').click(function() {
-				$.unWindow({
-					name: 'test3'
-				})
+			$('.list li').click(function() {
+				var $this = $(this);
+				var imgUrl =$this.attr('data-img');
+				var img = $('<img>').attr('src', imgUrl);
+				img.load(function() {
+					$.window({
+						message: img,
+						needCloseBtn: true,
+						needLeftBtn: true,
+						needRightBtn: true,
+						leftBtnEvent: function(opts) {
+							var $prev = $this.prev();
+							if($prev.length > 0) {
+								$this = $prev.eq(0);
+								img.attr('src', $this.attr('data-img'));
+							}
+						},
+						rightBtnEvent: function(opts) {
+							var $next = $this.next();
+							if($next.length > 0) {
+								$this = $next.eq(0);
+								img.attr('src', $this.attr('data-img'));
+							}
+						}
+					});
+				});
 			});
-			
-
 		})
+	</script>
+	<script id="part-layer" type="text/tempalte">
+		<div class="layer">
+			<div class="title" data-action="drag">零件详情--请拖动我</div>
+			<div class="content">
+				<table>
+					<tr><th>序号</th><th>零件编码</th><th>零件数量</th></tr>
+					<tr><td>1</td><td>677fffd8s78</td><td>2232</td></tr>
+					<tr><td>2</td><td>677fffd8s78</td><td>2232</td></tr>
+					<tr><td>3</td><td>677fffd8s78</td><td>2232</td></tr>
+					<tr><td>4</td><td>677fffd8s78</td><td>2232</td></tr>
+				</table>
+			</div>
+		</div>
+	</script>
+	<script id="test-layer" type="text/tempalte">
+		<div class="layer">
+			<div class="title">零件详情</div>
+					<div id="loading-layer" class="content">
+				
+					</div>
+			</div>
+	</script>
+	<script id="first-layer" type="text/tempalte">
+		<div id="first-layer-wrapper" class="layer">
+			<div class="title">hihihi,我是第一层
+				<span style="color:#000" data-action="close">X</span>
+			</div>
+			<div class="content" style="height: 200px;">
+				<a class="btn11" href="javascript:;">点我打开第二个层</a>
+			</div>
+		</div>
+	</script>
+	<script id="second-layer" type="text/tempalte">
+		<div id="second-layer-wrapper">
+			<div class="title">hihihi,我是第二层
+				<span style="color:#000" data-action="close">X</span>
+			</div>
+			<div style="width:1000px; height:150px;background-color: #fff;">
+				<a class="btn12" href="javascript:;">点我打开第三个层</a>
+			</div>
+		</div>
+		
+	</script>
+	<script id="third-layer" type="text/tempalte">
+		<div id="second-layer-wrapper">
+			<div class="title" data-action="drag">hihihi,我是第三层
+				<span style="color:#000" data-action="close">X</span>
+			</div>
+			<div style="width:1200px; height:50px;background-color: #eee;">
+			</div>
+		</div>
+		
 	</script>
 </body>
 </html>

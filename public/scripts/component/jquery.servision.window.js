@@ -3,6 +3,8 @@
 		var openedLayers = {};
 		var currentLayerId = '';
 		var baseZ = 1000;
+		var canOpen = true;
+		var overLayer = null;
 		var window = {
 			init: function(options) {
 				var self = this;
@@ -12,24 +14,26 @@
 				self.bindData();
 			},
 
-			initAttrs: function() { //记录要关闭的弹层关联的层
+			initAttrs: function() { 
 				var self = this;
-				self.layers = [];
+				self.layers = []; //记录要关闭的弹层关联的层
 				self.nameArr = [];
+				self.move = {x: 0,y: 0}
 			},
 
 			bindData: function() {
 				var self = this,
 					name = self.opts.name = self.opts.name || 'default';
-
+				
 				if(openedLayers[name] && name!=='default') {
 					return console.log('该层已创建');
 				}
-				//self.opts.baseZ = ++baseZ;
+
+				if(name === 'default') { self.removeAll();} //若没有给name。则默认为default。并且关闭之前所有打开的弹层
+
 				if(isEmptyObject(openedLayers)) { //判断是否为顶层类。以此作为z-index的基准
 					baseZ = self.opts.baseZ;
 					self.opts.top = true;
-					self.initGeneralEvents();
 				} else {
 					baseZ++;
 					self.opts.top = false;
@@ -37,53 +41,65 @@
 				if(!self.opts.parent) {  //确定父亲
 					self.opts.parent = currentLayerId;
 				}
+				self.opts.baseZ = baseZ;
 				
-				if(name === 'default') { self.removeAll();} //若没有给name。则默认为default。并且关闭之前所有打开的弹层
-	
 				currentLayerId = name;
 
 				self.diffLayerType();
-				self.open();
+				if(!canOpen) {
+					setTimeout(function() {
+						self.open();
+					},self.opts.speed);
+				} else {
+					self.open();
+				}		
 			},
 
-			diffLayerType: function() {
+			diffLayerType: function() {  //弹出层类型为dialog时做出额外的初始化
 				var self = this;
 
 				if(!self.opts.dialog) { return; }
-				self.dialogTempl = $('<div class="dialog"><div class="dialog-title"><a href="javascript:;" class="close-btn" data-action="cancel"></a><span class="text">'+ self.opts.title +'</span></div><div class="dialog-content"><div class="content-text"><span class="icon"></span><span class="text">'+ self.opts.content +'</span></div></div><div class="dialog-btn-wrapper"><a href="javascript:;" class="btn" data-action="confirm">确定</a><a href="javascript:;" class="btn" data-action="cancel">取消</a></div></div>');
+				self.dialogTempl = $('<div class="dialog"><div class="dialog-title" data-action="drag"><a href="javascript:;" class="close-btn" data-action="cancel"></a><span class="text">'+ self.opts.title +'</span></div><div class="dialog-content"><div class="content-text"><span class="icon"></span><span class="text">'+ self.opts.content +'</span></div></div><div class="dialog-btn-wrapper"><a href="javascript:;" class="btn" data-action="confirm">确定</a><a href="javascript:;" class="btn" data-action="cancel">取消</a></div></div>');
 				self.opts.$dialog = self.dialogTempl.eq(0);
 				self.opts.$confirmBtn = self.opts.$dialog.find(self.opts.confirmBtn);
 				self.opts.$cancelBtn = self.opts.$dialog.find(self.opts.cancelBtn);
 				if(!self.opts.confirm) {self.opts.$confirmBtn.remove();}
 				if(!self.opts.cancel) {self.opts.$cancelBtn.remove();}
+				if(self.opts.type !== 'info') {self.opts.$dialog.addClass(self.opts.type);}
 				self.opts.message = self.dialogTempl;
 			},
 
 			create: function() {
-				var self = this, layer1, layer2;
+				var self = this, layer1, layer2,
+					wrapDiv = $('<div class="contentWrapper" style="position:absolute"></div>');;
 
 				if(self.opts.layerWrapper === 'body') {
 					layer1 = $('<div class="overLayer" style="display: none; position: fixed; z-index:'+ baseZ +'; margin: 0; padding: 0; width: 100%;height: 100%; top:0; left: 0;opacity: 0.5;filter: alpha(opacity=50); background-color: #000"></div>');
 					layer2 = $('<div class="contentLayer" style="display: none; position: fixed; z-index: '+ baseZ +'; margin: 0; padding: 0; width: 100%;height: 100%; top:0; left: 0;"></div>');
 				} else {
-					layer1 = $('<div class="overLayer" style="display: none; position: absolute; z-index:'+ baseZ +'; margin: 0; padding: 0; width: 100%;height: 100%; top:0; left: 0;opacity: 0;filter: alpha(opacity=0); background-color: #000"></div>');
+					layer1 = $('<div class="overLayer" style="display: none; position: absolute; z-index:'+ baseZ +'; margin: 0; padding: 0; width: 100%;height: 100%; top:0; left: 0;opacity: 0.5;filter: alpha(opacity=50); background-color: #000"></div>');
 					layer2 = $('<div class="contentLayer" style="display: none; position: absolute; z-index: '+ baseZ +'; margin: 0; padding: 0; width: 100%;height: 100%; top:0; left: 0;"></div>');
+					$(self.opts.layerWrapper).css('position','relative');
 				}
-
+				
 				self.opts.layers = [layer1, layer2];
 				
-				if(!self.opts.top) {self.opts.layers.shift();layer1=null;}
+				if(self.opts.top) {overLayer = layer1;}
+				if(!self.opts.top && self.opts.layerWrapper === 'body') {
+					self.opts.layers.shift();
+					layer1=null;
+					overLayer.css({zIndex: baseZ});
+				}
 
 				$.each(self.opts.layers, function() {
 					this[0].id = self.opts.name;
 					$(self.opts.layerWrapper).append(this);
 				});
-				if(self.opts.message) {
-					var wrapDiv = $('<div class="contentWrapper" style="position:absolute"></div>');
-					$(layer2).empty().append(wrapDiv);
-					wrapDiv.html(self.opts.message);
-					self.opts.msgBox = wrapDiv;
-				}
+
+				layer2.attr("data-id", self.opts.name).empty().append(wrapDiv);
+				wrapDiv.html(self.opts.message);
+				self.opts.msgBox = wrapDiv;
+
 				if(layer1 && !isEmptyObject(self.opts.overlayCss)) {
 					layer1.css(self.opts.overlayCss);
 				}
@@ -91,20 +107,22 @@
 					self.opts.msgBox.css(self.opts.css);
 				}
 				if(self.opts.needCloseBtn) {
-					var closeBtnHtml = $('<a href="javascript:;" style="display: block; position:absolute;width:20px;height:20px;background-color:#fff; right: 20px; top: 20px; color: #fff; text-decoration: none;" data-action="close"><span class="icon-remove icon-4x"></span></a>');
+					var closeBtnHtml = $('<a class="icon-remove" href="javascript:;" style=" right: 20px; top: 20px;" data-action="close"></a>');
 					$(layer2).append(closeBtnHtml);
+				}
+				if(self.opts.needLeftBtn) {
+					var leftBtnHtml = $('<a class="icon-left" href="javascript:;" style="left: 20px; top: 50%;" data-action="left"></span></a>');
+					$(layer2).append(leftBtnHtml);
+				}
+				if(self.opts.needRightBtn) {
+					var rightBtnHtml = $('<a class="icon-right" href="javascript:;" style="right: 20px; top: 50%;" data-action="right"></a>');
+					$(layer2).append(rightBtnHtml);
 				}
 
 				openedLayers[self.opts.name] = {opts: self.opts};  //记录所有的配置
 				self.initEvents();
-			},
-
-			initGeneralEvents: function() {
-				var self = this;
-				$(global).on('resize', debounce(function(e) {
-					    self.setLayerPosition();
-					}, 200)
-				);
+			//	if(!self.opts.draggable || self.opts.layerWrapper != 'body') { return;}	
+				self.initDraggle(self.opts);
 			},
 
 			initEvents: function() {
@@ -112,7 +130,7 @@
 					opts = self.opts;
 					spaceName = '.' + opts.name;
 
-				$(document).on('click' + spaceName, '#' + opts.name + ' ' + opts.closeBtn, function() {
+				$('#' + opts.name + ' ' + opts.closeBtn).on('click' + spaceName, function() {
 					self.close(opts);
 				});
 				$(document).on('click' + spaceName, '#' + opts.name + ' ' + opts.confirmBtn, function() {
@@ -121,6 +139,110 @@
 				$(document).on('click' + spaceName, '#' + opts.name + ' ' + opts.cancelBtn, function() {
 					self.onCancel(opts);
 				});
+				$(document).on('click' + spaceName, '#' + opts.name + ' ' + opts.leftBtn, function() {
+					if(typeof opts.leftBtnEvent === 'function') {
+						opts.leftBtnEvent.apply(self, [opts]);
+					}
+					return;
+				});
+				$(document).on('click' + spaceName, '#' + opts.name + ' ' + opts.rightBtn, function() {
+					if(typeof opts.rightBtnEvent === 'function') {
+						opts.rightBtnEvent.apply(self, [opts]);
+					}
+					return;
+				});
+			},
+
+			initDraggle: function(opts) {
+				var self = this,
+					spaceName = '.' + opts.name,
+					$draggableDom = $('#' + opts.name + ' ' + opts.dragController),
+					timer = 0,
+					time = 0;
+					opts.draggable = false;
+					opts.$blockDom = $('<div style="position:absolute;width:100%;height:100%;top:0;left:0;background:#eee;opacity:0.5;cursor:move;z-index:19000;display:none"></div>');
+
+				if($draggableDom.length <= 0) {return;}
+				$draggableDom.css({cursor: 'move'});
+				opts.$blockDom.insertAfter(opts.msgBox);
+				$(document).on('mousedown' + spaceName, '#' + opts.name + ' ' + opts.dragController, function(e) {
+					time = (new Date()).getTime();
+					timer = setTimeout(function() {
+						self.moveStart(opts, e);
+					}, 1000);
+					return false;
+				});
+				$(document).on('mousemove' + spaceName, function(e) {
+					if((new Date()).getTime() - time < 1000) {
+						time = 0;
+						clearTimeout(timer);
+						self.moveStart(opts, e);
+					}
+					self.moveDom(opts, e);
+					return false;
+				});
+				$(document).on('mouseup' + spaceName, function() {
+					clearTimeout(timer);
+					self.moveEnd(opts);
+					return false;
+				});
+			},
+
+			moveStart: function(opts, e) {
+				var self = this,
+					$blockDom = opts.$blockDom;
+					opts.draggable = true;
+					self.move.x = e.clientX;
+					self.move.y = e.clientY;
+
+				$blockDom.css({
+					width: opts.msgBox.outerWidth(),
+					height: opts.msgBox.outerHeight(),
+					top: opts.msgBox.position().top,
+					left: opts.msgBox.position().left
+				}).show();
+				opts.msgBox.hide();
+			},
+
+			moveEnd: function(opts) {
+				var $blockDom = opts.$blockDom;
+
+				if(!opts.draggable) {return;}
+				opts.msgBox.css({
+					top: $blockDom.position().top,
+					left: $blockDom.position().left
+				}).show();
+				$blockDom.hide();
+				opts.draggable = false;
+			},
+
+			moveDom: function(opts, e) {
+				var self = this,
+					$domWrapper = opts.$blockDom,
+					domPos = $domWrapper.position(),calPos = {},
+					maxLeft = $(global).outerWidth() - $domWrapper.outerWidth(),
+					maxTop = $(global).outerHeight() - $domWrapper.outerHeight();
+
+				if(!opts.draggable) {return;}
+
+				calPos = {left: domPos.left + e.clientX - self.move.x,
+							top: domPos.top + e.clientY - self.move.y};
+
+				if(opts.layerWrapper === 'body') {
+					calPos.left  = calPos.left < 0 ? 0 : calPos.left;
+					calPos.top  = calPos.top < 0 ? 0 : calPos.top;
+				}
+				
+				calPos.left  = calPos.left > maxLeft ? maxLeft : calPos.left;
+				
+				calPos.top  = calPos.top > maxTop ? maxTop : calPos.top;
+
+				$domWrapper.css({
+					left: calPos.left + 'px',
+					top: calPos.top + 'px'
+				});
+				self.move.x = e.clientX;
+				self.move.y = e.clientY;
 			},
 
 			open: function() {
@@ -148,8 +270,7 @@
 				$.each(layers, function(index) {
 					$(this).fadeIn(self.opts.speed);
 					if(index === layers.length-1) {
-						self.setLayerPosition();
-						//self.setBtnsPosition();
+						self.setLayerPosition(self.opts);
 					}
 				});
 				if(typeof self.opts.onAfterOpen === 'function') {
@@ -161,10 +282,20 @@
 				var self = this;
 
 				$.each(nameArr, function(index, name) {
-					currentLayerId = openedLayers[name].parent || '';
+					currentLayerId = (openedLayers[name] && openedLayers[name].opts.parent) || '';
+
 					delete openedLayers[name];
+					if(currentLayerId) {
+						overLayer.css({zIndex: openedLayers[self.getBodyparent(currentLayerId)].opts.baseZ});
+					} else {
+						overLayer = null;
+					}
+					
 					$(global).off('resize' + '.' +name);
 					$(document).off('click' + '.' + name);
+					$(document).off('mousedown' + '.' + name);
+					$(document).off('mousemove' + '.' + name);
+					$(document).off('mouseup' + '.' + name);
 				});
 			},
 			close: function(options) {
@@ -174,20 +305,22 @@
 
 					if(!openedLayers[name]) {return;}
 					self.getParentLayer(name);
-					layers = self.layers.concat(layers);
-					nameArr = nameArr.concat(self.nameArr);
+					layers = self.layers.concat(layers).reverse(); //获得正确的关闭顺序
+					nameArr = nameArr.concat(self.nameArr).reverse();
 
 				if(typeof options.onBeforeClose === 'function') {
 					options.onBeforeClose.apply(self, [options]);
 				}
-
+				
 				$.each(layers, function(index,item) {
+					canOpen = false;
 					var exsitLayers = item.opts.layers;
 					$.each(exsitLayers, function(index, item) {
 						item.fadeOut(options.speed, function() {
 							item.remove();
 							if(index === exsitLayers.length-1) {
-								self.timer = null;
+								canOpen = true;
+								clearTimeout(self.timer);
 							}
 						});
 					})
@@ -198,7 +331,6 @@
 				if(typeof options.onAfterClose === 'function') {
 					options.onAfterClose.apply(self, [options]);
 				}
-
 			},
 
 			getParentLayer: function(name) {
@@ -230,7 +362,6 @@
 						top: $(wrapDom).outerHeight()/2 - msgBox.outerHeight()/2
 					});
 					if(single) {break;}
-
 				}
 			},
 
@@ -263,31 +394,51 @@
 			},
 
 			removeAll: function(layerObj) {
-				var layerObj = layerObj || openedLayers;
+				var self = this,
+					layerObj = layerObj || openedLayers;
 
 				for(var i in layerObj) {
 					var exsitLayer = layerObj[i];
-					$.each(exsitLayer.layers, function(index, item) {
-						item.remove();
-					});
+					self.close(exsitLayer.opts);
 				}
 			},
 
-			removeByName: function(layerName) {
-				var exsitLayer = layerObj[layerName];
-				$.each(exsitLayer.layers, function(index, item) {
-					item.remove();
-				});
+			getBodyparent: function(currentLayerId) {
+				var self = this;
+				if(currentLayerId && openedLayers[currentLayerId].opts.layerWrapper != 'body') {
+					return self.getBodyparent(openedLayers[currentLayerId].opts.parent);
+				} else {
+					return currentLayerId;
+				}
 			}
 			
 		};
+
+		(function initGlobalEvents() {
+			$(document).on('keyup', function(e) {
+
+				if(e.which == 27 && currentLayerId) {
+					window.close({name: window.getBodyparent(currentLayerId)});
+				}
+			});
+			$(global).on('resize', debounce(function(e) {
+				    window.setLayerPosition();
+				}, 200)
+			);
+		})();
 
 		$.fn.window = function(options, param) {
 			if(typeof options == 'string') {
 				return $.fn.window.methods[options].apply(this, [param]);
 			}
 			if(Object.prototype.toString.apply(options,[]) === '[object Object]') {
-				options.message = $(this).eq(0).html();
+				if(options.name) {
+					options.message = $(this).eq(0).html();
+				} else {
+					options.parent = $(this).eq(0).closest('.contentLayer').attr("data-id");
+					options.layerWrapper = $(this).eq(0);
+					options.name = 'layer_' + new Date().getTime() + Math.round(Math.random() * 1000);
+				}
 			}
 			$.window(options, param);
 			
@@ -298,10 +449,15 @@
 			window.init(opts);
 		};
 		$.unWindow = function(options) {
-			window.close(options);
+			window.close(options || {});
 		};
 		$.fn.window.methods = {
-
+			unWindow: function(options) {
+				return window.close(options || {});
+			},
+			setLayerPosition: function(options) {
+				return window.setLayerPosition(options || {});
+			}
 		};
 		$.fn.window.defaults = {
 			name: '', //必填
@@ -311,10 +467,12 @@
 			baseZ: 1000,
 			speed: 300,
 			delay: 0,
+			draggable: true,
+			dragController: '[data-action="drag"]',
 			overlayCss: {},
 			css: {},
 			layerWrapper: 'body',
-			needCloseBtn: true,
+			needCloseBtn: false,
 			needLeftBtn: false,
 			needRightBtn: false,
 			closeBtn: '[data-action="close"]',
@@ -326,7 +484,7 @@
 			onAfterClose: null,
 			leftBtnEvent: null,
 			rightBtnEvent: null,
-			//dialog的配置
+			//dialog的配置,若是dialog,不需要配置meassage
 			dialog: false,
 			type: 'info',
 			content: '提示',
@@ -366,7 +524,7 @@
 				count++;
 			}
 			return !count ? true : false;
-		}
+		};
 	};
 
 	if(typeof define === 'function') {

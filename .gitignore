@@ -29,6 +29,7 @@ node_modules
 
 .idea/
 .DS_Store
+
 /ecosystem.json
 /restart.bat
 /start-server.bat

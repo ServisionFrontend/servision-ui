@@ -25,10 +25,14 @@
 </head>
 <body>
 	<div class="tree-wrap">
+		<input id="btnClearSelection" type="button" value="清除全部选择" />
 	    <input id="btnCollapseAll" type="button" value="全部收起" />
 		<input id="btnExpandAll" type="button" value="全部展开" />
-		<input id="btnUp" type="button" value="节点上移" />
-		<input id="btnDown" type="button" value="节点下移" />
+		<input id="cbCheckbox1" type="checkbox" />
+		<input id="btnUp" type="button" value="节点向上选择" />
+		<input id="cbCheckbox2" type="checkbox" />
+		<input id="btnDown" type="button" value="节点向下选择" />
+		<input id="btnExpandTo" type="button" value="展开指点节点" />
 		<div id="tree-container1" class="tree-container">
 		</div>
 
@@ -41,30 +45,69 @@
 			var $tbcontainer2 = $('#tree-container2');
 
 			var data1 = [{
-				id: '1',
+				id: 1,
 				text: 'node-1',
 				children: [{
 					id: 2,
-					text: 'node-2'
+					text: 'node-2',
+					checked:false
 				}, {
 					id: 3,
 					text: 'node-3',
+					checked:true,
 					children: [{
 						id: 4,
-						text: 'node-4'
+						text: 'node-4',
+						checked:false
 					}, {
 						id: 5,
 						text: 'node-5',
-						url: 'http://wwww.baidu.com'
+						url: 'http://wwww.baidu.com',
+						checked:false
 					}]
 				}]
 			}];
 			var data2 = [{
+				id: 1,
+				text: 'node-1',
+				children:[{
+					id:2,
+					text: 'node-2',
+					children:[{
+						id:4,
+						text: 'node-4',
+						children:[{
+							id:5,
+							text:'node-5'
+						},{
+							id:6,
+							text:'node-6'
+						}]
+					}]
+				},{
+					id:3,
+					text: 'node-3',
+					children:[{
+						id: 333,
+						text: 'node-333'
+					},{
+						id: 444,
+						text: 'node-444'
+					}]
+				}]
+			},{
 				id: 11,
 				text: 'node-11',
 				children: [{
 					id: 22,
-					text: 'node-22'
+					text: 'node-22',
+					children:[{
+						id:221,
+						text:'node-221'
+					},{
+						id:222,
+						text:'node-222'
+					}]
 				}, {
 					id: 33,
 					text: 'node-33',
@@ -87,39 +130,34 @@
 
 			$tbcontainer1.tree({
 				data:data1,
-				folderCls:'tree-file',
-				folderOpenCls:'tree-file',
-				leafCls:'tree-file',
 				onClickRow:function(e, node){
-					// alert(this.outerHTML);
 				},
 				onClickNode:function(e, node){
-					// alert(node.text);
 				},
 				onExpanded:function(e, node){
-					//alert(node.text);
 				},
 				onCollapsed:function(e, node){
-					// alert(node.text);
 				},
 				onExpandAll:function(){
-					//alert('expand all');
 				},
 				onCollapseAll:function(){
-					//alert('collapse all');
 				}
 			});
 
 			$tbcontainer2.tree({
-				data:data2,
+				url:'/tree/getData',
+				expandAll:false,
+				onAjaxBeforeSend:function(){
+				},
+				onAjaxComplete:function(){
+				},
 				onClickNode:function(e, node){
-					//alert(node.text);
 				},
 				onExpanded:function(){
-					// alert('expanded');
 				},
 				onCollapsed:function(){
-					// alert('collapsed');
+				},
+				onSelectedNode:function(node){
 				}
 			});
 
@@ -136,10 +174,31 @@
 			});
 
 			$('#btnUp').on('click', function(){
-				$tbcontainer1.tree('nodeMoveUp');
+				var isSelectionFolder = $('#cbCheckbox1').is(':checked');
+				var status = $tbcontainer2.tree('prevNodeSelection', isSelectionFolder);
+
+				if (!status){
+					alert('已经到达最前');
+				}
 			});
+
 			$('#btnDown').on('click', function(){
-				$tbcontainer1.tree('nodeMoveDown');
+				var isSelectionFolder = $('#cbCheckbox2').is(':checked');
+				var status = $tbcontainer2.tree('nextNodeSelection', isSelectionFolder);
+
+				if (!status){
+					alert('已经到达最后');
+				}
+			});
+
+			$('#btnClearSelection').on('click', function(){
+
+				$tbcontainer2.tree('clearAllSelection');
+			});
+
+			$('#btnExpandTo').on('click', function(){
+				$tbcontainer2.tree('expandTo', 5);
+				$tbcontainer2.tree('selectionNode', 5);
 			});
 		});
 	</script>
