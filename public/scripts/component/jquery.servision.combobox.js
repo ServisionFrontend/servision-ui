@@ -44,8 +44,6 @@
 		});
 	})();
 
-
-
 	function scrollTo(target, value) {
 		var opts = $.data(target, 'combobox').options,
 			panel = $(target).combobox('panel').children(),
@@ -122,7 +120,7 @@
 			lineHeight: th + 'px'
 		});
 
-		$panel.children().css({
+		$panel.children(":eq(0)").css({
 			width: opts.width || tw,
 			maxHeight: opts.height || 200,
 			'_height': opts.height || 200
@@ -196,7 +194,7 @@
 						vs = opts.dependenciesParams ? opts.dependenciesParams.call(target, vv) : {
 							parentId: vv
 						};
-					$.extend(true, opts.queryParams, vs);
+					$.extend(opts.queryParams, vs);
 				}
 			}
 
@@ -210,10 +208,11 @@
 				'top': fixTop(target),
 				'left': fixLeft(target)
 			}).show();
+
 			state.comboTarget.find(".s-textbox-text").focus();
 
 			var q = $(target).combobox("getText");
-
+			// if (state.previous != q)
 			doQuery(target, q);
 		}
 	}
@@ -228,6 +227,10 @@
 				opts.onHidePanel.call(target);
 			}
 			state.panel.hide();
+
+			if (state.panel.blockUI) {
+				state.panel.blockUI.remove();
+			}
 		}
 	}
 
@@ -287,7 +290,9 @@
 				state.timer = setTimeout(function() {
 					var q = $(target).combobox("getText");
 					if (state.previous != q) {
-						state.previous = q;
+
+						setPrevAndClear(state, q);
+
 						$target.combobox('open');
 						opts.keyHandler.query.call(target, q, e);
 					}
@@ -312,13 +317,19 @@
 
 	function loadData(target, data, remainText) {
 		var state = $.data(target, 'combobox'),
-			opts = state.options;
+			opts = state.options,
+			$panel = state.panel,
+			query = $(target).combobox('getText'),
+			vv = $(target).combobox('getValues');
+
 
 		state.data = opts.loadFilter.call(target, data) || [];
 
-		opts.view.render.call(opts.view, target, state.panel.children(), state.data);
+		opts.view.render.call(opts.view, target, state.panel.children(':eq(0)'), state.data);
 
-		var vv = $(target).combobox('getValues');
+		query = opts.multiple ? query.split(opts.separator) : [query];
+
+		setLimitItem(target, query);
 
 		if (opts.multiple) {
 			setValues(target, vv, remainText);
@@ -335,7 +346,7 @@
 		if (url) {
 			opts.url = url;
 		}
-		param = $.extend(true, {}, opts.queryParams, param);
+		param = $.extend({}, opts.queryParams, param);
 
 		if (opts.onBeforeLoad.call(target, param) === false) return;
 
@@ -352,20 +363,8 @@
 			$panel = state.panel,
 			query = opts.multiple ? q.split(opts.separator) : [q];
 
-		//级联清除项
-		if (opts.clearIds) {
-			if (!$.isArray(opts.clearIds))
-				opts.clearIds = [opts.clearIds];
 
-			$(opts.clearIds.join(',')).combobox("clear");
-		}
-
-		// $panel
-		// 	.find('.s-combobox-item-hover')
-		// 	.removeClass('s-combobox-item-hover')
-		// 	.end()
-		// 	.find('.s-combobox-item,.s-combobox-group')
-		// 	.hide();
+		setPrevAndClear(state, q);
 
 		if (opts.mode == 'remote') {
 			//此步骤必须，异步获取成功后会再次读取文本框值并再次赋值
@@ -375,39 +374,7 @@
 			}, null);
 		} else {
 
-			var data = state.data,
-				vv = [],
-				group = undefined;
-			$panel
-				.find('.s-combobox-item-hover')
-				.removeClass('s-combobox-item-hover')
-				.end()
-				.find('.s-combobox-item,.s-combobox-group')
-				.hide();
-
-			$.map(query, function(val, idx) {
-				var value = val;
-
-				for (var i = 0, row; row = data[i]; i++) {
-					var t = row[opts.textField],
-						v = row[opts.valueField],
-						g = row[opts.groupField];
-					if (t.toLowerCase().indexOf(val.toLowerCase()) > -1) {
-
-						var $el = opts.finder.getEl(target, v).show();
-						if (t.toLowerCase() == val.toLowerCase()) {
-							value = v;
-							select(target, v);
-						}
-
-						if (opts.groupField && group != g) {
-							opts.finder.getGroupEl(target, g).show();
-							group = g;
-						}
-					}
-				}
-				vv.push(value);
-			});
+			var vv = setLimitItem(target, query);
 			//重置选中样式
 			_setValue(vv);
 		}
@@ -416,6 +383,49 @@
 			setValues(target, opts.multiple ? (q ? v : []) : v, remineText);
 		}
 
+	}
+
+	function setLimitItem(target, query) {
+		var state = $.data(target, 'combobox'),
+			data = state.data,
+			opts = state.options,
+			$panel = state.panel,
+			vv = [],
+			group = undefined;
+
+		if (opts.showLimitItem) {
+			$panel
+				.find('.s-combobox-item-hover')
+				.removeClass('s-combobox-item-hover')
+				.end()
+				.find('.s-combobox-item,.s-combobox-group')
+				.hide();
+		}
+
+		$.map(query, function(val, idx) {
+			var value = val;
+
+			for (var i = 0, row; row = data[i]; i++) {
+				var t = row[opts.textField],
+					v = row[opts.valueField],
+					g = row[opts.groupField];
+				if (t.toLowerCase().indexOf(val.toLowerCase()) > -1) {
+
+					var $el = opts.finder.getEl(target, v).show();
+					if (t.toLowerCase() == val.toLowerCase()) {
+						value = v;
+						select(target, v);
+					}
+
+					if (opts.groupField && group != g) {
+						opts.finder.getGroupEl(target, g).show();
+						group = g;
+					}
+				}
+			}
+			vv.push(value);
+		});
+		return vv;
 	}
 
 	function setValues(target, values, remainText) {
@@ -478,10 +488,12 @@
 	function setTextBoxValue(state, vv, tt) {
 		var opts = state.options,
 			$v = state.comboTarget.find("input.s-textbox-value"),
-			$t = state.comboTarget.find("input.s-textbox-text");
+			$t = state.comboTarget.find("input.s-textbox-text"),
+			v = vv.join(opts.separator),
+			t = tt.join(opts.separator);
 
-		$v.val(vv.join(opts.separator));
-		$t.val(tt.join(opts.separator));
+		$v.val(v);
+		$t.val(t);
 	}
 
 	function doEnter(target) {
@@ -489,7 +501,7 @@
 			state = $.data(target, 'combobox'),
 			opts = state.options,
 			$panel = state.panel,
-			$item = $panel.children().find("div.s-combobox-item-hover");
+			$item = $panel.children(":eq(0)").find("div.s-combobox-item-hover");
 		if ($item.size()) {
 			var row = opts.finder.getRow(target, $item);
 			var v = row[opts.valueField];
@@ -506,7 +518,7 @@
 		}
 
 		if (!opts.multiple) {
-			$panel.combobox('close');
+			$target.combobox('close');
 		}
 	}
 
@@ -548,7 +560,7 @@
 			values = $(target).combobox('getValues'),
 			key;
 
-		state.previous = $(target).combobox("getText");
+
 
 		if (typeof value != 'string') {
 			key = value.key;
@@ -559,6 +571,8 @@
 				values = [value];
 				if (!opts.multiple) {
 					$(target).combobox("setValues", values);
+
+					setPrevAndClear(state, $(target).combobox("getText"));
 				}
 			} else {
 				if (opts.multiple) {
@@ -567,21 +581,39 @@
 					values = [value];
 				}
 				$(target).combobox("setValues", values);
+
+				setPrevAndClear(state, $(target).combobox("getText"));
 			}
 		}
 	}
 
 	function unselect(target, value) {
-		var opts = $.data(target, 'combobox').options,
+		var state = $.data(target, 'combobox'),
+			opts = state.options,
 			values = $(target).combobox('getValues'),
 			idx = $.inArray(value, values);
 
 		if (idx >= 0) {
 			values.splice(idx, 1);
 			$(target).combobox("setValues", values);
+
+			setPrevAndClear(state, $(target).combobox("getText"));
 		}
 	}
 
+	function setPrevAndClear(state, q) {
+		var opts = state.options;
+		if (state.previous != q) {
+			//级联清除项
+			if (opts.clearIds) {
+				if (!$.isArray(opts.clearIds))
+					opts.clearIds = [opts.clearIds];
+
+				$(opts.clearIds.join(',')).combobox("clear");
+			}
+			state.previous = q;
+		}
+	}
 
 	function getRowIndex(target, value, remainText) {
 		var state = $.data(target, 'combobox'),
@@ -603,7 +635,7 @@
 		var $target = $(target),
 			state = $.data(target, 'combobox'),
 			opts = state.options,
-			$panel = state.panel.children(),
+			$panel = state.panel.children(":eq(0)"),
 			$item = $panel.children('div.s-combobox-item-hover'),
 			firstSelector = "div.s-combobox-item:visible:first",
 			lastSelector = "div.s-combobox-item:visible:last";
@@ -689,8 +721,8 @@
 				var dd = [];
 				dd.push('<span class="s-textbox">');
 				dd.push('<span class="s-textbox-addon s-textbox-addon-right"><a class="s-textbox-icon s-combobox-arrow" href="javascript:;"></a></span>');
-				dd.push('<input type="text" class="s-textbox-text">');
-				dd.push('<input type="hidden" class="s-textbox-value">');
+				dd.push('<input type="text" class="s-textbox-text" value="">');
+				dd.push('<input type="hidden" class="s-textbox-value" value="">');
 				dd.push('</span>');
 				$.data(jq[0], 'combobox').comboTarget = $(dd.join('')).insertAfter(jq);
 				jq.hide();
@@ -829,8 +861,7 @@
 				dd.push("</div>");
 			}
 
-
-			$(container).html(dd.join(''));
+			$(container).html(dd.join(' '));
 		}
 	};
 
@@ -843,7 +874,8 @@
 		},
 		queryMatch: '',
 		isCheckBox: false,
-		mode: 'local', //or 'local'
+		mode: 'local', //or 'local'  //筛选数据请求方式
+		isAutoComplete: false, //无级联的情况下数据一次性加载，本地筛选数据
 		method: 'post',
 		url: null,
 		data: null,
@@ -875,7 +907,7 @@
 					state = $.data(target, 'combobox'),
 					opts = state.options,
 					p = $(target).combobox("getText");
-				state.previous = p;
+				//state.previous = p;
 
 			},
 			keydown: bindKeyHandlerEvent,
@@ -935,14 +967,59 @@
 				return $('#' + id);
 			}
 		},
+		block: function(target) {
+			var $panel = $(target).combobox('panel');
+			var block = [];
+			if ($panel.blockUI) {
+				$panel.blockUI.remove();
+			}
+			block.push('<div class="mask-block-msg">');
+			block.push('<div class="block-panel">');
+			block.push('<div class="loading"></div>');
+			block.push('</div></div>');
+
+			if ($panel.is(":visible")) {
+				$panel.blockUI = $(block.join(' ')).appendTo('body');
+				var cssText = {
+					'zIndex': $panel.css("zIndex"),
+					'top': $panel.css("top"),
+					'left': $panel.css("left"),
+					'width': $panel.css("width"),
+					'height': $panel.css("height")
+				};
+
+				$panel.blockUI.css({
+					'zIndex': cssText.zIndex,
+					'top': cssText.top,
+					'left': cssText.left,
+					'width': cssText.width,
+					'height': cssText.height
+				});
+			}
+		},
+
+		unblock: function(target) {
+			var $panel = $(target).combobox('panel');
+			if ($panel.blockUI) {
+				$panel.blockUI.remove();
+			}
+		},
+
 		loader: function(params, success, error) {
-			var opts = $(this).combobox('options');
+			var target = this;
+			var opts = $(target).combobox('options');
 			if (!opts.url) return;
 			$.ajax({
 				type: opts.method,
 				url: opts.url,
 				data: params,
 				dataType: 'json',
+				beforeSend: function() {
+					opts.block(target);
+				},
+				complete: function() {
+					opts.unblock(target);
+				},
 				success: function(data) {
 					success(data);
 				},

@@ -65,11 +65,12 @@
 		$(function(){
 
 			$("#msg").combobox({
-				width:500,
-				heght:300,
+				// width:500,
+				// heght:300,
 				//data:data,
 				url:'/getComboList/brand',
-				mode:'remote',
+				mode:'local',
+				showLimitItem:false,
 				method:'GET',
 				textField:'Description',
 				valueField:'Code',
@@ -114,6 +115,7 @@
 				url:'/getComboList/series',
 				mode:'remote',
 				method:'GET',
+				showLimitItem:true,
 				textField:'Description',
 				valueField:'Code',
 				groupField:'BrandCode',
@@ -152,48 +154,49 @@
 				}
 			});
 
-			// $("#msg3").combobox({
-			// 	//data:data,
-			// 	url:'/getComboList',
-			// 	mode:'remote',
-			// 	method:'GET',
-			// 	textField:'Description',
-			// 	valueField:'Code',
-			// 	groupField:'BrandCode',
-			// 	queryMatch:'Description',
-			// 	separator:',',
-			// 	dependenciesIds:["#msg2"],
-			// 	clearIds:[],
-			// 	multiple:true,
-			// 	queryParams:{},
-			// 	dependenciesParams: function(vs) {
-			// 		return {
-			// 			parentId: vs
-			// 		};
-			// 	},
-			// 	// groupFormatter:function(g){},
-			// 	//formatter:function(row){return row.Code+'==='+row.Sort},
-			// 	// loader: function(params, success, error){},
-			// 	loadFilter:function(data){
-			// 		return data.Data;
-			// 	},
-			// 	onBeforeLoad:function(param){},
-			// 	onLoadSuccess:function(data){
-			// 	},
-			// 	onLoadError:function(){},
-			// 	onSelect: function(record) {
-			// 		// //debugger;
-			// 		// console.log(record)
-			// 		//console.info($("#msg").combobox('getValues'));
-			// 	},
-			// 	onUnselect: function(record) {
-			// 		//debugger;
-			// 	},
-			// 	onOpenPanel: function() {},
-			// 	onHidePanel:function(){
-			// 		console.log($(this).combobox("getValues"));
-			// 	}
-			// });
+			$("#msg3").combobox({
+				data:data,
+				//url:'/getComboList/series',
+				mode:'local',
+				method:'GET',
+				showLimitItem:true,
+				textField:'Description',
+				valueField:'Code',
+				groupField:'BrandCode',
+				queryMatch:'Description',
+				separator:',',
+				dependenciesIds:["#msg"],
+				clearIds:["#msg3"],
+				multiple:true,
+				queryParams:{},
+				dependenciesParams: function(vs) {
+					return {
+						parentId: vs
+					};
+				},
+				// groupFormatter:function(g){},
+				//formatter:function(row){return row.Code+'==='+row.Sort},
+				// loader: function(params, success, error){},
+				loadFilter:function(data){
+					return data.Data;
+				},
+				onBeforeLoad:function(param){},
+				onLoadSuccess:function(data){
+				},
+				onLoadError:function(){},
+				onSelect: function(record) {
+					// //debugger;
+					// console.log(record)
+					//console.info($("#msg").combobox('getValues'));
+				},
+				onUnselect: function(record) {
+					//debugger;
+				},
+				onOpenPanel: function() {},
+				onHidePanel:function(){
+					console.log($(this).combobox("getValues"));
+				}
+			});
 
 			// var count=10;
 			// (function(){
@@ -236,6 +239,9 @@
 	</div>
 </div>
 -->
+
+
+
 <script src="./scripts/component/jquery.servision.combobox.js"></script>
 
 </head>

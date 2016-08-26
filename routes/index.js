@@ -95,6 +95,9 @@ router.get('/getComboList/brand', function(req, res, next) {
 		rst = {
 			Data: []
 		};
+	return res.json({
+		Data: comboList.Brand
+	});
 
 	if (!q.q) {
 		return res.json({
@@ -134,6 +137,17 @@ router.get('/getComboList/series', function(req, res, next) {
 	if (!q.q || !q.q.length) return res.json({
 		Data: comboList.Series
 	});
+
+	q.parentId.forEach(function(pv, pi) {
+		comboList.Series.forEach(function(val, idx) {
+			if (pv.toLowerCase() == val.BrandCode.toLowerCase()) {
+				console.log(val.BrandCode.toLowerCase());
+				rst.Data.push(val);
+			}
+		});
+	});
+	return res.json(rst);
+
 	q.parentId.forEach(function(pv, pi) {
 		q.q.forEach(function(v, i) {
 			comboList.Series.forEach(function(val, idx) {
