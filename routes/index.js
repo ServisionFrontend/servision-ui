@@ -90,6 +90,10 @@ router.get('/window', function(req, res, next) {
 	res.render('window.ejs');
 });
 
+router.get('/grid', function(req, res, next) {
+	res.render('grid.ejs');
+});
+
 router.get('/getComboList/brand', function(req, res, next) {
 	var q = req.query,
 		rst = {
