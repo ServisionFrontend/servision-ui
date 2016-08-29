@@ -141,7 +141,6 @@ router.get('/getComboList/series', function(req, res, next) {
 	q.parentId.forEach(function(pv, pi) {
 		comboList.Series.forEach(function(val, idx) {
 			if (pv.toLowerCase() == val.BrandCode.toLowerCase()) {
-				console.log(val.BrandCode.toLowerCase());
 				rst.Data.push(val);
 			}
 		});
@@ -152,13 +151,34 @@ router.get('/getComboList/series', function(req, res, next) {
 		q.q.forEach(function(v, i) {
 			comboList.Series.forEach(function(val, idx) {
 				if ((pv.toLowerCase() == val.BrandCode.toLowerCase()) && (!v.toLowerCase() || val.Description.toLowerCase().indexOf(v.toLowerCase()) > -1)) {
-					console.log(val.BrandCode.toLowerCase());
 					rst.Data.push(val);
 				}
 			});
 		});
 	});
 	res.json(rst);
+});
+
+router.get('/getComboList/year', function(req, res, next) {
+	var q = req.query,
+		rst = {
+			Data: []
+		};
+
+	if (!q.parentId) return rst;
+	if (!q.q || !q.q.length) return res.json({
+		Data: comboList.Year
+	});
+	console.log(q.parentId);
+	q.parentId.forEach(function(pv, pi) {
+		comboList.Year.forEach(function(val, idx) {
+			if (!val.Series || pv.toLowerCase() == val.Series.toLowerCase()) {
+
+				rst.Data.push(val);
+			}
+		});
+	});
+	return res.json(rst);
 });
 
 module.exports = router;

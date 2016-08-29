@@ -155,18 +155,18 @@
 			});
 
 			$("#msg3").combobox({
-				data:data,
-				//url:'/getComboList/series',
-				mode:'local',
+				// data:data,
+				url:'/getComboList/year',
+				mode:'remote',
 				method:'GET',
-				showLimitItem:true,
+				showLimitItem:false,
 				textField:'Description',
 				valueField:'Code',
 				groupField:'BrandCode',
 				queryMatch:'Description',
 				separator:',',
-				dependenciesIds:["#msg"],
-				clearIds:["#msg3"],
+				dependenciesIds:["#msg2"],
+				clearIds:[],
 				multiple:true,
 				queryParams:{},
 				dependenciesParams: function(vs) {
@@ -197,21 +197,6 @@
 					console.log($(this).combobox("getValues"));
 				}
 			});
-
-			// var count=10;
-			// (function(){
-			// 	var args=arguments;
-			// 	setTimeout(function(){
-			// 		$(".msg").css({
-			// 			top:count*5,
-			// 			left:count*6
-			// 		});
-			// 		count+=2;
-			// 		console.log(count)
-			// 		args.callee();
-			// 	},4*1000);
-			// })()
-
 		});
 	</script>
 </head>
