@@ -79,7 +79,7 @@
 				separator:',',
 				dependenciesIds:[],
 				clearIds:["#msg2","#msg3"],
-				multiple:true,
+				multiple:false,
 				queryParams:{},
 				dependenciesParams: function(vs) {
 					return {
@@ -147,6 +147,7 @@
 				},
 				onUnselect: function(record) {
 					//debugger;
+					console.log(record)
 				},
 				onOpenPanel: function() {},
 				onHidePanel:function(){

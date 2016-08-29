@@ -167,20 +167,29 @@ router.get('/getComboList/year', function(req, res, next) {
 	var q = req.query,
 		rst = {
 			Data: []
-		};
+		},
+		hash = {},
+		arr = [];
 
 	if (!q.parentId) return rst;
 	if (!q.q || !q.q.length) return res.json({
 		Data: comboList.Year
 	});
-	console.log(q.parentId);
+
 	q.parentId.forEach(function(pv, pi) {
 		comboList.Year.forEach(function(val, idx) {
 			if (!val.Series || pv.toLowerCase() == val.Series.toLowerCase()) {
 
-				rst.Data.push(val);
+				arr.push(val);
 			}
 		});
+	});
+
+	arr.length && arr.forEach(function(v, i) {
+		if (!hash[v.Code]) {
+			hash[v.Code] = true;
+			rst.Data.push(v);
+		}
 	});
 	return res.json(rst);
 });
