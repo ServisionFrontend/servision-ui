@@ -1,185 +1,182 @@
 {
-	"IsSuccess": true,
-	"Data": {
-		"next": "Year",
-		"code": "Series",
-		"description": "目录",
-		"data": [{
-			"Sort": 1,
-			"IcoFileName": "CN050V.gif",
-			"BrandCode": "Wuling",
-			"CodeDesc": "CN050V - 五菱之光V(CN050V)",
-			"Code": "CN050V",
-			"Description": "五菱之光V(CN050V)"
-		}, {
-			"Sort": 2,
-			"IcoFileName": "CN113.gif",
-			"BrandCode": "Wuling",
-			"CodeDesc": "CN113 - 五菱宏光S1",
-			"Code": "CN113",
-			"Description": "五菱宏光S1"
-		}, {
-			"Sort": 3,
-			"IcoFileName": "N120.gif",
-			"BrandCode": "Wuling",
-			"CodeDesc": "N120 - 五菱之光S",
-			"Code": "N120",
-			"Description": "五菱之光S"
-		}, {
-			"Sort": 4,
-			"IcoFileName": "CN100V.gif",
-			"BrandCode": "Wuling",
-			"CodeDesc": "CN100V - 五菱荣光V(原五菱宏光V)",
-			"Code": "CN100V",
-			"Description": "五菱荣光V(原五菱宏光V)"
-		}, {
-			"Sort": 5,
-			"IcoFileName": "CN101.gif",
-			"BrandCode": "Wuling",
-			"CodeDesc": "CN101 - 五菱宏光2014款",
-			"Code": "CN101",
-			"Description": "五菱宏光2014款"
-		}, {
-			"Sort": 6,
-			"IcoFileName": "CN100.gif",
-			"BrandCode": "Wuling",
-			"CodeDesc": "CN100 - 五菱宏光",
-			"Code": "CN100",
-			"Description": "五菱宏光"
-		}, {
-			"Sort": 7,
-			"IcoFileName": "CN112.gif",
-			"BrandCode": "Wuling",
-			"CodeDesc": "CN112 - 五菱宏光S",
-			"Code": "CN112",
-			"Description": "五菱宏光S"
-		}, {
-			"Sort": 8,
-			"IcoFileName": "N400.gif",
-			"BrandCode": "Wuling",
-			"CodeDesc": "N400 - 五菱征程",
-			"Code": "N400",
-			"Description": "五菱征程"
-		}, {
-			"Sort": 9,
-			"IcoFileName": "N310.gif",
-			"BrandCode": "Wuling",
-			"CodeDesc": "N310 - 五菱荣光S",
-			"Code": "N310",
-			"Description": "五菱荣光S"
-		}, {
-			"Sort": 10,
-			"IcoFileName": "N111.gif",
-			"BrandCode": "Wuling",
-			"CodeDesc": "N111 - 五菱之光2013款",
-			"Code": "N111",
-			"Description": "五菱之光2013款"
-		}, {
-			"Sort": 11,
-			"IcoFileName": "N111P.gif",
-			"BrandCode": "Wuling",
-			"CodeDesc": "N111P - 五菱之光2013款货车",
-			"Code": "N111P",
-			"Description": "五菱之光2013款货车"
-		}, {
-			"Sort": 12,
-			"IcoFileName": "N300.gif",
-			"BrandCode": "Wuling",
-			"CodeDesc": "N300 - 五菱荣光",
-			"Code": "N300",
-			"Description": "五菱荣光"
-		}, {
-			"Sort": 14,
-			"IcoFileName": "N300P.gif",
-			"BrandCode": "Wuling",
-			"CodeDesc": "N300P - 五菱荣光货车",
-			"Code": "N300P",
-			"Description": "五菱荣光货车"
-		}, {
-			"Sort": 15,
-			"IcoFileName": "N109.gif",
-			"BrandCode": "Wuling",
-			"CodeDesc": "N109 - 新五菱之光",
-			"Code": "N109",
-			"Description": "新五菱之光"
-		}, {
-			"Sort": 18,
-			"IcoFileName": "N108.gif",
-			"BrandCode": "Wuling",
-			"CodeDesc": "N108 - 五菱之光",
-			"Code": "N108",
-			"Description": "五菱之光"
-		}, {
-			"Sort": 19,
-			"IcoFileName": "N107.gif",
-			"BrandCode": "Wuling",
-			"CodeDesc": "N107 - 五菱之光",
-			"Code": "N107",
-			"Description": "五菱之光"
-		}, {
-			"Sort": 21,
-			"IcoFileName": "N1LP.gif",
-			"BrandCode": "Wuling",
-			"CodeDesc": "N1LP - 五菱之光单排货车",
-			"Code": "N1LP",
-			"Description": "五菱之光单排货车"
-		}, {
-			"Sort": 23,
-			"IcoFileName": "N200.gif",
-			"BrandCode": "Wuling",
-			"CodeDesc": "N200 - 五菱鸿途",
-			"Code": "N200",
-			"Description": "五菱鸿途"
-		}, {
-			"Sort": 25,
-			"IcoFileName": "N7.gif",
-			"BrandCode": "Wuling",
-			"CodeDesc": "N7 - 五菱龙，五菱兴旺",
-			"Code": "N7",
-			"Description": "五菱龙，五菱兴旺"
-		}, {
-			"Sort": 28,
-			"IcoFileName": "PN.gif",
-			"BrandCode": "Wuling",
-			"CodeDesc": "PN - 五菱单、双排货车",
-			"Code": "PN",
-			"Description": "五菱单、双排货车"
-		}, {
-			"Sort": 29,
-			"IcoFileName": "N1.gif",
-			"BrandCode": "Wuling",
-			"CodeDesc": "N1 - 五菱之光，五菱扬光",
-			"Code": "N1",
-			"Description": "五菱之光，五菱扬光"
-		}, {
-			"Sort": 31,
-			"IcoFileName": "D150.gif",
-			"BrandCode": "Wuling",
-			"CodeDesc": "D150 - 五菱小旋风",
-			"Code": "D150",
-			"Description": "五菱小旋风"
-		}, {
-			"Sort": 33,
-			"IcoFileName": "6370.gif",
-			"BrandCode": "Wuling",
-			"CodeDesc": "6370 - 五菱大发，都市清风",
-			"Code": "6370",
-			"Description": "五菱大发，都市清风"
-		}],
-		"listViewInfo": {
-			"textFieldsInfo": [{
-				"text": "目录",
-				"field": "Code"
-			}, {
-				"text": "描述",
-				"field": "Description"
-			}],
-			"imageFieldInfo": {
-				"text": "",
-				"field": "IcoFileName"
-			},
-			"titleField": "CodeDesc"
-		},
-		"isLeaf": false
-	}
+	"Brand": [{
+		"CodeDesc": "宝骏",
+		"Code": "BaoJun",
+		"Description": "宝骏"
+	}, {
+		"CodeDesc": "五菱",
+		"Code": "Wuling",
+		"Description": "五菱"
+	}],
+	"Series": [{
+		"BrandCode": "BaoJun",
+		"CodeDesc": "CN180C - 宝骏310",
+		"Code": "CN180C",
+		"Description": "宝骏310"
+	}, {
+		"BrandCode": "BaoJun",
+		"CodeDesc": "GP53 - 宝骏630 2016款",
+		"Code": "GP53",
+		"Description": "宝骏630 2016款"
+	}, {
+		"BrandCode": "BaoJun",
+		"CodeDesc": "CN201 - 宝骏730 2016款",
+		"Code": "CN201",
+		"Description": "宝骏730 2016款"
+	}, {
+		"BrandCode": "BaoJun",
+		"CodeDesc": "CN200S - 宝骏560",
+		"Code": "CN200S",
+		"Description": "宝骏560"
+	}, {
+		"BrandCode": "BaoJun",
+		"CodeDesc": "GP30 - 宝骏330",
+		"Code": "GP30",
+		"Description": "宝骏330"
+	}, {
+		"BrandCode": "BaoJun",
+		"CodeDesc": "CN200 - 宝骏730",
+		"Code": "CN200",
+		"Description": "宝骏730"
+	}, {
+		"BrandCode": "BaoJun",
+		"CodeDesc": "GP50HB - 宝骏610",
+		"Code": "GP50HB",
+		"Description": "宝骏610"
+	}, {
+		"BrandCode": "BaoJun",
+		"CodeDesc": "GP5X - 升级款宝骏630(GP51/52)",
+		"Code": "GP5X",
+		"Description": "升级款宝骏630(GP51/52)"
+	}, {
+		"BrandCode": "BaoJun",
+		"CodeDesc": "GP50 - 经典款宝骏630",
+		"Code": "GP50",
+		"Description": "经典款宝骏630"
+	}, {
+		"BrandCode": "BaoJun",
+		"CodeDesc": "M150 - 乐驰配P-TEC发动机",
+		"Code": "M150",
+		"Description": "乐驰配P-TEC发动机"
+	}, {
+		"BrandCode": "BaoJun",
+		"CodeDesc": "N5 - 乐驰",
+		"Code": "N5",
+		"Description": "乐驰"
+	}, {
+		"BrandCode": "Wuling",
+		"CodeDesc": "CN050V - 五菱之光V",
+		"Code": "CN050V",
+		"Description": "五菱之光V"
+	}, {
+		"BrandCode": "Wuling",
+		"CodeDesc": "CN113 - 五菱宏光S1",
+		"Code": "CN113",
+		"Description": "五菱宏光S1"
+	}, {
+		"BrandCode": "Wuling",
+		"CodeDesc": "N120 - 五菱之光S",
+		"Code": "N120",
+		"Description": "五菱之光S"
+	}, {
+		"BrandCode": "Wuling",
+		"CodeDesc": "CN100V - 五菱荣光V(原五菱宏光V)",
+		"Code": "CN100V",
+		"Description": "五菱荣光V(原五菱宏光V)"
+	}, {
+		"BrandCode": "Wuling",
+		"CodeDesc": "CN101 - 五菱宏光2014款",
+		"Code": "CN101",
+		"Description": "五菱宏光2014款"
+	}, {
+		"BrandCode": "Wuling",
+		"CodeDesc": "CN100 - 五菱宏光",
+		"Code": "CN100",
+		"Description": "五菱宏光"
+	}, {
+		"BrandCode": "Wuling",
+		"CodeDesc": "CN112 - 五菱宏光S",
+		"Code": "CN112",
+		"Description": "五菱宏光S"
+	}, {
+		"BrandCode": "Wuling",
+		"CodeDesc": "N400 - 五菱征程",
+		"Code": "N400",
+		"Description": "五菱征程"
+	}, {
+		"BrandCode": "Wuling",
+		"CodeDesc": "N310 - 五菱荣光S",
+		"Code": "N310",
+		"Description": "五菱荣光S"
+	}, {
+		"BrandCode": "Wuling",
+		"CodeDesc": "N111P - 五菱之光2013款货车",
+		"Code": "N111P",
+		"Description": "五菱之光2013款货车"
+	}, {
+		"BrandCode": "Wuling",
+		"CodeDesc": "N111 - 五菱之光2013款",
+		"Code": "N111",
+		"Description": "五菱之光2013款"
+	}, {
+		"BrandCode": "Wuling",
+		"CodeDesc": "N300P - 五菱荣光货车",
+		"Code": "N300P",
+		"Description": "五菱荣光货车"
+	}, {
+		"BrandCode": "Wuling",
+		"CodeDesc": "N300 - 五菱荣光",
+		"Code": "N300",
+		"Description": "五菱荣光"
+	}, {
+		"BrandCode": "Wuling",
+		"CodeDesc": "N109 - 新五菱之光",
+		"Code": "N109",
+		"Description": "新五菱之光"
+	}, {
+		"BrandCode": "Wuling",
+		"CodeDesc": "N108 - 五菱之光",
+		"Code": "N108",
+		"Description": "五菱之光"
+	}, {
+		"BrandCode": "Wuling",
+		"CodeDesc": "N107 - 五菱之光",
+		"Code": "N107",
+		"Description": "五菱之光"
+	}, {
+		"BrandCode": "Wuling",
+		"CodeDesc": "N1LP - 五菱之光单排货车",
+		"Code": "N1LP",
+		"Description": "五菱之光单排货车"
+	}, {
+		"BrandCode": "Wuling",
+		"CodeDesc": "N200 - 五菱鸿途",
+		"Code": "N200",
+		"Description": "五菱鸿途"
+	}, {
+		"BrandCode": "Wuling",
+		"CodeDesc": "N7 - 五菱龙，五菱兴旺",
+		"Code": "N7",
+		"Description": "五菱龙，五菱兴旺"
+	}, {
+		"BrandCode": "Wuling",
+		"CodeDesc": "PN - 五菱单、双排货车",
+		"Code": "PN",
+		"Description": "五菱单、双排货车"
+	}, {
+		"BrandCode": "Wuling",
+		"CodeDesc": "N1 - 五菱之光，五菱扬光",
+		"Code": "N1",
+		"Description": "五菱之光，五菱扬光"
+	}, {
+		"BrandCode": "Wuling",
+		"CodeDesc": "D150 - 五菱小旋风",
+		"Code": "D150",
+		"Description": "五菱小旋风"
+	}, {
+		"BrandCode": "Wuling",
+		"CodeDesc": "6370 - 五菱大发，都市清风",
+		"Code": "6370",
+		"Description": "五菱大发，都市清风"
+	}]
 }

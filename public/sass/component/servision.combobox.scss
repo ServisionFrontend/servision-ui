@@ -11,23 +11,23 @@ $borderColor:		#95B8E7;
 .s-combobox-container{
 	position:absolute;
 	border:1px solid $borderColor;
-	width:$defaultWidth;
 	overflow:hidden;
 	display:block;
 	font-family: 'Microsoft YaHei,Verdana,Arial,Helvetica,AppleGothic,sans-serif';
 	.s-combobox-inner{
+		width:$defaultWidth;
 		list-style: none;
 		padding:0;
 		margin:0;
 		overflow:auto;
-		height:200px;
 		.s-combobox-item,.s-combobox-group,.s-combobox-gitem{padding:6px;font-size:$defaultSize;}
 		.s-combobox-item{
-			&:hover{background: $rowBgHover;}
+			&.s-combobox-item-hover{background: $rowBgHover;}
 		}
+		.s-combobox-selected{background: $rowCkBg;}
 		.s-combobox-group{font-weight:bold;}
 		.s-combobox-gitem{padding-left:12px;}
-		.s-combobox-selected{background: $rowCkBg;}
+
 	}
 }
 .s-combobox-p{z-index:1000;}
@@ -36,10 +36,15 @@ $borderColor:		#95B8E7;
 			.s-textbox-addon{position:absolute;top:0;}
 			.s-textbox-addon-right{top:0;right:0;}
 			.s-textbox-icon{outline:none;text-decoration:none;}
-			.s-combobox-arrow{background:url('../images/combobox/combo_arrow.png') no-repeat center center $defaultColor;display:inline-block;overflow:hidden;width:18px;height:22px;vertical-align:top;cursor:pointer;opacity:.6;}
+			.s-combobox-arrow{background:url('../images/combobox/combo_arrow.png') no-repeat center center $defaultColor;
+			display:inline-block;overflow:hidden;width:18px;height:22px;vertical-align:top;cursor:pointer;opacity:.6;
+			&:hover{opacity:1;}
+		}
 			.s-textbox-text{font-size:$defaultSize;border:none;padding:4px;vertical-align:top;outline-style:none;resize:none;white-space:normal;}
 		}
 
-.mask-block-msg{position: absolute;display: table;width: 100%;height: 100%;top:0;left:0;*position: absolute;*top:50%;*height:auto;z-index: 5;}
+.mask-block-msg{border:1px solid $borderColor;position: absolute;display: table;width: 100%;height: 100%;top:0;left:0;*position: absolute;*top:50%;*height:auto;z-index: 5;background:$defaultColor;}
 .mask-block-msg .block-panel{position: relative;display: table-cell;vertical-align:middle; *position: relative;*top:-50%;}
 .mask-block-msg .block-panel .block-panel-content{margin:0 auto;background:#fff;color:#000;text-align:center;width:100px;border:2px solid #8c8c8c;border-radius:4px;}
+
+.mask-block-msg .block-panel .loading{background:url(../images/combobox/loading.gif) no-repeat center $defaultColor;width:100%;height:100%;}
