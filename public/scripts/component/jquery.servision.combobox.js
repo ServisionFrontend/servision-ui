@@ -182,20 +182,33 @@
 
 		if (state.panel.is(":hidden")) {
 
+			var q = $(target).combobox("getText");
+
+
 			//级联依赖项
 			if (opts.dependenciesIds) {
 				if (!$.isArray(opts.dependenciesIds))
 					opts.dependenciesIds = [opts.dependenciesIds];
 				var i = 0,
 					l = opts.dependenciesIds.length,
+					dependV = [],
 					selector;
 				for (; selector = opts.dependenciesIds[i]; i++) {
 					var vv = $(selector).combobox("getValues"),
 						vs = opts.dependenciesParams ? opts.dependenciesParams.call(target, vv) : {
 							parentId: vv
 						};
+
 					$.extend(opts.queryParams, vs);
+
+					dependV = dependV.concat(vv);
 				}
+
+				if (dependV.length) {
+					doQuery(target, q);
+				}
+			} else {
+				doQuery(target, q);
 			}
 
 			if (opts.onOpenPanel) {
@@ -210,10 +223,6 @@
 			}).show();
 
 			state.comboTarget.find(".s-textbox-text").focus();
-
-			var q = $(target).combobox("getText");
-			// if (state.previous != q)
-			doQuery(target, q);
 		}
 	}
 
@@ -483,7 +492,6 @@
 
 		setTextBoxValue(state, vv, tt, remainText);
 	}
-
 
 	function setTextBoxValue(state, vv, tt) {
 		var opts = state.options,
@@ -773,8 +781,10 @@
 				if (typeof url == 'string') {
 					request(this, url);
 				} else {
-					var opts = $.data(this, 'combobox').option;
-					opts.queryParams = url;
+					if (url) {
+						var opts = $.data(this, 'combobox').option;
+						opts.queryParams = url;
+					}
 					request(this);
 				}
 			});
