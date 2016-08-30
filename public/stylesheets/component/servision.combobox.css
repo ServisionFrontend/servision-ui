@@ -9,7 +9,8 @@
     list-style: none;
     padding: 0;
     margin: 0;
-    overflow: auto; }
+    overflow: auto;
+    background: #fff; }
     .s-combobox-container .s-combobox-inner .s-combobox-item, .s-combobox-container .s-combobox-inner .s-combobox-group, .s-combobox-container .s-combobox-inner .s-combobox-gitem {
       padding: 6px;
       font-size: 12px; }
@@ -64,6 +65,8 @@
     outline-style: none;
     resize: none;
     white-space: normal; }
+  .s-textbox .s-textbox-disabled {
+    background: #fff; }
 
 .mask-block-msg {
   border: 1px solid #95B8E7;
@@ -99,5 +102,61 @@
   background: url(../images/combobox/loading.gif) no-repeat center #E0ECFF;
   width: 100%;
   height: 100%; }
+
+a {
+  text-decoration: none; }
+
+a:link {
+  color: #000; }
+
+a:visited {
+  color: #000; }
+
+a:active {
+  color: #f00; }
+
+.menu {
+  border: 1px solid #ccc;
+  width: 400px;
+  background: #eee;
+  font-weight: bold;
+  float: left; }
+  .menu ul {
+    padding: 0;
+    margin: 0; }
+    .menu ul li {
+      line-height: 30px; }
+      .menu ul li a {
+        display: inline-block;
+        width: 100%;
+        text-indent: 2em; }
+        .menu ul li a:hover {
+          color: #000; }
+        .menu ul li a.selected {
+          color: #f00; }
+
+.content-view {
+  padding: 20px;
+  overflow: hidden;
+  border: 1px solid #eee; }
+
+.source-title {
+  background: #FAFAFA;
+  line-height: 40px; }
+  .source-title h4 {
+    color: #2575ed;
+    text-align: left;
+    text-indent: 2em;
+    padding: 0;
+    margin: 0; }
+
+.source-content {
+  overflow: auto;
+  background: #555;
+  color: #fff;
+  font-size: 16px;
+  overflow: auto; }
+  .source-content pre {
+    display: none; }
 
 /*# sourceMappingURL=servision.combobox.css.map */

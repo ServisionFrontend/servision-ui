@@ -7,225 +7,432 @@
 	<!-- <script src="./scripts/libs/public/jquery-1.11.3.min.js"></script> -->
 	<script src="./scripts/libs/public/jquery-1.9.0.js"></script>
 	<style>
-	.msg{position: absolute;top:100px;left:300px;}
-	input{width:200px;}
+	
 	</style>
 	<script>
 	var data = {
-	"Data": [{
-		"Sort": 1,
-		"IcoFileName": "CN050V.gif",
-		"BrandCode": "Wuling",
-		"CodeDesc": "CN050V - 五菱之光V(CN050V)",
-		"Code": "CN050V",
-		"Description": "五菱之光V(CN050V)"
-	}, {
-		"Sort": 2,
-		"IcoFileName": "CN113.gif",
-		"BrandCode": "Wuling",
-		"CodeDesc": "CN113 - 五菱宏光S1",
-		"Code": "CN113",
-		"Description": "五菱宏光S1"
-	}, {
-		"Sort": 3,
-		"IcoFileName": "N120.gif",
-		"BrandCode": "Wuling",
-		"CodeDesc": "N120 - 五菱之光S",
-		"Code": "N120",
-		"Description": "五菱之光S"
-	}, {
-		"Sort": 4,
-		"IcoFileName": "CN100V.gif",
-		"BrandCode": "Wuling",
-		"CodeDesc": "CN100V - 五菱荣光V(原五菱宏光V)",
-		"Code": "CN100V",
-		"Description": "五菱荣光V(原五菱宏光V)"
-	}, {
-		"Sort": 5,
-		"IcoFileName": "CN101.gif",
-		"BrandCode": "Wuling",
-		"CodeDesc": "CN101 - 五菱宏光2014款",
-		"Code": "CN101",
-		"Description": "五菱宏光2014款"
-	}, {
-		"Sort": 6,
-		"IcoFileName": "CN100.gif",
-		"BrandCode": "Wuling-0253",
-		"CodeDesc": "CN100 - 五菱宏光",
-		"Code": "CN100",
-		"Description": "五菱宏光"
-	}, {
-		"Sort": 7,
-		"IcoFileName": "CN112.gif",
-		"BrandCode": "Wuling-0253",
-		"CodeDesc": "CN112 - 五菱宏光S",
-		"Code": "CN112",
-		"Description": "五菱宏光S"
-	}]};
-		$(function(){
+		"Data": [{
+			"Sort": 1,
+			"IcoFileName": "CN050V.gif",
+			"BrandCode": "Wuling",
+			"CodeDesc": "CN050V - 五菱之光V(CN050V)",
+			"Code": "CN050V",
+			"Description": "五菱之光V(CN050V)"
+		}, {
+			"Sort": 2,
+			"IcoFileName": "CN113.gif",
+			"BrandCode": "Wuling",
+			"CodeDesc": "CN113 - 五菱宏光S1",
+			"Code": "CN113",
+			"Description": "五菱宏光S1"
+		}, {
+			"Sort": 3,
+			"IcoFileName": "N120.gif",
+			"BrandCode": "Wuling",
+			"CodeDesc": "N120 - 五菱之光S",
+			"Code": "N120",
+			"Description": "五菱之光S"
+		}, {
+			"Sort": 4,
+			"IcoFileName": "CN100V.gif",
+			"BrandCode": "Wuling",
+			"CodeDesc": "CN100V - 五菱荣光V(原五菱宏光V)",
+			"Code": "CN100V",
+			"Description": "五菱荣光V(原五菱宏光V)"
+		}, {
+			"Sort": 5,
+			"IcoFileName": "CN101.gif",
+			"BrandCode": "Wuling",
+			"CodeDesc": "CN101 - 五菱宏光2014款",
+			"Code": "CN101",
+			"Description": "五菱宏光2014款"
+		}, {
+			"Sort": 6,
+			"IcoFileName": "CN100.gif",
+			"BrandCode": "Wuling-0253",
+			"CodeDesc": "CN100 - 五菱宏光",
+			"Code": "CN100",
+			"Description": "五菱宏光"
+		}, {
+			"Sort": 7,
+			"IcoFileName": "CN112.gif",
+			"BrandCode": "Wuling-0253",
+			"CodeDesc": "CN112 - 五菱宏光S",
+			"Code": "CN112",
+			"Description": "五菱宏光S"
+		}]
+	};
+	$(function() {
 
-			$("#msg").combobox({
-				// width:500,
-				// heght:300,
-				//data:data,
-				url:'/getComboList/brand',
-				mode:'local',
-				showLimitItem:false,
-				method:'GET',
-				textField:'Description',
-				valueField:'Code',
-				groupField:'BrandCode',
-				queryMatch:'Description',
-				separator:',',
-				dependenciesIds:[],
-				clearIds:["#msg2","#msg3"],
-				multiple:false,
-				queryParams:{},
-				dependenciesParams: function(vs) {
-					return {
-						parentId: vs
-					};
-				},
-				// groupFormatter:function(g){},
-				//formatter:function(row){return row.Code+'==='+row.Sort},
-				// loader: function(params, success, error){},
-				loadFilter:function(data){
+		var opts = {
+			// width:500,
+			// heght:300,
+			data:null,
+			url: '',
+			mode: 'local',
+			showLimitItem: false,
+			method: 'GET',
+			textField: 'Description',
+			valueField: 'Code',
+			groupField: '',
+			queryMatch: 'Description',
+			separator: ',',
+			dependenciesIds: [],
+			clearIds: [],
+			queryParams: {},
+			dependenciesParams: function(vs) {
+				return {
+					parentId: vs
+				};
+			},
+			// groupFormatter:function(g){},
+			//formatter:function(row){return row.Code+'==='+row.Sort},
+			// loader: function(params, success, error){},
+			loadFilter: function(data) {
+				return data.Data;
+			},
+			onBeforeLoad: function(param) {},
+			onLoadSuccess: function(data) {},
+			onLoadError: function() {},
+			onSelect: function(record) {
+				// //debugger;
+				// console.log(record)
+				//console.info($("#brand").combobox('getValues'));
+			},
+			onUnselect: function(record) {
+				//debugger;
+			},
+			onOpenPanel: function() {},
+			onHidePanel: function() {
+				console.log($(this).combobox("getValues"));
+			}
+		};
+
+		// $(".menu").on("click", "[data-action]", function(e) {
+		// 	var action = $(this).attr("data-action");
+		// 	window.location.href=window.location.href+'?q='+action;
+		// });
+
+		init();
+
+		function init() {
+			var search = window.location.search,
+				txt = new RegExp("[\\?&]q=([^&#]*)"),
+				val = txt.exec(search);
+			if (!val) return;
+			var action = val[1];
+			hideCascade();
+			switch (action) {
+				case "basic":
+					basic();
+					break;
+				case "dynamic":
+					dynamic();
+					break;
+				case "multiple":
+					multiple();
+					break;
+				case "group":
+					group();
+					break;
+				case "custom":
+					custom();
+					break;
+				case "cascade":
+					showCascade();
+					cascade();
+					break;
+			}
+			$(".menu").find("[data-action='" + action + "']").addClass("selected");
+			$("pre[data-action='"+action+"']").show();
+		}
+
+		function basic() {
+			$("#brand").combobox('clear').combobox($.extend({}, opts, {
+				data: data,
+				loadFilter: function(data) {
+					return data.Data;
+				}
+			}));
+		}
+
+		function dynamic() {
+			$("#brand").combobox('clear').combobox($.extend({}, opts, {
+				url: '/getComboList/brand',
+				loadFilter: function(data) {
+					return data.Data;
+				}
+			}));
+		}
+
+		function multiple() {
+			$("#brand").combobox('clear').combobox($.extend({}, opts, {
+				data: data,
+				multiple: true,
+				loadFilter: function(data) {
+					return data.Data;
+				}
+			}));
+		}
+
+		function group() {
+			$("#brand").combobox('clear').combobox($.extend({}, opts, {
+				data: data,
+				groupField: 'BrandCode',
+				loadFilter: function(data) {
+					return data.Data;
+				}
+			}));
+		}
+
+		function custom() {
+			$("#brand").combobox('clear').combobox($.extend({}, opts, {
+				data: data,
+				groupField: '',
+				loadFilter: function(data) {
 					return data.Data;
 				},
-				onBeforeLoad:function(param){},
-				onLoadSuccess:function(data){
-				},
-				onLoadError:function(){},
-				onSelect: function(record) {
-					// //debugger;
-					// console.log(record)
-					//console.info($("#msg").combobox('getValues'));
-				},
-				onUnselect: function(record) {
-					//debugger;
-				},
-				onOpenPanel: function() {},
-				onHidePanel:function(){
-					console.log($(this).combobox("getValues"));
+				formatter: function(row) {
+					var s = '<span style="font-weight:bold">' + row.Code + '</span><br/>' +
+						'<span style="color:#888">' + row.Description + '</span>';
+					return s;
 				}
-			});
+			}));
+		}
 
-			$("#msg2").combobox({
-				//data:data,
-				url:'/getComboList/series',
-				mode:'remote',
-				method:'GET',
-				showLimitItem:true,
-				textField:'Description',
-				valueField:'Code',
-				groupField:'BrandCode',
-				queryMatch:'Description',
-				separator:',',
-				dependenciesIds:["#msg"],
-				clearIds:["#msg3"],
-				multiple:true,
-				queryParams:{},
-				dependenciesParams: function(vs) {
-					return {
-						parentId: vs
-					};
-				},
-				// groupFormatter:function(g){},
-				//formatter:function(row){return row.Code+'==='+row.Sort},
-				// loader: function(params, success, error){},
-				loadFilter:function(data){
+		function cascade() {
+			$("#brand").combobox('clear').combobox($.extend({}, opts, {
+				url: '/getComboList/brand',
+				mode: 'remote',
+				clearIds: ["#series", "#year"],
+				loadFilter: function(data) {
 					return data.Data;
-				},
-				onBeforeLoad:function(param){},
-				onLoadSuccess:function(data){
-				},
-				onLoadError:function(){},
-				onSelect: function(record) {
-					// //debugger;
-					// console.log(record)
-					//console.info($("#msg").combobox('getValues'));
-				},
-				onUnselect: function(record) {
-					//debugger;
-					console.log(record)
-				},
-				onOpenPanel: function() {},
-				onHidePanel:function(){
-					console.log($(this).combobox("getValues"));
 				}
-			});
+			}));
 
-			$("#msg3").combobox({
-				// data:data,
-				url:'/getComboList/year',
-				mode:'remote',
-				method:'GET',
-				showLimitItem:false,
-				textField:'Description',
-				valueField:'Code',
-				groupField:'BrandCode',
-				queryMatch:'Description',
-				separator:',',
-				dependenciesIds:["#msg2"],
-				clearIds:[],
-				multiple:true,
-				queryParams:{},
-				dependenciesParams: function(vs) {
-					return {
-						parentId: vs
-					};
-				},
-				// groupFormatter:function(g){},
-				//formatter:function(row){return row.Code+'==='+row.Sort},
-				// loader: function(params, success, error){},
-				loadFilter:function(data){
+			$("#series").combobox('clear').combobox($.extend({}, opts, {
+				url: '/getComboList/series',
+				mode: 'remote',
+				dependenciesIds: ["#brand"],
+				clearIds: ["#year"],
+				loadFilter: function(data) {
 					return data.Data;
-				},
-				onBeforeLoad:function(param){},
-				onLoadSuccess:function(data){
-				},
-				onLoadError:function(){},
-				onSelect: function(record) {
-					// //debugger;
-					// console.log(record)
-					//console.info($("#msg").combobox('getValues'));
-				},
-				onUnselect: function(record) {
-					//debugger;
-				},
-				onOpenPanel: function() {},
-				onHidePanel:function(){
-					console.log($(this).combobox("getValues"));
 				}
-			});
-		});
+			}));
+
+			$("#year").combobox('clear').combobox($.extend({}, opts, {
+				url: '/getComboList/year',
+				mode: 'remote',
+				dependenciesIds: ["#series"],
+				loadFilter: function(data) {
+					return data.Data;
+				}
+			}));
+		}
+
+
+		function hideCascade() {
+			$("#series").combobox("comboTarget").hide();
+			$("#year").combobox("comboTarget").hide();
+		}
+
+		function showCascade() {
+			$("#series").combobox("comboTarget").show();
+			$("#year").combobox("comboTarget").show();
+		}
+	});
 	</script>
 </head>
 <body>
-	<!-- <span class="s-textbox">
-		<span class="s-textbox-addon s-textbox-addon-right"><a class="s-textbox-icon s-combobox-arrow" href="javascript:;"></a></span>
-			<input type="text" class="s-textbox-text">
-			<input type="hidden" class='s-textbox-value'>
-	</span> -->
-	<div class="msg">
-		<input type="text" id="msg">
-		<input type="text" id="msg2">
-		<input type="text" id="msg3">
-	</div>
-	<!-- 	<div id="autocomplete_source_wrap" class="s-combobox-container" data-field='autocomplete_panel'>
-	<div class="s-combobox-inner">
-		<div class="s-combobo-group">一大类</div>
-		<div class="s-combobo-item s-combobo-gitem">1小类</div>
-		<div class="s-combobo-item s-combobo-gitem">2小类</div>
-		<div class="s-combobo-group">二大类</div>
-		<div class="s-combobo-item s-combobo-gitem">2.1小类</div>
-		<div class="s-combobo-item s-combobo-gitem">2.2小类</div>
-		<div class="s-combobo-item">***小类</div>
-		<div class="s-combobo-item">*****小类</div>
-	</div>
+<div class="menu">
+	<ul>
+		<li><a href="/combobox?q=basic" data-action="basic"> Basic</a></li>
+		<li><a href="/combobox?q=dynamic" data-action="dynamic"> Load Dynamic ComboBox Data</a></li>
+		<li><a href="/combobox?q=multiple" data-action="multiple"> Multiple Select</a></li>
+		<li><a href="/combobox?q=group" data-action="group"> Group ComboBox</a></li>
+		<li><a href="/combobox?q=custom" data-action="custom"> Custom Format in ComboBox</a></li>
+		<li><a href="/combobox?q=cascade" data-action="cascade"> Cascade ComboBox</a></li>
+		<li><a href="/combobox?q=default" data-action="default"> Combobox Defaults Feature</a></li>
+	</ul>
 </div>
--->
 
+	<div class="content-view">
+
+		品牌：<input type="text" id="brand">
+		目录：<input type="text" id="series">
+		年份：<input type="text" id="year">
+	</div>
+	<div class="source-title"><h4>Source Code:</h4></div>
+	<div class="source-content">
+		<pre data-action="basic">
+			$("#brand").combobox('clear').combobox($.extend({}, opts, {
+				data: data,
+				loadFilter: function(data) {
+					return data.Data;
+				}
+			}));
+		</pre>
+		<pre data-action="dynamic">
+			$("#brand").combobox('clear').combobox($.extend({}, opts, {
+				url: '/getComboList/brand',
+				loadFilter: function(data) {
+					return data.Data;
+				}
+			}));
+		</pre>
+		<pre data-action="multiple">
+			$("#brand").combobox('clear').combobox($.extend({}, opts, {
+				data: data,
+				multiple: true,
+				loadFilter: function(data) {
+					return data.Data;
+				}
+			}));
+		</pre>
+		<pre data-action="group">
+			$("#brand").combobox('clear').combobox($.extend({}, opts, {
+				data: data,
+				groupField: 'BrandCode',
+				loadFilter: function(data) {
+					return data.Data;
+				}
+			}));
+		</pre>
+		<pre data-action="custom">
+			$("#brand").combobox('clear').combobox($.extend({}, opts, {
+				data: data,
+				groupField: '',
+				loadFilter: function(data) {
+					return data.Data;
+				},
+				formatter: function(row) {
+					var s = "&ltspan style='font-weight:bold'>" + row.Code + "&lt/span>&ltspan style='color:#888'&gt" + row.Description + "&lt/span&gt";
+					return s;
+				}
+			}));
+		</pre>
+		<pre data-action="cascade">
+			$("#brand").combobox('clear').combobox($.extend({}, opts, {
+				url: '/getComboList/brand',
+				mode: 'remote',
+				clearIds: ["#series", "#year"],
+				loadFilter: function(data) {
+					return data.Data;
+				}
+			}));
+
+			$("#series").combobox('clear').combobox($.extend({}, opts, {
+				url: '/getComboList/series',
+				mode: 'remote',
+				dependenciesIds: ["#brand"],
+				clearIds: ["#year"],
+				loadFilter: function(data) {
+					return data.Data;
+				}
+			}));
+
+			$("#year").combobox('clear').combobox($.extend({}, opts, {
+				url: '/getComboList/year',
+				mode: 'remote',
+				dependenciesIds: ["#series"],
+				loadFilter: function(data) {
+					return data.Data;
+				}
+			}));
+		</pre>
+		<pre data-action="default">
+			width:200,
+			height:150,
+			valueField: 'value',
+			textField: 'text',
+			groupField: 'group',
+			//渲染分组时自定义
+			groupFormatter: function(g) {
+				return g;
+			},
+			//按XX字段查询
+			queryMatch: '',
+			//远程请求方式
+			method: 'GET',
+			url: null,
+			//默认查询参数
+			queryParams: null,
+			//筛选数据请求方式(级联查询时只支持remote)
+			mode: 'local', //or 'remote'  
+			//是否显示与筛选数据不相关的项
+			showLimitItem: false, 
+			//本地数据加载
+			data: null,
+			//按键输入延迟查询
+			delay: 200,
+			multiple: false,
+			disabled: false,
+			//级联父级以下(所有子级)必须填写
+			dependenciesIds: [],
+			//清除级联下的子项
+			clearIds: [],
+			//传递到后台时依赖项参数
+			dependenciesParams: function(vs) {
+				return {
+					parentId: vs
+				};
+			},
+			//多选时分隔符
+			separator: ',',
+			//格式化选项
+			formatter: function(row) {
+				var opts = $(this).combobox("options");
+				return row[opts.textField];
+			},
+			//远程加载方法，可外部重写，接收参数，成功回调，失败回调
+			loader: function(params, success, error) {
+				var target = this;
+				var opts = $(target).combobox('options');
+				if (!opts.url) return;
+				$.ajax({
+					type: opts.method,
+					url: opts.url,
+					data: params,
+					dataType: 'json',
+					beforeSend: function() {
+						opts.block(target);
+					},
+					complete: function() {
+						opts.unblock(target);
+					},
+					success: function(data) {
+						success(data);
+					},
+					error: function() {
+						error.apply(this, arguments);
+					}
+				});
+			},
+			//重构数据
+			loadFilter: function(data) {
+				return data;
+			},
+			onHidePanel: function() {},
+			onOpenPanel: function() {},
+			onBeforeLoad: function(param) {},
+			onLoadSuccess: function(param) {},
+			onLoadError: function(param) {},
+			onSelect: function(record) {},
+			onUnselect: function(record) {}
+		</pre>
+	</div>
+
+
+<!-- <div class="msg">
+		<input type="text" id="msg">
+		<span class="s-textbox">
+		<span class="s-textbox-addon s-textbox-addon-right">
+			<a class="s-textbox-icon s-combobox-arrow" href="javascript:;"></a>
+		</span>
+
+		<input type="text" class="s-textbox-text s-textbox-disabled" tabindex="1" value="" readonly="readonly" ><input type="hidden" class="s-textbox-value" value="">
+		</span>
+	</div> -->
 
 
 <script src="./scripts/component/jquery.servision.combobox.js"></script>

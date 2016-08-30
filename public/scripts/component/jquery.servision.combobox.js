@@ -81,6 +81,7 @@
 			}
 		}
 
+		panel.off(".s-combobox");
 		//init panel event handler
 		for (var event in opts.panelEvents) {
 			panel.on(event + '.s-combobox', {
@@ -96,12 +97,6 @@
 			$target = $(target),
 			tw = $target.outerWidth(),
 			th = $target.outerHeight(),
-			m = {
-				top: $target.css('marginTop'),
-				left: $target.css('marginLeft'),
-				right: $target.css('marginRight'),
-				bottom: $target.css('marginBottom')
-			},
 			p = {
 				top: $target.css('paddingTop'),
 				left: $target.css('paddingLeft'),
@@ -130,12 +125,12 @@
 			margin = ['0', $arrow.outerWidth(true) + 'px', '0', '0'];
 
 		$input.css({
-			width: tw - $arrow.outerWidth(true) - parseFloat(p.left) - parseFloat(p.bottom),
+			width: tw - $arrow.outerWidth(true) - parseFloat(p.left) - parseFloat(p.right),
 			padding: padding.join(' '),
 			height: th,
 			lineHeight: th + 'px',
 			margin: margin.join(' ')
-		});
+		}).attr("readOnly", opts.disabled).addClass(opts.disabled ? 's-textbox-disabled' : '');
 
 		$arrow.css({
 			height: th
@@ -178,12 +173,10 @@
 		if (!target) return;
 
 		var state = $.data(target, 'combobox'),
+			dependV = [],
 			opts = state.options;
 
 		if (state.panel.is(":hidden")) {
-
-			var q = $(target).combobox("getText");
-
 
 			//级联依赖项
 			if (opts.dependenciesIds) {
@@ -191,7 +184,6 @@
 					opts.dependenciesIds = [opts.dependenciesIds];
 				var i = 0,
 					l = opts.dependenciesIds.length,
-					dependV = [],
 					selector;
 				for (; selector = opts.dependenciesIds[i]; i++) {
 					var vv = $(selector).combobox("getValues"),
@@ -203,12 +195,6 @@
 
 					dependV = dependV.concat(vv);
 				}
-
-				if (dependV.length) {
-					doQuery(target, q);
-				}
-			} else {
-				doQuery(target, q);
 			}
 
 			if (opts.onOpenPanel) {
@@ -223,6 +209,20 @@
 			}).show();
 
 			state.comboTarget.find(".s-textbox-text").focus();
+
+			var q = $(target).combobox("getText");
+
+			if (opts.dependenciesIds && opts.dependenciesIds.length && !dependV.length) {
+				if (opts.mode == 'local') {
+					state.panel.children().children('.s-combobox-item,.s-combobox-group').hide();
+				} else if (opts.mode == 'remote') {
+					opts.view.render.call(opts.view, target, state.panel.children(':eq(0)'), []);
+				}
+				$(target).combobox("clear");
+				$(target).combobox('fixPosition');
+				return;
+			}
+			doQuery(target, q);
 		}
 	}
 
@@ -265,6 +265,18 @@
 		return left;
 	}
 
+	function fixPosition(target) {
+		if (!target) return;
+		var state = $.data(target, 'combobox'),
+			$panel = state.panel;
+		if ($panel.is(":visible")) {
+			$panel.css({
+				'top': fixTop(target),
+				'left': fixLeft(target)
+			});
+		}
+	}
+
 	function bindKeyHandlerEvent(e) {
 		var target = e.data.target,
 			$target = $(target),
@@ -299,9 +311,7 @@
 				state.timer = setTimeout(function() {
 					var q = $(target).combobox("getText");
 					if (state.previous != q) {
-
 						setPrevAndClear(state, q);
-
 						$target.combobox('open');
 						opts.keyHandler.query.call(target, q, e);
 					}
@@ -327,6 +337,7 @@
 	function loadData(target, data, remainText) {
 		var state = $.data(target, 'combobox'),
 			opts = state.options,
+			$target = $(target),
 			$panel = state.panel,
 			query = $(target).combobox('getText'),
 			vv = $(target).combobox('getValues');
@@ -348,10 +359,13 @@
 
 		opts.onLoadSuccess.call(target, data);
 
+		$(target).combobox('fixPosition');
+
 	}
 
 	function request(target, url, param, remainText) {
-		var opts = $.data(target, 'combobox').options;
+		var state = $.data(target, 'combobox'),
+			opts = state.options;
 		if (url) {
 			opts.url = url;
 		}
@@ -359,19 +373,21 @@
 
 		if (opts.onBeforeLoad.call(target, param) === false) return;
 
+
 		opts.loader.call(target, param, function(data) {
 			loadData(target, data, remainText);
 		}, function() {
 			opts.onLoadError.call(this, arguments);
+			opts.view.render.call(opts.view, target, state.panel.children(':eq(0)'), []);
 		});
 	}
 
 	function doQuery(target, q) {
 		var state = $.data(target, 'combobox'),
+			$target = $(target),
 			opts = state.options,
 			$panel = state.panel,
 			query = opts.multiple ? q.split(opts.separator) : [q];
-
 
 		setPrevAndClear(state, q);
 
@@ -386,6 +402,8 @@
 			var vv = setLimitItem(target, query);
 			//重置选中样式
 			_setValue(vv);
+
+			$(target).combobox('fixPosition');
 		}
 
 		function _setValue(v, remineText) {
@@ -697,7 +715,7 @@
 			var state = $.data(this, 'combobox');
 			if (state) {
 
-				state = $.extend(state.options, options);
+				$.extend(state.options, options);
 			} else {
 
 				state = $.data(this, 'combobox', {
@@ -724,19 +742,27 @@
 		panel: function(jq) {
 			return $.data(jq[0], "combobox").panel;
 		},
+
+		loadData: function(jq, data) {
+			return jq.each(function(idx, val) {
+				loadData(val, data);
+			});
+		},
 		comboTarget: function(jq) {
-			if (!$.data(jq[0], "combobox").comboTarget) {
+			var state = $.data(jq[0], "combobox");
+			if (state && !state.comboTarget) {
 				var dd = [];
 				dd.push('<span class="s-textbox">');
 				dd.push('<span class="s-textbox-addon s-textbox-addon-right"><a class="s-textbox-icon s-combobox-arrow" href="javascript:;"></a></span>');
-				dd.push('<input type="text" class="s-textbox-text" value="">');
+				dd.push('<input type="text" class="s-textbox-text" tabIndex="1" value="">');
 				dd.push('<input type="hidden" class="s-textbox-value" value="">');
 				dd.push('</span>');
 				$.data(jq[0], 'combobox').comboTarget = $(dd.join('')).insertAfter(jq);
 				jq.hide();
 			}
-			return $.data(jq[0], "combobox").comboTarget;
+			if (!state) return jq;
 
+			return state.comboTarget;
 		},
 		setValues: function(jq, values) {
 			return jq.each(function() {
@@ -787,6 +813,12 @@
 					}
 					request(this);
 				}
+			});
+		},
+
+		fixPosition: function(jq) {
+			return jq.each(function(idx, val) {
+				fixPosition(val);
 			});
 		},
 
@@ -879,25 +911,38 @@
 		valueField: 'value',
 		textField: 'text',
 		groupField: 'group',
+		//渲染分组时自定义
 		groupFormatter: function(g) {
 			return g;
 		},
+		//按XX字段查询
 		queryMatch: '',
-		isCheckBox: false,
-		mode: 'local', //or 'local'  //筛选数据请求方式
-		isAutoComplete: false, //无级联的情况下数据一次性加载，本地筛选数据
-		method: 'post',
+		//远程请求方式
+		method: 'GET',
 		url: null,
+		//默认查询参数
+		queryParams: null,
+		//筛选数据请求方式(级联查询时只支持remote)
+		mode: 'local', //or 'remote'  
+		//是否显示与筛选数据不相关的项
+		showLimitItem: false,
+		//本地数据加载
 		data: null,
+		//按键输入延迟查询
 		delay: 200,
-		multiple: true,
+		multiple: false,
+		disabled: false,
+		//级联父级以下(所有子级)必须填写
 		dependenciesIds: [],
+		//清除级联下的子项
 		clearIds: [],
+		//传递到后台时依赖项参数
 		dependenciesParams: function(vs) {
 			return {
 				parentId: vs
 			};
 		},
+		//多选时分隔符
 		separator: ',',
 		view: defaultView,
 		inputEvents: {
@@ -924,7 +969,6 @@
 			paste: no0p,
 			drop: no0p
 		},
-		queryParams: null,
 		keyHandler: {
 			up: function(e) {
 				nav(this, 'prev');
@@ -948,6 +992,7 @@
 			mouseout: mouseoutHandler,
 			click: clickHandler
 		},
+		//格式化选项
 		formatter: function(row) {
 			var opts = $(this).combobox("options");
 			return row[opts.textField];
@@ -995,7 +1040,7 @@
 					'top': $panel.css("top"),
 					'left': $panel.css("left"),
 					'width': $panel.css("width"),
-					'height': $panel.css("height")
+					'height': parseFloat($panel.css("height")) || 40
 				};
 
 				$panel.blockUI.css({
@@ -1014,7 +1059,7 @@
 				$panel.blockUI.remove();
 			}
 		},
-
+		//远程加载方法，可外部重写，接收参数，成功回调，失败回调
 		loader: function(params, success, error) {
 			var target = this;
 			var opts = $(target).combobox('options');
@@ -1038,6 +1083,7 @@
 				}
 			});
 		},
+		//重构数据
 		loadFilter: function(data) {
 			return data;
 		},

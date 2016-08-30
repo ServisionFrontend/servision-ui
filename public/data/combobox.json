@@ -65,8 +65,8 @@
 		"Description": "乐驰"
 	}, {
 		"BrandCode": "Wuling",
-		"CodeDesc": "CN050V - 五菱之光V",
-		"Code": "CN050V",
+		"CodeDesc": "CN180C - 五菱之光V",
+		"Code": "CN180C",
 		"Description": "五菱之光V"
 	}, {
 		"BrandCode": "Wuling",
@@ -181,15 +181,15 @@
 	}],
 	"Year": [{
 		"CodeDesc": "全部年份",
-		"Code": "",
+		"Code": "all",
 		"Description": "全部年份"
 	}, {
-		"Series": "GP53",
+		"Series": "CN180C",
 		"CodeDesc": "2016",
 		"Code": "2016",
 		"Description": "2016"
 	}, {
-		"Series": "GP53",
+		"Series": "CN180C",
 		"CodeDesc": "2015",
 		"Code": "2015",
 		"Description": "2015"
