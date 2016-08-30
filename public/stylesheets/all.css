@@ -1,0 +1,16 @@
+html, body, header, section, footer, article, nav, aside, div, p, ul, dl, li, dt, dd, span, a, label, input, textarea, pre {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+dl, ul {
+    list-style: none;
+}
+a {
+    text-decoration: none;
+    color: #444;
+    font-size: 14px;
+}
+a:hover {
+    color: #EBA679;
+}
