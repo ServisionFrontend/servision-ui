@@ -1,0 +1,90 @@
+<style type="text/css">
+		.tree-wrap {
+			display:block;
+			text-align: left;
+			margin: 0px;
+		}
+
+		.tree-container {
+			padding: 5px;
+			width: 755px;
+			min-height: 200px;
+			border: 1px solid #95b8e7;
+			margin: 10px 0 0 0;
+		}
+</style>
+
+<link rel="stylesheet" href="/stylesheets/component/servision.tree.css" />
+
+<div class="tree-wrap">
+	<a id="btnCheckAll" href="javascript:void(0);" class="button">全选</a>
+	<div id="tree-container" class="tree-container">
+	</div>
+</div>
+
+<script type="text/javascript" src="/scripts/component/jquery.servision.tree.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		var $tbcontainer = $('#tree-container');
+
+		var data = [{
+			id: 1,
+			text: 'node-1',
+			checked: true,
+			children: [{
+				id: 2,
+				text: 'node-2',
+				checked: true
+			}, {
+				id: 3,
+				text: 'node-3',
+				checked: true,
+				children: [{
+					id: 4,
+					text: 'node-4',
+					checked: true
+				}, {
+					id: 5,
+					text: 'node-5',
+					checked: true
+				}]
+			},{
+				id: 6,
+				text: 'node-6',
+				checked: true,
+				children: [{
+					id: 7,
+					text: 'node-7',
+					checked: true
+				}, {
+					id: 8,
+					text: 'node-8',
+					checked: true
+				}]
+			},{
+				id: 9,
+				text: 'node-9',
+				checked: true,
+				children: [{
+					id: 10,
+					text: 'node-10',
+					checked: true
+				}, {
+					id: 11,
+					text: 'node-11',
+					checked: true
+				}]
+			}]
+		}];
+
+		$tbcontainer.tree({
+			data:data,
+			expandAll:true
+		});
+
+		$('#btnCheckAll').on('click', function(){
+			$tbcontainer.tree('checkAll');
+		});
+	});
+</script>

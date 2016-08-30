@@ -158,7 +158,8 @@
 					spaceName = '.' + opts.name,
 					$draggableDom = $('#' + opts.name + ' ' + opts.dragController),
 					timer = 0,
-					time = 0;
+					time = 0,
+					pos = {x:0, y:0};
 					opts.draggable = false;
 					opts.$blockDom = $('<div style="position:absolute;width:100%;height:100%;top:0;left:0;background:#eee;opacity:0.5;cursor:move;z-index:19000;display:none"></div>');
 
@@ -166,6 +167,8 @@
 				$draggableDom.css({cursor: 'move'});
 				opts.$blockDom.insertAfter(opts.msgBox);
 				$(document).on('mousedown' + spaceName, '#' + opts.name + ' ' + opts.dragController, function(e) {
+					pos.x = e.clientX;
+					pos.y = e.clientY;
 					time = (new Date()).getTime();
 					timer = setTimeout(function() {
 						self.moveStart(opts, e);
@@ -173,16 +176,19 @@
 					return false;
 				});
 				$(document).on('mousemove' + spaceName, function(e) {
-					if((new Date()).getTime() - time < 1000) {
+					if((new Date()).getTime() - time < 1000 && (Math.abs(e.clientX-pos.x) > 20 || Math.abs(e.clientY-pos.y) > 20)) {
 						time = 0;
 						clearTimeout(timer);
-						self.moveStart(opts, e);
+						if(timer) {
+							self.moveStart(opts, e);
+						}
 					}
 					self.moveDom(opts, e);
 					return false;
 				});
 				$(document).on('mouseup' + spaceName, function() {
 					clearTimeout(timer);
+					timer = null;
 					self.moveEnd(opts);
 					return false;
 				});

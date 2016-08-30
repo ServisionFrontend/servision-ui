@@ -2,21 +2,37 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>主页</title>
-
-	<style>
-		a {
-			margin: 5px;
-		}
-	</style>
+	<title>servision ui demo</title>
+	<link rel="stylesheet" href="/stylesheets/all.css">
+	<link rel="stylesheet" href="/stylesheets/home.css">
+	<script type="text/javascript" src="/scripts/libs/public/jquery-1.11.3.min.js"></script>
 </head>
 <body>
-    <div>
-		<a href="/tree" target="_blank">tree</a>
-		<a href="/combobox" target="_blank">combobox</a>
-		<a href="/textbox" target="_blank">textbox</a>
-		<a href="/window" target="_blank">window</a>
-		<a href="/grid" target="_blank">grid</a>
+    <div class="header-wrap" >
+    	<div class="header-content">
+    	   <a class="header-logo"></a><span class="header-title">web前端组件</span>
+    	</div>
+	</div>
+	<div class="component-list">
+		<ul>
+			<li><a href="/tree">tree</a></li>
+			<li><a href="javascript:void(0);">combobox</a></li>
+			<li><a href="javascript:void(0);">window</a></li>
+			<li><a href="javascript:void(0);">grid</a></li>
+		</ul>
+	</div>
+	<div class="component-content">
+		<div class="component-nav">
+			<div class="component-nav-title">组件功能</div>
+			<ul class="component-nav-list" >
+				<% featureList.forEach(function(item){ %>
+					<li><a href="<%= item.href %>"><%= item.text %></a></li>
+				<% }) %>
+			</ul>
+		</div>
+		<div class="component-demo">
+			<%- include(page) %>
+		</div>
 	</div>
 </body>
 </html>

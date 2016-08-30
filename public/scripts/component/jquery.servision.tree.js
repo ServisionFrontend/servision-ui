@@ -568,7 +568,7 @@
 		return this.each(function() {
 
 			$.data(this, 'tree', {
-				options: $.extend({}, $.fn.tree.defaults, options)
+				options: $.extend(true, {}, $.fn.tree.defaults, options)
 			});
 
 			tree.init(this);
