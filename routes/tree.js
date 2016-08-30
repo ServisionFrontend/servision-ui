@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 // tree
-var treeFeatureList = [{
+var featureList = [{
 	text: '基本功能',
 	href: '/tree'
 }, {
@@ -19,28 +19,28 @@ var treeFeatureList = [{
 router.get('/', function(req, res, next) {
 	res.render('index.ejs', {
 		page: './tree/basic.ejs',
-		featureList: treeFeatureList
+		featureList: featureList
 	});
 });
 
 router.get('/nodeCheckbox', function(req, res, next) {
 	res.render('index.ejs', {
 		page: './tree/nodeCheckbox.ejs',
-		featureList: treeFeatureList
+		featureList: featureList
 	});
 });
 
 router.get('/moveSelection', function(req, res, next) {
 	res.render('index.ejs', {
 		page: './tree/moveSelection.ejs',
-		featureList: treeFeatureList
+		featureList: featureList
 	});
 });
 
 router.get('/expandTo', function(req, res, next) {
 	res.render('index.ejs', {
 		page: './tree/expandTo.ejs',
-		featureList: treeFeatureList
+		featureList: featureList
 	});
 });
 
