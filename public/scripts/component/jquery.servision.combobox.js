@@ -910,7 +910,7 @@
 	$.fn.combobox.defaults = {
 		valueField: 'value',
 		textField: 'text',
-		groupField: 'group',
+		groupField: '',
 		//渲染分组时自定义
 		groupFormatter: function(g) {
 			return g;

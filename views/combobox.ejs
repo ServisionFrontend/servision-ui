@@ -121,7 +121,7 @@
 				val = txt.exec(search);
 			if (!val) return;
 			var action = val[1];
-			hideCascade();
+			
 			switch (action) {
 				case "basic":
 					basic();
@@ -140,7 +140,6 @@
 					break;
 				case "cascade":
 					showCascade();
-					cascade();
 					break;
 			}
 			$(".menu").find("[data-action='" + action + "']").addClass("selected");
@@ -230,16 +229,6 @@
 			}));
 		}
 
-
-		function hideCascade() {
-			$("#series").combobox("comboTarget").hide();
-			$("#year").combobox("comboTarget").hide();
-		}
-
-		function showCascade() {
-			$("#series").combobox("comboTarget").show();
-			$("#year").combobox("comboTarget").show();
-		}
 	});
 	</script>
 </head>
