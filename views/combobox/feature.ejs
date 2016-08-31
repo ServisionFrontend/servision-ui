@@ -1,0 +1,108 @@
+	<style>
+		.content-view {
+		  padding: 20px;
+		  overflow: hidden;
+		  border: 1px solid #eee; }
+		 .content-view input{height:26px;}
+
+		.source-title {
+		  background: #FAFAFA;
+		  line-height: 40px; }
+		  .source-title h4 {
+		    color: #2575ed;
+		    text-align: left;
+		    text-indent: 2em;
+		    padding: 0;
+		    margin: 0; }
+
+		.source-content {
+		  overflow: auto;
+		  background: #555;
+		  color: #fff;
+		  font-size: 16px;
+		  overflow: auto; }
+
+	</style>
+<div class="source-title"><h4>Source Code:</h4></div>
+	<div class="source-content">
+	<pre data-action="default">
+			width:200,
+			height:150,
+			valueField: 'value',
+			textField: 'text',
+			groupField: '',
+			//渲染分组时自定义
+			groupFormatter: function(g) {
+				return g;
+			},
+			//按XX字段查询
+			queryMatch: '',
+			//远程请求方式
+			method: 'GET',
+			url: null,
+			//默认查询参数
+			queryParams: null,
+			//筛选数据请求方式(级联查询时只支持remote)
+			mode: 'local', //or 'remote'  
+			//是否显示与筛选数据不相关的项
+			showLimitItem: false, 
+			//本地数据加载
+			data: null,
+			//按键输入延迟查询
+			delay: 200,
+			multiple: false,
+			disabled: false,
+			//级联父级以下(所有子级)必须填写
+			dependenciesIds: [],
+			//清除级联下的子项
+			clearIds: [],
+			//传递到后台时依赖项参数
+			dependenciesParams: function(vs) {
+				return {
+					parentId: vs
+				};
+			},
+			//多选时分隔符
+			separator: ',',
+			//格式化选项
+			formatter: function(row) {
+				var opts = $(this).combobox("options");
+				return row[opts.textField];
+			},
+			//远程加载方法，可外部重写，接收参数，成功回调，失败回调
+			loader: function(params, success, error) {
+				var target = this;
+				var opts = $(target).combobox('options');
+				if (!opts.url) return;
+				$.ajax({
+					type: opts.method,
+					url: opts.url,
+					data: params,
+					dataType: 'json',
+					beforeSend: function() {
+						opts.block(target);
+					},
+					complete: function() {
+						opts.unblock(target);
+					},
+					success: function(data) {
+						success(data);
+					},
+					error: function() {
+						error.apply(this, arguments);
+					}
+				});
+			},
+			//重构数据
+			loadFilter: function(data) {
+				return data;
+			},
+			onHidePanel: function() {},
+			onOpenPanel: function() {},
+			onBeforeLoad: function(param) {},
+			onLoadSuccess: function(param) {},
+			onLoadError: function(param) {},
+			onSelect: function(record) {},
+			onUnselect: function(record) {}
+		</pre>
+	</div>

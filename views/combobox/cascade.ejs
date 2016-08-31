@@ -1,0 +1,120 @@
+
+	<link rel="stylesheet" href="../stylesheets/component/servision.combobox.css">
+	<script src="../scripts/component/jquery.servision.combobox.js"></script>
+	<style>
+		.content-view {
+		  padding: 20px;
+		  overflow: hidden;
+		  border: 1px solid #eee; }
+		 .content-view input{height:26px;}
+
+		.source-title {
+		  background: #FAFAFA;
+		  line-height: 40px; }
+		  .source-title h4 {
+		    color: #2575ed;
+		    text-align: left;
+		    text-indent: 2em;
+		    padding: 0;
+		    margin: 0; }
+
+		.source-content {
+		  overflow: auto;
+		  background: #555;
+		  color: #fff;
+		  font-size: 16px;
+		  overflow: auto; }
+
+	</style>
+	<script>
+	
+	$(function() {
+
+
+		$("#brand").combobox({
+				url: '/combobox/getComboList/brand',
+				mode: 'remote',
+				textField: 'Description',
+				valueField: 'Code',
+				queryMatch:'Description',
+				clearIds: ["#series", "#year"],
+				loadFilter: function(data) {
+					return data.Data;
+				}
+		});
+		$("#series").combobox({
+				url: '/combobox/getComboList/series',
+				mode: 'remote',
+				textField: 'Description',
+				valueField: 'Code',
+				dependenciesIds: ["#brand"],
+				queryMatch:'Description',
+				clearIds: ["#year"],
+				loadFilter: function(data) {
+					return data.Data;
+				}
+		});
+
+		$("#year").combobox({
+			url: '/combobox/getComboList/year',
+			mode: 'remote',
+			textField: 'Description',
+			valueField: 'Code',
+			queryMatch:'Description',
+			dependenciesIds: ["#series"],
+			loadFilter: function(data) {
+				return data.Data;
+			}
+		});
+	});
+	</script>
+
+
+	<div class="content-view">
+
+		品牌：<input type="text" id="brand">
+		目录：<input type="text" id="series">
+		年份：<input type="text" id="year">
+	</div>
+	<div class="source-title"><h4>Source Code:</h4></div>
+	<div class="source-content">
+		<pre data-action="basic">
+			$("#brand").combobox({
+				url: '/combobox/getComboList/brand',
+				mode: 'remote',
+				textField: 'Description',
+				valueField: 'Code',
+				queryMatch:'Description',
+				clearIds: ["#series", "#year"],
+				loadFilter: function(data) {
+					return data.Data;
+				}
+			});
+			$("#series").combobox({
+					url: '/combobox/getComboList/series',
+					mode: 'remote',
+					textField: 'Description',
+					valueField: 'Code',
+					dependenciesIds: ["#brand"],
+					queryMatch:'Description',
+					clearIds: ["#year"],
+					loadFilter: function(data) {
+						return data.Data;
+					}
+			});
+
+			$("#year").combobox({
+				url: '/combobox/getComboList/year',
+				mode: 'remote',
+				textField: 'Description',
+				valueField: 'Code',
+				queryMatch:'Description',
+				dependenciesIds: ["#series"],
+				loadFilter: function(data) {
+					return data.Data;
+				}
+			});
+		</pre>
+	</div>
+
+

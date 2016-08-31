@@ -191,7 +191,7 @@
 							parentId: vv
 						};
 
-					$.extend(opts.queryParams, vs);
+					opts.queryParams = $.extend(opts.queryParams, vs);
 
 					dependV = dependV.concat(vv);
 				}

@@ -139,7 +139,7 @@
 					custom();
 					break;
 				case "cascade":
-					showCascade();
+					cascade();
 					break;
 			}
 			$(".menu").find("[data-action='" + action + "']").addClass("selected");
@@ -334,7 +334,7 @@
 			height:150,
 			valueField: 'value',
 			textField: 'text',
-			groupField: 'group',
+			groupField: '',
 			//渲染分组时自定义
 			groupFormatter: function(g) {
 				return g;

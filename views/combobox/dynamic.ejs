@@ -1,0 +1,66 @@
+
+	<link rel="stylesheet" href="../stylesheets/component/servision.combobox.css">
+	<script src="../scripts/component/jquery.servision.combobox.js"></script>
+	<style>
+		.content-view {
+		  padding: 20px;
+		  overflow: hidden;
+		  border: 1px solid #eee; }
+		 .content-view input{height:26px;}
+
+		.source-title {
+		  background: #FAFAFA;
+		  line-height: 40px; }
+		  .source-title h4 {
+		    color: #2575ed;
+		    text-align: left;
+		    text-indent: 2em;
+		    padding: 0;
+		    margin: 0; }
+
+		.source-content {
+		  overflow: auto;
+		  background: #555;
+		  color: #fff;
+		  font-size: 16px;
+		  overflow: auto; }
+
+	</style>
+	<script>
+	$(function() {
+
+		$("#brand").combobox({
+				url: '/combobox/getComboList/brand',
+				textField: 'Description',
+				valueField: 'Code',
+				mode:'remote',
+				queryMatch:'Description',
+				loadFilter: function(data) {
+					return data.Data;
+				}
+		});
+	});
+	</script>
+
+
+	<div class="content-view">
+
+		品牌：<input type="text" id="brand">
+	</div>
+	<div class="source-title"><h4>Source Code:</h4></div>
+	<div class="source-content">
+		<pre data-action="basic">
+			$("#brand").combobox({
+				url: '/combobox/getComboList/brand',
+				textField: 'Description',
+				valueField: 'Code',
+				mode:'remote',
+				queryMatch:'Description',
+				loadFilter: function(data) {
+					return data.Data;
+				}
+			});
+		</pre>
+	</div>
+
+

@@ -1,0 +1,119 @@
+
+	<link rel="stylesheet" href="../stylesheets/component/servision.combobox.css">
+	<script src="../scripts/component/jquery.servision.combobox.js"></script>
+	<style>
+		.content-view {
+		  padding: 20px;
+		  overflow: hidden;
+		  border: 1px solid #eee; }
+		 .content-view input{height:26px;}
+
+		.source-title {
+		  background: #FAFAFA;
+		  line-height: 40px; }
+		  .source-title h4 {
+		    color: #2575ed;
+		    text-align: left;
+		    text-indent: 2em;
+		    padding: 0;
+		    margin: 0; }
+
+		.source-content {
+		  overflow: auto;
+		  background: #555;
+		  color: #fff;
+		  font-size: 16px;
+		  overflow: auto; }
+
+	</style>
+	<script>
+	var data = {
+		"Data": [{
+			"Sort": 1,
+			"IcoFileName": "CN050V.gif",
+			"BrandCode": "Wuling",
+			"CodeDesc": "CN050V - 五菱之光V(CN050V)",
+			"Code": "CN050V",
+			"Description": "五菱之光V(CN050V)"
+		}, {
+			"Sort": 2,
+			"IcoFileName": "CN113.gif",
+			"BrandCode": "Wuling",
+			"CodeDesc": "CN113 - 五菱宏光S1",
+			"Code": "CN113",
+			"Description": "五菱宏光S1"
+		}, {
+			"Sort": 3,
+			"IcoFileName": "N120.gif",
+			"BrandCode": "Wuling",
+			"CodeDesc": "N120 - 五菱之光S",
+			"Code": "N120",
+			"Description": "五菱之光S"
+		}, {
+			"Sort": 4,
+			"IcoFileName": "CN100V.gif",
+			"BrandCode": "Wuling",
+			"CodeDesc": "CN100V - 五菱荣光V(原五菱宏光V)",
+			"Code": "CN100V",
+			"Description": "五菱荣光V(原五菱宏光V)"
+		}, {
+			"Sort": 5,
+			"IcoFileName": "CN101.gif",
+			"BrandCode": "Wuling",
+			"CodeDesc": "CN101 - 五菱宏光2014款",
+			"Code": "CN101",
+			"Description": "五菱宏光2014款"
+		}, {
+			"Sort": 6,
+			"IcoFileName": "CN100.gif",
+			"BrandCode": "Wuling-0253",
+			"CodeDesc": "CN100 - 五菱宏光",
+			"Code": "CN100",
+			"Description": "五菱宏光"
+		}, {
+			"Sort": 7,
+			"IcoFileName": "CN112.gif",
+			"BrandCode": "Wuling-0253",
+			"CodeDesc": "CN112 - 五菱宏光S",
+			"Code": "CN112",
+			"Description": "五菱宏光S"
+		}]
+	};
+	$(function() {
+
+
+		$("#brand").combobox({
+				data: data,
+				groupField: 'BrandCode',
+				textField: 'Description',
+				valueField: 'Code',
+				queryMatch:'Description',
+				loadFilter: function(data) {
+					return data.Data;
+				}
+		});
+	});
+	</script>
+
+
+	<div class="content-view">
+
+		品牌：<input type="text" id="brand">
+	</div>
+	<div class="source-title"><h4>Source Code:</h4></div>
+	<div class="source-content">
+		<pre data-action="basic">
+			$("#brand").combobox({
+				data: data,
+				groupField: 'BrandCode',
+				textField: 'Description',
+				valueField: 'Code',
+				queryMatch:'Description',
+				loadFilter: function(data) {
+					return data.Data;
+				}
+			});
+		</pre>
+	</div>
+
+
