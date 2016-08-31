@@ -18,6 +18,8 @@
 
 <div class="tree-wrap">
 	<a id="btnCheckAll" href="javascript:void(0);" class="button">全选</a>
+	<a id="btnUnCheckAll" href="javascript:void(0);" class="button">反选</a>
+	<a id="btnCheckCount" href="javascript:void(0);" class="button">获取选中数量</a>
 	<div id="tree-container" class="tree-container">
 	</div>
 </div>
@@ -84,7 +86,17 @@
 		});
 
 		$('#btnCheckAll').on('click', function(){
-			$tbcontainer.tree('checkAll');
+			$tbcontainer.tree('checkAll', true);
+		});
+
+		$('#btnUnCheckAll').on('click', function(){
+			$tbcontainer.tree('checkAll', false);
+		});
+
+		$('#btnCheckCount').on('click', function(){
+			var count = $tbcontainer.tree('getChecked');
+
+			alert(count);
 		});
 	});
 </script>
