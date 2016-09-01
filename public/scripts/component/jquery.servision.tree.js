@@ -28,16 +28,22 @@
 		initEvents: function(target) {
 			var self = this;
 
-			// 在树节点移动改变背景色
 			$(target).on('mouseover', '.tree-node', function(e) {
+
 				$(this).addClass('tree-node-hover');
 			});
 
 			$(target).on('mouseout', '.tree-node', function(e) {
+
 				$(this).removeClass('tree-node-hover');
 			});
 
-			// 节点行事件监听
+			$(target).on('dblclick', '.tree-node', function(e) {
+				var that = $(this).find('.tree-hit').get(0);
+
+				self.toggleNode(e, that, target);
+			});
+
 			$(target).on('click', '.tree-node', function(e) {
 				var id = $(this).attr('data-id');
 
@@ -48,18 +54,18 @@
 				self.clickRow(e, this, target);
 			});
 
-			// 节点行事件监听
 			$(target).on('click', '.tree-checkbox', function(e) {
+
 				self.toggleChecked(e, this, target);
 			});
 
-			// 展开收起图标事件监听
 			$(target).on('click', '.tree-hit', function(e) {
+
 				self.toggleNode(e, this, target);
 			});
 
-			// 节点文本事件监听
 			$(target).on('click', '.tree-text', function(e) {
+
 				self.clickNode(e, this, target);
 			});
 		},
@@ -92,48 +98,81 @@
 			var self = this,
 				checked,
 				opts = $.data(target, 'tree').options,
-				id = $(that).parent().attr('data-id');
+				data = opts.data,
+				id = $(that).parent().attr('data-id'),
+				node = self.getNodeById(target, id),
+				ids = utils.getNodeIds([node]);
 
 			if ($(that).hasClass('tree-checkbox0')) {
-				$(that).removeClass('tree-checkbox0');
-				$(that).addClass('tree-checkbox1');
 				checked = true;
 			} else {
-				$(that).removeClass('tree-checkbox1');
-				$(that).addClass('tree-checkbox0');
 				checked = false;
 			}
 
-			self.setDataChecked(opts.data, checked, id);
+			self.cascadeChecked(target, data, checked, ids);
+			self.bubbleChecked(target, node, data);
 		},
 
-		cascadeCheck: function() {
+		bubbleChecked: function(target, node, data) {
+			if (node.level == 1) return;
+
+			var self = this,
+				parentNode, id, isChecked,
+				level = node.level,
+				nodePath = $.extend([], node.nodePath);
+
+			while (level > 1) {
+				nodePath = nodePath.slice(0, --level);
+				parentNode = self.getNodeByPath(nodePath, data);
+				isChecked = self.isHasUnChecked(parentNode.children);
+
+				self.setDataChecked(data, isChecked, parentNode.id);
+				self.setDomChecked(target, isChecked, parentNode.id);
+			}
+		},
+
+		isHasUnChecked: function(data) {
+			if (data.length === 0) return;
+
+			var self = this,
+				result,
+				checked = true;
+
+			for (var i = 0; i < data.length; i++) {
+				if (data[i].checked === false) {
+					return false;
+				}
+				result = self.isHasUnChecked(data[i].children || []);
+
+				if (result === false) checked = result;
+			}
+
+			return checked;
+		},
+
+		cascadeChecked: function(target, data, checked, ids) {
 			var self = this;
 
-			// TODO
+			for (var i = 0; i < ids.length; i++) {
+				self.setDataChecked(data, checked, ids[i]);
+				self.setDomChecked(target, checked, ids[i]);
+			}
 		},
 
-		getChecked: function(target) {
-			var self = this,
-				opts = $.data(target, 'tree').options;
-
-			return self.getCheckedCount(opts.data);
-		},
-
-		getCheckedCount: function(data) {
-			if (data.length === 0) return 0;
+		getCheckedNodes: function(data) {
+			if (data.length === 0) return [];
 
 			var self = this,
-				count = 0;
+				nodes = [];
 
 			for (var i = 0; i < data.length; i++) {
 				if (data[i].checked === true) {
-					count++;
+					nodes.push(utils.cloneNode(data[i]));
 				}
-				count += self.getCheckedCount(data[i].children || []);
+				nodes = nodes.concat(self.getCheckedNodes(data[i].children || []));
 			}
 
-			return count;
+			return nodes;
 		},
 
 		checkAll: function(target, checked) {
@@ -166,6 +205,19 @@
 					data[i].checked = checked;
 				}
 				self.setDataChecked(data[i].children || [], checked, id);
+			}
+		},
+
+		setDomChecked: function(target, checked, id) {
+			var self = this,
+				$that = $(target).find('[data-id=' + id + ']').find('.tree-checkbox');
+
+			if (checked) {
+				$that.removeClass('tree-checkbox0');
+				$that.addClass('tree-checkbox1');
+			} else {
+				$that.removeClass('tree-checkbox1');
+				$that.addClass('tree-checkbox0');
 			}
 		},
 
@@ -281,28 +333,12 @@
 			return node;
 		},
 
-		getNodes: function(data, ids) {
-			if (data.length === 0) return;
-
+		getNodes: function(target, ids) {
 			var self = this,
-				node,
-				result,
 				nodes = [];
 
-			for (var i = 0; i < data.length; i++) {
-				node = {};
-				if (ids.indexOf(data[i].id.toString()) > -1) {
-					for (key in data[i]) {
-						if (key !== 'children') node[key] = data[i][key];
-					}
-					nodes.push(node);
-				}
-
-				result = self.getNodes(data[i].children || [], ids);
-
-				if (result && result.length) {
-					nodes = nodes.concat(result);
-				}
+			for (var i = 0; i < ids.length; i++) {
+				nodes.push(self.getNodeById(target, ids[i]));
 			}
 
 			return nodes;
@@ -512,8 +548,7 @@
 		getSelectedNode: function(target) {
 			var self = this,
 				ids = self.getSelectedIds(target),
-				opts = $.data(target, 'tree').options,
-				nodes = self.getNodes(opts.data, ids);
+				nodes = self.getNodes(target, ids);
 
 			return nodes;
 		},
@@ -628,6 +663,38 @@
 		}
 	};
 
+	var utils = {
+		cloneNode: function(node) {
+			var newNode = {};
+
+			for (var key in node) {
+				if (key !== 'children') newNode[key] = node[key];
+			}
+
+			return newNode;
+		},
+
+		getNodeIds: function(node) {
+			if (node.length === 0) return;
+
+			var self = this,
+				result,
+				ids = [];
+
+			for (var i = 0; i < node.length; i++) {
+				ids.push(node[i].id);
+
+				result = self.getNodeIds(node[i].children || []);
+
+				if (result) {
+					ids = ids.concat(result)
+				}
+			}
+
+			return ids;
+		}
+	};
+
 	// jquery 插件扩展方法
 	$.fn.tree = function(options, param) {
 		if (typeof options == 'string') {
@@ -684,9 +751,10 @@
 			return tree.getSelectedNode(jq[0]);
 		},
 
-		getChecked: function(jq) {
+		getCheckedNodes: function(jq) {
+			var opts = $.data(jq[0], 'tree').options;
 
-			return tree.getChecked(jq[0]);
+			return tree.getCheckedNodes(opts.data);
 		},
 
 		clearAllSelection: function(jq) {

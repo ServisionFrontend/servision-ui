@@ -94,9 +94,9 @@
 		});
 
 		$('#btnCheckCount').on('click', function(){
-			var count = $tbcontainer.tree('getChecked');
+			var nodes = $tbcontainer.tree('getCheckedNodes');
 
-			alert(count);
+			alert(nodes.length);
 		});
 	});
 </script>
