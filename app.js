@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var tree = require('./routes/tree');
 var combobox = require('./routes/combobox');
+var window = require('./routes/window');
 
 var app = express();
 
@@ -28,6 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/tree', tree);
 app.use('/combobox', combobox);
+app.use('/window', window);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

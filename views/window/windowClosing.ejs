@@ -1,0 +1,151 @@
+	
+	<link rel="stylesheet" href="/stylesheets/component/servision.window.css">
+	<script type="text/javascript" src="/scripts/component/jquery.servision.window.js"></script>
+<style type="text/css">
+		h2,h3 {
+			margin: 0;
+		}
+		.btnWrapper {
+			width: 200px ;
+			height: 200px;
+			position: fixed;
+			z-index: 2000;
+			top: 200px;
+			left: 0;
+		}
+		.btnWrapper .btn {
+			background: #1a5257;
+		}
+		.layer {
+			width: 500px;
+			height: auto;
+			border: solid 1px #4CCD4C;
+		}
+		.layer .title {
+			height: 30px;
+			line-height: 30px;
+			padding: 0 10px;
+			background-color: #4CCD4C;
+		}
+		.layer .title span[data-action="close"] {
+			display: inline-block;
+			float: right;
+			font-size: 24px;
+		}
+		.layer .content {
+			background-color: #fff;
+			min-height: 100px;
+			position: relative;
+		}
+		.layer .content table {
+			width: 100%;
+			text-align: center;
+		}
+		ul {
+			margin: 0;
+			padding: 0;
+			list-style-type: none;
+		}
+		.clearfix:before,.clearfix:after {
+			content: ".";
+			display: block;
+			height: 0;
+			overflow: hidden;
+		}
+		.clearfix:after {
+			clear: both;
+		}
+		.clearfix {
+			zoom:1;
+		}
+		ul.list li {
+	 	width: 200px;
+			height: 200px;
+			margin-right: 10px;
+		 	float: left;
+		}
+		ul.list li img{
+			width: 100%;
+			height: 100%;
+		}
+		.item {
+			min-height: 300px;
+			margin-bottom: 50px;
+		}
+		.item .title {
+			height: 40px;
+			line-height: 40px;
+			padding: 0 10px; 
+			background: #555d71;
+			color: #00D2CA;
+			font-size: 16px;
+		}
+		.item .content {
+			padding: 10px 10px 20px;
+		}
+		.code-wrapper {
+			max-height: 300px;
+			overflow: auto;
+			margin: 0 auto;
+			padding: 5px 0;
+			border-radius: 8px;
+			background: #2d2828;
+			color: #fff;
+		}
+		p {
+			margin-top: 1em;
+			margin-bottom: 0.5em;
+			line-height: 100%;
+		}
+		.btn-wrapper {
+			margin-bottom: 10px;
+		}
+		.btn {
+			min-width: 80px;
+			height: 30px;
+			line-height: 30px;
+			display: inline-block;
+			background: #e61d61;
+			text-align: center;
+			border-radius: 4px;
+			box-shadow: 1px 1px 3px #555;
+			color: #fff;
+			margin: 5px 5px 5px 0;
+			padding: 0 10px;
+			cursor: pointer;
+			*zoom: 1;
+			*display: inline;
+		}
+		.btn:hover {
+			background: #488a88;
+		}
+		table {
+			color: #000;
+		}
+
+	</style>
+</head>
+
+<body>
+	<div class="wrapper">
+		<div class="item">
+			<div class="content">
+				<p>不加参数则代表关闭没有name属性的层</p>
+				<div class="code-wrapper">
+					<blockquote>
+						<p>$.unWindow();</p>
+						<p></p>
+					</blockquote>
+					<blockquote>
+						<p>//或者</p>
+					</blockquote>
+					<br/>
+					<blockquote>
+						<p>$.unWindow({</p>
+						<p>name: 'test1',</p>
+						<p>});</p>
+					</blockquote>
+				</div>
+			</div>
+		</div>
+	</div>

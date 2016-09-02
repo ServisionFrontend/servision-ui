@@ -1,0 +1,310 @@
+	
+	<link rel="stylesheet" href="/stylesheets/component/servision.window.css">
+	<script type="text/javascript" src="/scripts/component/jquery.servision.window.js"></script>
+<style type="text/css">
+		h2,h3 {
+			margin: 0;
+		}
+		.btnWrapper {
+			width: 200px ;
+			height: 200px;
+			position: fixed;
+			z-index: 2000;
+			top: 200px;
+			left: 0;
+		}
+		.btnWrapper .btn {
+			background: #1a5257;
+		}
+		.layer {
+			width: 500px;
+			height: auto;
+			border: solid 1px #4CCD4C;
+		}
+		.layer .title {
+			height: 30px;
+			line-height: 30px;
+			padding: 0 10px;
+			background-color: #4CCD4C;
+		}
+		.layer .title span[data-action="close"] {
+			display: inline-block;
+			float: right;
+			font-size: 24px;
+		}
+		.layer .content {
+			background-color: #fff;
+			min-height: 100px;
+			position: relative;
+		}
+		.layer .content table {
+			width: 100%;
+			text-align: center;
+		}
+		ul {
+			margin: 0;
+			padding: 0;
+			list-style-type: none;
+		}
+		.clearfix:before,.clearfix:after {
+			content: ".";
+			display: block;
+			height: 0;
+			overflow: hidden;
+		}
+		.clearfix:after {
+			clear: both;
+		}
+		.clearfix {
+			zoom:1;
+		}
+		ul.list li {
+	 	width: 200px;
+			height: 200px;
+			margin-right: 10px;
+		 	float: left;
+		}
+		ul.list li img{
+			width: 100%;
+			height: 100%;
+		}
+		.item {
+			min-height: 300px;
+			margin-bottom: 50px;
+		}
+		.item .title {
+			height: 40px;
+			line-height: 40px;
+			padding: 0 10px; 
+			background: #555d71;
+			color: #00D2CA;
+			font-size: 16px;
+		}
+		.item .content {
+			padding: 10px 10px 20px;
+		}
+		.code-wrapper {
+			max-height: 300px;
+			overflow: auto;
+			margin: 0 auto;
+			padding: 5px 0;
+			border-radius: 8px;
+			background: #2d2828;
+			color: #fff;
+		}
+		p {
+			margin-top: 1em;
+			margin-bottom: 0.5em;
+			line-height: 100%;
+		}
+		.btn-wrapper {
+			margin-bottom: 10px;
+		}
+		.btn {
+			min-width: 80px;
+			height: 30px;
+			line-height: 30px;
+			display: inline-block;
+			background: #e61d61;
+			text-align: center;
+			border-radius: 4px;
+			box-shadow: 1px 1px 3px #555;
+			color: #fff;
+			margin: 5px 5px 5px 0;
+			padding: 0 10px;
+			cursor: pointer;
+			*zoom: 1;
+			*display: inline;
+		}
+		.btn:hover {
+			background: #488a88;
+		}
+		table {
+			color: #000;
+		}
+
+	</style>
+</head>
+
+<body>
+	<div class="wrapper">
+		<div id="header">
+			<h2>window Demo Display</h2> 
+		</div>
+		<div class="item">
+	
+			<div class="content">
+				<h4>方式一</h4>
+				<p>只需传入需要展示的信息。以这种方式调用时，层打开之前会关闭之前所有打开的层。</p>
+				<div class="btn-wrapper">
+					<div class="btn btn1">查看效果</div>
+				</div>
+				<div class="code-wrapper">
+					<blockquote>
+						<p>      $.window({</p>
+						<p>  message: '按ESC退出'</p>
+						<p>})</p>
+					</blockquote>
+				</div>
+				<h4>方式二</h4>
+				<p>需要传入name属性，name属性唯一。以这种方式创建的层不会对已创建的层有任何的影响。可以创建多个。</p>
+				<div class="btn-wrapper">
+					<div class="btn btn2">查看效果</div>
+				</div>
+				<div class="code-wrapper">
+					<blockquote>
+						<p>$.window({</p>
+						<p>  name: 'test2',</p>
+						<p>  message: '&lt;div&gt; class="loading"&lt;/div&gt;',</p>
+						<p>  onBeforeOpen: function() {</p>
+						<p>  console.log('弹层test2即将打开');</p>
+						<p>  }</p>
+						<p>});</p>
+					</blockquote>	
+				</div>
+				<h4>方式三</h4>
+				<p>以这种方式创建全局window，必须传入name。否则创建的是层上弹出的层，会取调用对象的内容当做弹出的信息。</p>
+				<div class="btn-wrapper">
+					<div class="btn btn3">查看效果</div>
+				</div>
+				<div class="code-wrapper">
+					<blockquote>
+						<p>$('#header').window({</p>
+						<p> name: 'test3',</p>
+						<p>onBeforeOpen: function() {</p>
+						<p>console.log('弹层2即将打开');</p>
+						<p>}</p>
+						<p>});</p>	
+					</blockquote>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.btn1').click(function() {
+				$.window({
+					message: '按ESC退出',
+					css: {
+						color: '#fff'
+					}
+				})
+			});
+			$('.btn2').click(function() {
+				$.window({
+				   name: 'test2',
+					message: '<div class="loading"></div>',
+					onBeforeOpen: function() {
+						console.log('弹层test2即将打开');
+					}
+				});
+			})
+
+			$('.btn3').click(function() {
+				$('#header').window({
+					name: 'test3',
+					css: {
+						color: '#fff'
+					},
+					onBeforeOpen: function() {
+						console.log('弹层2即将打开');
+					}
+				});
+			});
+			$('.btn4').click(function() {
+				$.window({
+					message: $('#test-layer').html(),
+					onAfterOpen: function() {
+						$.window({
+							name: 'test5',
+							message: '<div class="loading"></div>',
+							layerWrapper: '#loading-layer',
+							overlayCss: {
+						    	opacity: 0
+						    }
+					 	});
+					}
+				});
+			});
+			$('.btn5').click(function() {
+				$.window({
+					message: $('#test-layer').html(),
+					onAfterOpen: function() {
+						$('#loading-layer').window({
+						    message: '<div class="loading"></div>',
+						    overlayCss: {
+						    	opacity: 0
+						    }
+					    })
+					}
+				});
+			});
+			$('.btn6').click(function() {
+				$.window({
+					name: 'test6',
+					message: $('#part-layer').html()
+				});
+			});
+			$('.btn7').click(function() {
+				$.window({
+					name: 'test7',
+					dialog: true,
+					content: '请输入需要交流的内容 ',
+					onBeforeOpen: function() {
+						console.log('弹层3即将打开');
+					}
+				});
+			});
+			$('.btn8').click(function() {
+				$.window({
+					message: $('#first-layer').html()
+				});
+			});
+			$(document).on('click', '.btn11', function() {
+				$('#first-layer-wrapper').window({
+					message: $('#second-layer').html()
+				});
+			});
+			$(document).on('click', '.btn12', function() {
+				$('#second-layer-wrapper').window({
+					message: $('#third-layer').html()
+				});
+			});
+			$('.btn9').click(function() {
+				$.unWindow();
+			});
+			$('.btn10').click(function() {
+				$.unWindow({
+					name: 'test2'
+				})
+			});
+			$('.list li').click(function() {
+				var $this = $(this);
+				var imgUrl =$this.attr('data-img');
+				var img = $('<img>').attr('src', imgUrl);
+				img.load(function() {
+					$.window({
+						message: img,
+						needCloseBtn: true,
+						needLeftBtn: true,
+						needRightBtn: true,
+						leftBtnEvent: function(opts) {
+							var $prev = $this.prev();
+							if($prev.length > 0) {
+								$this = $prev.eq(0);
+								img.attr('src', $this.attr('data-img'));
+							}
+						},
+						rightBtnEvent: function(opts) {
+							var $next = $this.next();
+							if($next.length > 0) {
+								$this = $next.eq(0);
+								img.attr('src', $this.attr('data-img'));
+							}
+						}
+					});
+				});
+			});
+		})
+	</script>

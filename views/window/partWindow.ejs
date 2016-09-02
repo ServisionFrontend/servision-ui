@@ -1,0 +1,273 @@
+	
+	<link rel="stylesheet" href="/stylesheets/component/servision.window.css">
+	<script type="text/javascript" src="/scripts/component/jquery.servision.window.js"></script>
+<style type="text/css">
+		h2,h3 {
+			margin: 0;
+		}
+		.btnWrapper {
+			width: 200px ;
+			height: 200px;
+			position: fixed;
+			z-index: 2000;
+			top: 200px;
+			left: 0;
+		}
+		.btnWrapper .btn {
+			background: #1a5257;
+		}
+		.layer {
+			width: 500px;
+			height: auto;
+			border: solid 1px #4CCD4C;
+		}
+		.layer .title {
+			height: 30px;
+			line-height: 30px;
+			padding: 0 10px;
+			background-color: #4CCD4C;
+		}
+		.layer .title span[data-action="close"] {
+			display: inline-block;
+			float: right;
+			font-size: 24px;
+		}
+		.layer .content {
+			background-color: #fff;
+			min-height: 100px;
+			position: relative;
+		}
+		.layer .content table {
+			width: 100%;
+			text-align: center;
+		}
+		ul {
+			margin: 0;
+			padding: 0;
+			list-style-type: none;
+		}
+		.clearfix:before,.clearfix:after {
+			content: ".";
+			display: block;
+			height: 0;
+			overflow: hidden;
+		}
+		.clearfix:after {
+			clear: both;
+		}
+		.clearfix {
+			zoom:1;
+		}
+		ul.list li {
+	 	width: 200px;
+			height: 200px;
+			margin-right: 10px;
+		 	float: left;
+		}
+		ul.list li img{
+			width: 100%;
+			height: 100%;
+		}
+		.item {
+			min-height: 300px;
+			margin-bottom: 50px;
+		}
+		.item .title {
+			height: 40px;
+			line-height: 40px;
+			padding: 0 10px; 
+			background: #555d71;
+			color: #00D2CA;
+			font-size: 16px;
+		}
+		.item .content {
+			padding: 10px 10px 20px;
+		}
+		.code-wrapper {
+			max-height: 300px;
+			overflow: auto;
+			margin: 0 auto;
+			padding: 5px 0;
+			border-radius: 8px;
+			background: #2d2828;
+			color: #fff;
+		}
+		p {
+			margin-top: 1em;
+			margin-bottom: 0.5em;
+			line-height: 100%;
+		}
+		.btn-wrapper {
+			margin-bottom: 10px;
+		}
+		.btn {
+			min-width: 80px;
+			height: 30px;
+			line-height: 30px;
+			display: inline-block;
+			background: #e61d61;
+			text-align: center;
+			border-radius: 4px;
+			box-shadow: 1px 1px 3px #555;
+			color: #fff;
+			margin: 5px 5px 5px 0;
+			padding: 0 10px;
+			cursor: pointer;
+			*zoom: 1;
+			*display: inline;
+		}
+		.btn:hover {
+			background: #488a88;
+		}
+		table {
+			color: #000;
+		}
+
+	</style>
+</head>
+
+<body>
+	<div class="wrapper">
+		<div class="item">
+			<div class="content">
+				<h4>方式一</h4>
+				<p>此方式调用的时候必须给出name。</p>
+				<div class="btn-wrapper">
+					<div class="btn btn4">查看效果</div>
+				</div>
+				<div class="code-wrapper">
+					<blockquote>
+						<p>$.window({</p>
+						<p>message: $('#test-layer').html(),</p>
+						<p>onAfterOpen: function() {</p>
+						<p>$.window({</p>
+						<p>name: 'test5',</p>
+						<p>message: '&lt;div&gt; class="loading"&lt;/div&gt;',</p>
+						<p>layerWrapper: '#loading-layer'</p>
+						<p>});</p>
+						<p>}</p>
+						<p>});</p>
+					</blockquote>
+				</div>
+				<h4>方式二</h4>
+				<p>不需要传入name。但必须以jquery对象方式调用。当前jquery对象代表放置新弹出的层的容器。</p>
+				<div class="btn-wrapper">
+					<div class="btn btn5">查看效果1</div>
+					<div class="btn btn8">查看效果2</div>
+				</div>
+				<div class="code-wrapper">
+					<blockquote>
+						<p>$.window({</p>
+						<p>message: $('#test-layer').html(),</p>
+						<p>onAfterOpen: function() {</p>
+						<p>$('#loading-layer').window({</p>
+						<p>message: '&lt;div&gt; class="loading"&lt;/div&gt;',</p>
+						<p>});</p>
+						<p>}</p>
+						<p>});</p>
+					</blockquote>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.btn4').click(function() {
+				$.window({
+					message: $('#test-layer').html(),
+					onAfterOpen: function() {
+						$.window({
+							name: 'test5',
+							message: '<div class="loading"></div>',
+							layerWrapper: '#loading-layer',
+							overlayCss: {
+						    	opacity: 0
+						    }
+					 	});
+					}
+				});
+			});
+			$('.btn5').click(function() {
+				$.window({
+					message: $('#test-layer').html(),
+					onAfterOpen: function() {
+						$('#loading-layer').window({
+						    message: '<div class="loading"></div>',
+						    overlayCss: {
+						    	opacity: 0
+						    }
+					    })
+					}
+				});
+			});
+			$('.btn8').click(function() {
+				$.window({
+					message: $('#first-layer').html()
+				});
+			});
+			$(document).on('click', '.btn11', function() {
+				$('#first-layer-wrapper').window({
+					message: $('#second-layer').html()
+				});
+			});
+			$(document).on('click', '.btn12', function() {
+				$('#second-layer-wrapper').window({
+					message: $('#third-layer').html()
+				});
+			});
+		})
+	</script>
+	<script id="part-layer" type="text/tempalte">
+		<div class="layer">
+			<div class="title" data-action="drag">零件详情--请拖动我</div>
+			<div class="content">
+				<table>
+					<tr><th>序号</th><th>零件编码</th><th>零件数量</th></tr>
+					<tr><td>1</td><td>677fffd8s78</td><td>2232</td></tr>
+					<tr><td>2</td><td>677fffd8s78</td><td>2232</td></tr>
+					<tr><td>3</td><td>677fffd8s78</td><td>2232</td></tr>
+					<tr><td>4</td><td>677fffd8s78</td><td>2232</td></tr>
+				</table>
+			</div>
+		</div>
+	</script>
+	<script id="test-layer" type="text/tempalte">
+		<div class="layer">
+			<div class="title">零件详情</div>
+					<div id="loading-layer" class="content">
+				
+					</div>
+			</div>
+	</script>
+	<script id="first-layer" type="text/tempalte">
+		<div id="first-layer-wrapper" class="layer">
+			<div class="title">hihihi,我是第一层
+				<span style="color:#000" data-action="close">X</span>
+			</div>
+			<div class="content" style="height: 200px;">
+				<a class="btn11" href="javascript:;">点我打开第二个层</a>
+			</div>
+		</div>
+	</script>
+	<script id="second-layer" type="text/tempalte">
+		<div id="second-layer-wrapper">
+			<div class="title">hihihi,我是第二层
+				<span style="color:#000" data-action="close">X</span>
+			</div>
+			<div style="width:1000px; height:150px;background-color: #fff;">
+				<a class="btn12" href="javascript:;">点我打开第三个层</a>
+			</div>
+		</div>
+		
+	</script>
+	<script id="third-layer" type="text/tempalte">
+		<div id="second-layer-wrapper">
+			<div class="title" data-action="drag">hihihi,我是第三层
+				<span style="color:#000" data-action="close">X</span>
+			</div>
+			<div style="width:1200px; height:50px;background-color: #eee;">
+			</div>
+		</div>
+		
+	</script>
