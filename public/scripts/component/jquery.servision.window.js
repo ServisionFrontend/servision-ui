@@ -14,81 +14,99 @@
 				self.bindData();
 			},
 
-			initAttrs: function() { 
+			initAttrs: function() {
 				var self = this;
 				self.layers = []; //记录要关闭的弹层关联的层
 				self.nameArr = [];
-				self.move = {x: 0,y: 0}
+				self.move = {
+					x: 0,
+					y: 0
+				}
 			},
 
 			bindData: function() {
 				var self = this,
 					name = self.opts.name = self.opts.name || 'default';
-				
-				if(openedLayers[name] && name!=='default') {
+
+				if (openedLayers[name] && name !== 'default') {
 					return console.log('该层已创建');
 				}
 
-				if(name === 'default') { self.removeAll();} //若没有给name。则默认为default。并且关闭之前所有打开的弹层
+				if (name === 'default') {
+					self.removeAll();
+				} //若没有给name。则默认为default。并且关闭之前所有打开的弹层
 
-				if(isEmptyObject(openedLayers)) { //判断是否为顶层类。以此作为z-index的基准
+				if (isEmptyObject(openedLayers)) { //判断是否为顶层类。以此作为z-index的基准
 					baseZ = self.opts.baseZ;
 					self.opts.top = true;
 				} else {
 					baseZ++;
 					self.opts.top = false;
 				}
-				if(!self.opts.parent) {  //确定父亲
+				if (!self.opts.parent) { //确定父亲
 					self.opts.parent = currentLayerId;
 				}
 				self.opts.baseZ = baseZ;
-				
+
 				currentLayerId = name;
 
 				self.diffLayerType();
-				if(!canOpen) {
+				if (!canOpen) {
 					setTimeout(function() {
 						self.open();
-					},self.opts.speed);
+					}, self.opts.speed);
 				} else {
 					self.open();
-				}		
+				}
 			},
 
-			diffLayerType: function() {  //弹出层类型为dialog时做出额外的初始化
+			diffLayerType: function() { //弹出层类型为dialog时做出额外的初始化
 				var self = this;
 
-				if(!self.opts.dialog) { return; }
-				self.dialogTempl = $('<div class="dialog"><div class="dialog-title" data-action="drag"><a href="javascript:;" class="close-btn" data-action="cancel"></a><span class="text">'+ self.opts.title +'</span></div><div class="dialog-content"><div class="content-text"><span class="icon"></span><span class="text">'+ self.opts.content +'</span></div></div><div class="dialog-btn-wrapper"><a href="javascript:;" class="btn" data-action="confirm">确定</a><a href="javascript:;" class="btn" data-action="cancel">取消</a></div></div>');
+				if (!self.opts.dialog) {
+					return;
+				}
+				self.dialogTempl = $('<div class="dialog"><div class="dialog-title" data-action="drag"><a href="javascript:;" class="close-btn" data-action="cancel"></a><span class="text">' + self.opts.title + '</span></div><div class="dialog-content"><div class="content-text"><span class="icon"></span><span class="text">' + self.opts.content + '</span></div></div><div class="dialog-btn-wrapper"><a href="javascript:;" class="btn" data-action="confirm">确定</a><a href="javascript:;" class="btn" data-action="cancel">取消</a></div></div>');
 				self.opts.$dialog = self.dialogTempl.eq(0);
 				self.opts.$confirmBtn = self.opts.$dialog.find(self.opts.confirmBtn);
 				self.opts.$cancelBtn = self.opts.$dialog.find(self.opts.cancelBtn);
-				if(!self.opts.confirm) {self.opts.$confirmBtn.remove();}
-				if(!self.opts.cancel) {self.opts.$cancelBtn.remove();}
-				if(self.opts.type !== 'info') {self.opts.$dialog.addClass(self.opts.type);}
+				if (!self.opts.confirm) {
+					self.opts.$confirmBtn.remove();
+				}
+				if (!self.opts.cancel) {
+					self.opts.$cancelBtn.remove();
+				}
+				if (self.opts.type !== 'info') {
+					self.opts.$dialog.addClass(self.opts.type);
+				}
 				self.opts.message = self.dialogTempl;
 			},
 
 			create: function() {
-				var self = this, layer1, layer2,
+				var self = this,
+					layer1, layer2,
 					wrapDiv = $('<div class="contentWrapper" style="position:absolute"></div>');;
 
-				if(self.opts.layerWrapper === 'body') {
-					layer1 = $('<div class="overLayer" style="display: none; position: fixed; z-index:'+ baseZ +'; margin: 0; padding: 0; width: 100%;height: 100%; top:0; left: 0;opacity: 0.5;filter: alpha(opacity=50); background-color: #000"></div>');
-					layer2 = $('<div class="contentLayer" style="display: none; position: fixed; z-index: '+ baseZ +'; margin: 0; padding: 0; width: 100%;height: 100%; top:0; left: 0;"></div>');
+				if (self.opts.layerWrapper === 'body') {
+					layer1 = $('<div class="overLayer" style="display: none; position: fixed; z-index:' + baseZ + '; margin: 0; padding: 0; width: 100%;height: 100%; top:0; left: 0;opacity: 0.5;filter: alpha(opacity=50); background-color: #000"></div>');
+					layer2 = $('<div class="contentLayer" style="display: none; position: fixed; z-index: ' + baseZ + '; margin: 0; padding: 0; width: 100%;height: 100%; top:0; left: 0;"></div>');
 				} else {
-					layer1 = $('<div class="overLayer" style="display: none; position: absolute; z-index:'+ baseZ +'; margin: 0; padding: 0; width: 100%;height: 100%; top:0; left: 0;opacity: 0.5;filter: alpha(opacity=50); background-color: #000"></div>');
-					layer2 = $('<div class="contentLayer" style="display: none; position: absolute; z-index: '+ baseZ +'; margin: 0; padding: 0; width: 100%;height: 100%; top:0; left: 0;"></div>');
-					$(self.opts.layerWrapper).css('position','relative');
+					layer1 = $('<div class="overLayer" style="display: none; position: absolute; z-index:' + baseZ + '; margin: 0; padding: 0; width: 100%;height: 100%; top:0; left: 0;opacity: 0.5;filter: alpha(opacity=50); background-color: #000"></div>');
+					layer2 = $('<div class="contentLayer" style="display: none; position: absolute; z-index: ' + baseZ + '; margin: 0; padding: 0; width: 100%;height: 100%; top:0; left: 0;"></div>');
+					$(self.opts.layerWrapper).css('position', 'relative');
 				}
-				
+
 				self.opts.layers = [layer1, layer2];
-				
-				if(self.opts.top) {overLayer = layer1;}
-				if(!self.opts.top && self.opts.layerWrapper === 'body') {
+
+				if (self.opts.top) {
+					overLayer = layer1;
+				}
+				if (!self.opts.top && self.opts.layerWrapper === 'body') {
 					self.opts.layers.shift();
-					layer1=null;
-					overLayer.css({zIndex: baseZ});
+					layer1 = null;
+					overLayer.css({
+						zIndex: baseZ
+					});
 				}
 
 				$.each(self.opts.layers, function() {
@@ -100,35 +118,37 @@
 				wrapDiv.html(self.opts.message);
 				self.opts.msgBox = wrapDiv;
 
-				if(layer1 && !isEmptyObject(self.opts.overlayCss)) {
+				if (layer1 && !isEmptyObject(self.opts.overlayCss)) {
 					layer1.css(self.opts.overlayCss);
 				}
-				if(!isEmptyObject(self.opts.css)) {
+				if (!isEmptyObject(self.opts.css)) {
 					self.opts.msgBox.css(self.opts.css);
 				}
-				if(self.opts.needCloseBtn) {
+				if (self.opts.needCloseBtn) {
 					var closeBtnHtml = $('<a class="icon-remove" href="javascript:;" style=" right: 20px; top: 20px;" data-action="close"></a>');
 					$(layer2).append(closeBtnHtml);
 				}
-				if(self.opts.needLeftBtn) {
+				if (self.opts.needLeftBtn) {
 					var leftBtnHtml = $('<a class="icon-left" href="javascript:;" style="left: 20px; top: 50%;" data-action="left"></span></a>');
 					$(layer2).append(leftBtnHtml);
 				}
-				if(self.opts.needRightBtn) {
+				if (self.opts.needRightBtn) {
 					var rightBtnHtml = $('<a class="icon-right" href="javascript:;" style="right: 20px; top: 50%;" data-action="right"></a>');
 					$(layer2).append(rightBtnHtml);
 				}
 
-				openedLayers[self.opts.name] = {opts: self.opts};  //记录所有的配置
+				openedLayers[self.opts.name] = {
+					opts: self.opts
+				}; //记录所有的配置
 				self.initEvents();
-			//	if(!self.opts.draggable || self.opts.layerWrapper != 'body') { return;}	
+				//	if(!self.opts.draggable || self.opts.layerWrapper != 'body') { return;}	
 				self.initDraggle(self.opts);
 			},
 
 			initEvents: function() {
 				var self = this,
 					opts = self.opts;
-					spaceName = '.' + opts.name;
+				spaceName = '.' + opts.name;
 
 				$('#' + opts.name + ' ' + opts.closeBtn).on('click' + spaceName, function() {
 					self.close(opts);
@@ -140,13 +160,13 @@
 					self.onCancel(opts);
 				});
 				$(document).on('click' + spaceName, '#' + opts.name + ' ' + opts.leftBtn, function() {
-					if(typeof opts.leftBtnEvent === 'function') {
+					if (typeof opts.leftBtnEvent === 'function') {
 						opts.leftBtnEvent.apply(self, [opts]);
 					}
 					return;
 				});
 				$(document).on('click' + spaceName, '#' + opts.name + ' ' + opts.rightBtn, function() {
-					if(typeof opts.rightBtnEvent === 'function') {
+					if (typeof opts.rightBtnEvent === 'function') {
 						opts.rightBtnEvent.apply(self, [opts]);
 					}
 					return;
@@ -159,12 +179,19 @@
 					$draggableDom = $('#' + opts.name + ' ' + opts.dragController),
 					timer = 0,
 					time = 0,
-					pos = {x:0, y:0};
-					opts.draggable = false;
-					opts.$blockDom = $('<div style="position:absolute;width:100%;height:100%;top:0;left:0;background:#eee;opacity:0.5;cursor:move;z-index:19000;display:none"></div>');
+					pos = {
+						x: 0,
+						y: 0
+					};
+				opts.draggable = false;
+				opts.$blockDom = $('<div style="position:absolute;width:100%;height:100%;top:0;left:0;background:#eee;opacity:0.5;cursor:move;z-index:19000;display:none"></div>');
 
-				if($draggableDom.length <= 0) {return;}
-				$draggableDom.css({cursor: 'move'});
+				if ($draggableDom.length <= 0) {
+					return;
+				}
+				$draggableDom.css({
+					cursor: 'move'
+				});
 				opts.$blockDom.insertAfter(opts.msgBox);
 				$(document).on('mousedown' + spaceName, '#' + opts.name + ' ' + opts.dragController, function(e) {
 					pos.x = e.clientX;
@@ -176,10 +203,10 @@
 					return false;
 				});
 				$(document).on('mousemove' + spaceName, function(e) {
-					if((new Date()).getTime() - time < 1000 && (Math.abs(e.clientX-pos.x) > 20 || Math.abs(e.clientY-pos.y) > 20)) {
+					if ((new Date()).getTime() - time < 1000 && (Math.abs(e.clientX - pos.x) > 20 || Math.abs(e.clientY - pos.y) > 20)) {
 						time = 0;
 						clearTimeout(timer);
-						if(timer) {
+						if (timer) {
 							self.moveStart(opts, e);
 						}
 					}
@@ -197,9 +224,9 @@
 			moveStart: function(opts, e) {
 				var self = this,
 					$blockDom = opts.$blockDom;
-					opts.draggable = true;
-					self.move.x = e.clientX;
-					self.move.y = e.clientY;
+				opts.draggable = true;
+				self.move.x = e.clientX;
+				self.move.y = e.clientY;
 
 				$blockDom.css({
 					width: opts.msgBox.outerWidth(),
@@ -213,7 +240,9 @@
 			moveEnd: function(opts) {
 				var $blockDom = opts.$blockDom;
 
-				if(!opts.draggable) {return;}
+				if (!opts.draggable) {
+					return;
+				}
 				opts.msgBox.css({
 					top: $blockDom.position().top,
 					left: $blockDom.position().left
@@ -225,23 +254,28 @@
 			moveDom: function(opts, e) {
 				var self = this,
 					$domWrapper = opts.$blockDom,
-					domPos = $domWrapper.position(),calPos = {},
+					domPos = $domWrapper.position(),
+					calPos = {},
 					maxLeft = $(global).outerWidth() - $domWrapper.outerWidth(),
 					maxTop = $(global).outerHeight() - $domWrapper.outerHeight();
 
-				if(!opts.draggable) {return;}
-
-				calPos = {left: domPos.left + e.clientX - self.move.x,
-							top: domPos.top + e.clientY - self.move.y};
-
-				if(opts.layerWrapper === 'body') {
-					calPos.left  = calPos.left < 0 ? 0 : calPos.left;
-					calPos.top  = calPos.top < 0 ? 0 : calPos.top;
+				if (!opts.draggable) {
+					return;
 				}
-				
-				calPos.left  = calPos.left > maxLeft ? maxLeft : calPos.left;
-				
-				calPos.top  = calPos.top > maxTop ? maxTop : calPos.top;
+
+				calPos = {
+					left: domPos.left + e.clientX - self.move.x,
+					top: domPos.top + e.clientY - self.move.y
+				};
+
+				if (opts.layerWrapper === 'body') {
+					calPos.left = calPos.left < 0 ? 0 : calPos.left;
+					calPos.top = calPos.top < 0 ? 0 : calPos.top;
+				}
+
+				calPos.left = calPos.left > maxLeft ? maxLeft : calPos.left;
+
+				calPos.top = calPos.top > maxTop ? maxTop : calPos.top;
 
 				$domWrapper.css({
 					left: calPos.left + 'px',
@@ -256,11 +290,11 @@
 
 				self.create();
 
-				if(typeof self.opts.onBeforeOpen === 'function') {
+				if (typeof self.opts.onBeforeOpen === 'function') {
 					self.opts.onBeforeOpen.apply(self, [self.opts]);
 				}
 
-				if(self.opts.delay) {
+				if (self.opts.delay) {
 					self.timer = setTimeout(function() {
 						self.show();
 					})
@@ -271,15 +305,15 @@
 
 			show: function() {
 				var self = this,
-				    layers = self.opts.layers;
+					layers = self.opts.layers;
 
 				$.each(layers, function(index) {
 					$(this).fadeIn(self.opts.speed);
-					if(index === layers.length-1) {
+					if (index === layers.length - 1) {
 						self.setLayerPosition(self.opts);
 					}
 				});
-				if(typeof self.opts.onAfterOpen === 'function') {
+				if (typeof self.opts.onAfterOpen === 'function') {
 					self.opts.onAfterOpen.apply(self, [self.opts]);
 				}
 			},
@@ -291,13 +325,15 @@
 					currentLayerId = (openedLayers[name] && openedLayers[name].opts.parent) || '';
 
 					delete openedLayers[name];
-					if(currentLayerId) {
-						overLayer.css({zIndex: openedLayers[self.getBodyparent(currentLayerId)].opts.baseZ});
+					if (currentLayerId) {
+						overLayer.css({
+							zIndex: openedLayers[self.getBodyparent(currentLayerId)].opts.baseZ
+						});
 					} else {
 						overLayer = null;
 					}
-					
-					$(global).off('resize' + '.' +name);
+
+					$(global).off('resize' + '.' + name);
 					$(document).off('click' + '.' + name);
 					$(document).off('mousedown' + '.' + name);
 					$(document).off('mousemove' + '.' + name);
@@ -307,24 +343,27 @@
 			close: function(options) {
 				var self = this,
 					name = options.name || 'default',
-					layers = [openedLayers[name]],nameArr = [name];
+					layers = [openedLayers[name]],
+					nameArr = [name];
 
-					if(!openedLayers[name]) {return;}
-					self.getParentLayer(name);
-					layers = self.layers.concat(layers).reverse(); //获得正确的关闭顺序
-					nameArr = nameArr.concat(self.nameArr).reverse();
+				if (!openedLayers[name]) {
+					return;
+				}
+				self.getParentLayer(name);
+				layers = self.layers.concat(layers).reverse(); //获得正确的关闭顺序
+				nameArr = nameArr.concat(self.nameArr).reverse();
 
-				if(typeof options.onBeforeClose === 'function') {
+				if (typeof options.onBeforeClose === 'function') {
 					options.onBeforeClose.apply(self, [options]);
 				}
-				
-				$.each(layers, function(index,item) {
+
+				$.each(layers, function(index, item) {
 					canOpen = false;
 					var exsitLayers = item.opts.layers;
 					$.each(exsitLayers, function(index, item) {
 						item.fadeOut(options.speed, function() {
 							item.remove();
-							if(index === exsitLayers.length-1) {
+							if (index === exsitLayers.length - 1) {
 								canOpen = true;
 								clearTimeout(self.timer);
 							}
@@ -334,7 +373,7 @@
 
 				self.reset(nameArr);
 
-				if(typeof options.onAfterClose === 'function') {
+				if (typeof options.onAfterClose === 'function') {
 					options.onAfterClose.apply(self, [options]);
 				}
 			},
@@ -342,10 +381,10 @@
 			getParentLayer: function(name) {
 				var self = this;
 
-				for(var i in openedLayers) {
+				for (var i in openedLayers) {
 					var item = openedLayers[i];
 
-					if(item.opts.parent == name) {  
+					if (item.opts.parent == name) {
 						self.layers.push(item);
 						self.nameArr.push(item.opts.name);
 						self.getParentLayer(item.opts.name);
@@ -357,30 +396,32 @@
 			setLayerPosition: function(options) {
 				var self = this;
 
-				for(var i in openedLayers) {
-					var single = options &&　options.name;
-					var layer = single ? openedLayers[options.name] :openedLayers[i],
+				for (var i in openedLayers) {
+					var single = options && 　options.name;
+					var layer = single ? openedLayers[options.name] : openedLayers[i],
 						msgBox = layer.opts.msgBox,
 						wrapDom = layer.opts.layerWrapper === 'body' ? global : layer.opts.layerWrapper;
 
 					msgBox.css({
-						left: $(wrapDom).outerWidth()/2 - msgBox.outerWidth()/2,
-						top: $(wrapDom).outerHeight()/2 - msgBox.outerHeight()/2
+						left: $(wrapDom).outerWidth() / 2 - msgBox.outerWidth() / 2,
+						top: $(wrapDom).outerHeight() / 2 - msgBox.outerHeight() / 2
 					});
-					if(single) {break;}
+					if (single) {
+						break;
+					}
 				}
 			},
 
 			onConfirm: function(options) {
 				var self = this;
 
-				if(typeof options.onBeforeConfirm === 'function') {
+				if (typeof options.onBeforeConfirm === 'function') {
 					options.onBeforeConfirm.apply(self, [options]);
 				}
 
 				self.close(options);
 
-				if(typeof options.onAfterConfirm === 'function') {
+				if (typeof options.onAfterConfirm === 'function') {
 					options.onAfterConfirm.apply(self, [options]);
 				}
 			},
@@ -388,13 +429,13 @@
 			onCancel: function(options) {
 				var self = this;
 
-				if(typeof options.onBeforeCancel === 'function') {
+				if (typeof options.onBeforeCancel === 'function') {
 					options.onBeforeCancel.apply(self, [options]);
 				}
 
 				self.close(options);
 
-				if(typeof options.onAfterCancel === 'function') {
+				if (typeof options.onAfterCancel === 'function') {
 					options.onAfterCancel.apply(self, [options]);
 				}
 			},
@@ -403,7 +444,7 @@
 				var self = this,
 					layerObj = layerObj || openedLayers;
 
-				for(var i in layerObj) {
+				for (var i in layerObj) {
 					var exsitLayer = layerObj[i];
 					self.close(exsitLayer.opts);
 				}
@@ -411,34 +452,35 @@
 
 			getBodyparent: function(currentLayerId) {
 				var self = this;
-				if(currentLayerId && openedLayers[currentLayerId].opts.layerWrapper != 'body') {
+				if (currentLayerId && openedLayers[currentLayerId].opts.layerWrapper != 'body') {
 					return self.getBodyparent(openedLayers[currentLayerId].opts.parent);
 				} else {
 					return currentLayerId;
 				}
 			}
-			
+
 		};
 
 		(function initGlobalEvents() {
 			$(document).on('keyup', function(e) {
 
-				if(e.which == 27 && currentLayerId) {
-					window.close({name: window.getBodyparent(currentLayerId)});
+				if (e.which == 27 && currentLayerId) {
+					window.close({
+						name: window.getBodyparent(currentLayerId)
+					});
 				}
 			});
 			$(global).on('resize', debounce(function(e) {
-				    window.setLayerPosition();
-				}, 200)
-			);
+				window.setLayerPosition();
+			}, 200));
 		})();
 
 		$.fn.window = function(options, param) {
-			if(typeof options == 'string') {
+			if (typeof options == 'string') {
 				return $.fn.window.methods[options].apply(this, [param]);
 			}
-			if(Object.prototype.toString.apply(options,[]) === '[object Object]') {
-				if(options.name) {
+			if (Object.prototype.toString.apply(options, []) === '[object Object]') {
+				if (options.name) {
 					options.message = $(this).eq(0).html();
 				} else {
 					options.parent = $(this).eq(0).closest('.contentLayer').attr("data-id");
@@ -447,7 +489,7 @@
 				}
 			}
 			$.window(options, param);
-			
+
 		};
 		$.window = function(options, param) {
 
@@ -511,13 +553,13 @@
 					context = this,
 					later = function() {
 						timer = null;
-						if(!immediate) {
+						if (!immediate) {
 							fun.apply(context, args);
 						}
 					};
 				var callNow = !timer && immediate;
 				clearTimeout(timer);
-				if(callNow) {
+				if (callNow) {
 					return fun.apply(context, args);
 				}
 				timer = setTimeout(later, wait);
@@ -526,17 +568,17 @@
 
 		function isEmptyObject(obj) {
 			var count = 0;
-			for(var i in obj) {
+			for (var i in obj) {
 				count++;
 			}
 			return !count ? true : false;
 		};
 	};
 
-	if(typeof define === 'function') {
+	if (typeof define === 'function') {
 		define([], steup);
 	} else {
 		setup();
 	}
-	
+
 })(jQuery, window);
