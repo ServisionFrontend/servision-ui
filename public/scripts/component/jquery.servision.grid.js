@@ -67,7 +67,8 @@
 
             self.assignColumns($target, opts);
 
-            html += self.templateMap.wrapper.begin.replace(/\{width\}/g, opts.width);
+            html += self.templateMap.wrapper.begin
+                .replace(/\{width\}/g, opts.width);
 
             switch (opts.frozenColsAlign) {
                 case 'right':
@@ -171,28 +172,64 @@
                 if (opts.withRowNumber) deltaW += parseInt(opts.rowNumberWidth);
             }
 
-            htmlGridTable += self.templateMap.gridTable.begin.replace('{frozenAlign}', frozenAlign).replace('{width}', self.getGridTableW($target, opts, frozenAlign, beginColIndex, colsW, deltaW) + 'px');
-            htmlGridTable += self.templateMap.tableHeader.begin.replace('{width}', self.getFixedTableHeaderW($target, opts, frozenAlign, beginColIndex, deltaW)).replace('{theadHeight}', opts.theadHeight).replace('{theadLineHeight}', opts.theadHeight);
+            htmlGridTable += self.templateMap.gridTable.begin
+                .replace('{frozenAlign}', frozenAlign)
+                .replace('{width}', self.getGridTableW($target, opts, frozenAlign, beginColIndex, colsW, deltaW) + 'px');
+
+            htmlGridTable += self.templateMap.tableHeader.begin
+                .replace('{width}', self.getFixedTableHeaderW($target, opts, frozenAlign, beginColIndex, deltaW))
+                .replace('{theadHeight}', opts.theadHeight)
+                .replace('{theadLineHeight}', opts.theadHeight);
 
             if (!originalColIndex && opts.withCheckbox) {
-                htmlColgroup += self.templateMap.colgroup.replace('{width}', opts.checkboxWidth);
-                htmlGridTable += self.templateMap.tableColumn.begin.replace('{classList}', self.createColumnClass({isCheckbox: true})).replace('{colIndex}', beginColIndex++).replace('{index}', 'checkbox').replace('{width}', opts.checkboxWidth).replace('{theadHeight}', opts.theadHeight).replace('{theadLineHeight}', parseInt(opts.theadHeight) - 1 + 'px');
+                htmlColgroup += self.templateMap.colgroup
+                    .replace('{width}', opts.checkboxWidth);
+
+                htmlGridTable += self.templateMap.tableColumn.begin
+                    .replace('{classList}', self.createColumnClass({isCheckbox: true}))
+                    .replace('{colIndex}', beginColIndex++)
+                    .replace('{index}', 'checkbox')
+                    .replace('{width}', opts.checkboxWidth)
+                    .replace('{theadHeight}', opts.theadHeight)
+                    .replace('{theadLineHeight}', parseInt(opts.theadHeight) - 1 + 'px');
+
                 htmlGridTable += self.templateMap.checkbox;
                 htmlGridTable += self.templateMap.tableColumn.end;
             }
 
             if (!originalColIndex && opts.withRowNumber) {
-                htmlColgroup += self.templateMap.colgroup.replace('{width}', opts.rowNumberWidth);
-                htmlGridTable += self.templateMap.tableColumn.begin.replace('{classList}', self.createColumnClass({isRowNumber: true})).replace('{colIndex}', beginColIndex++).replace('{index}', 'checkbox').replace('{width}', opts.rowNumberWidth).replace('{theadHeight}', opts.theadHeight).replace('{theadLineHeight}', parseInt(opts.theadHeight) - 1 + 'px');
-                htmlGridTable += self.templateMap.gridText.replace('{title}', '序号');
+                htmlColgroup += self.templateMap.colgroup
+                    .replace('{width}', opts.rowNumberWidth);
+
+                htmlGridTable += self.templateMap.tableColumn.begin
+                    .replace('{classList}', self.createColumnClass({isRowNumber: true}))
+                    .replace('{colIndex}', beginColIndex++)
+                    .replace('{index}', 'checkbox')
+                    .replace('{width}', opts.rowNumberWidth)
+                    .replace('{theadHeight}', opts.theadHeight)
+                    .replace('{theadLineHeight}', parseInt(opts.theadHeight) - 1 + 'px');
+
+                htmlGridTable += self.templateMap.gridText
+                    .replace('{title}', '序号');
                 htmlGridTable += self.templateMap.tableColumn.end;
             }
 
             for (var i = 0; i < len; i++) {
                 temp = cols[i];
-                htmlColgroup += self.templateMap.colgroup.replace('{width}', temp.width);
-                htmlGridTable += self.templateMap.tableColumn.begin.replace('{classList}', self.createColumnClass(temp)).replace('{colIndex}', beginColIndex++).replace('{index}', temp.index).replace('{width}', temp.width).replace('{theadHeight}', opts.theadHeight).replace('{theadLineHeight}', parseInt(opts.theadHeight) - 1 + 'px');
-                htmlGridTable += self.templateMap.gridText.replace('{title}', temp.title);
+                htmlColgroup += self.templateMap.colgroup
+                    .replace('{width}', temp.width);
+
+                htmlGridTable += self.templateMap.tableColumn.begin
+                    .replace('{classList}', self.createColumnClass(temp))
+                    .replace('{colIndex}', beginColIndex++)
+                    .replace('{index}', temp.index)
+                    .replace('{width}', temp.width)
+                    .replace('{theadHeight}', opts.theadHeight)
+                    .replace('{theadLineHeight}', parseInt(opts.theadHeight) - 1 + 'px');
+
+                htmlGridTable += self.templateMap.gridText
+                    .replace('{title}', temp.title);
+
                 if (temp.resizeable) {
                     htmlGridTable += self.templateMap.dragQuarantine;
                 }
@@ -201,7 +238,8 @@
             htmlGridTable += self.templateMap.tableHeader.end;
             htmlGridTable += self.getTableWrapperBeginHtml($target, opts, frozenAlign);
             htmlGridTable += htmlColgroup;
-            htmlGridTable += self.templateMap.tbody.begin.replace('{id}', tbodyId);
+            htmlGridTable += self.templateMap.tbody.begin
+                .replace('{id}', tbodyId);
 
             if (opts.localData) {
                 $target.ns.store = opts.localData;
@@ -279,7 +317,10 @@
                 height = parseInt(opts.height) - parseInt(opts.theadHeight);
             }
 
-            return self.templateMap.tableWrapper.begin.replace(/\{width\}/g, width + 'px').replace(/\{height\}/g, height + 'px').replace('{overflowMode}', overflowMode);
+            return self.templateMap.tableWrapper.begin
+                .replace(/\{width\}/g, width + 'px')
+                .replace(/\{height\}/g, height + 'px')
+                .replace('{overflowMode}', overflowMode);
         },
 
         loadData: function ($target, opts, frozenAlign, beginColIndex, tbodyId) {
@@ -334,11 +375,18 @@
             if (!colsLen) return '';
 
             for (var i = 0; i < listLen; i++) {
-                htmlTbody += self.templateMap.tr.begin.replace('{rowIndex}', i);
+                htmlTbody += self.templateMap.tr.begin
+                    .replace('{rowIndex}', i);
 
                 if (self.isGridTableNeed($target, opts, frozenAlign)) {
-                    if (opts.withCheckbox) htmlTbody += self.templateMap.tdCheckbox.replace('{trHeight}', opts.trHeight).replace('{trLineHeight}', parseInt(opts.trHeight) - 1 + 'px');
-                    if (opts.withRowNumber) htmlTbody += self.templateMap.tdRowNumber.replace('{trHeight}', opts.trHeight).replace('{trLineHeight}', parseInt(opts.trHeight) - 1 + 'px').replace('{number}', i + 1);
+                    if (opts.withCheckbox) htmlTbody += self.templateMap.tdCheckbox
+                        .replace('{trHeight}', opts.trHeight)
+                        .replace('{trLineHeight}', parseInt(opts.trHeight) - 1 + 'px');
+
+                    if (opts.withRowNumber) htmlTbody += self.templateMap.tdRowNumber
+                        .replace('{trHeight}', opts.trHeight)
+                        .replace('{trLineHeight}', parseInt(opts.trHeight) - 1 + 'px')
+                        .replace('{number}', i + 1);
                 }
 
                 for (var j = 0; j < colsLen; j++) {
@@ -350,7 +398,10 @@
                         temp = list[i][index];
                     }
 
-                    htmlTbody += self.templateMap.td.replace('{trHeight}', opts.trHeight).replace('{trLineHeight}', parseInt(opts.trHeight) - 1 + 'px').replace('{content}', temp);
+                    htmlTbody += self.templateMap.td
+                        .replace('{trHeight}', opts.trHeight)
+                        .replace('{trLineHeight}', parseInt(opts.trHeight) - 1 + 'px')
+                        .replace('{content}', temp);
                 }
                 htmlTbody += self.templateMap.tr.end;
             }
