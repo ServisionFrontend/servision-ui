@@ -24,7 +24,7 @@
             self.initGlobalScope($target);
             self.render($target);
             self.initJqueryObject($target);
-            self.initEvents($target);
+            self.initEvent($target);
         },
 
         initGlobalScope: function ($target) {
@@ -43,6 +43,7 @@
             $target.ns.rightFrozenColsW = 0;
             $target.ns.unFrozenColsW = 0;
             $target.ns.unFrozenColsWrapperW = 0;
+            $target.ns.store = null;
         },
 
         render: function ($target) {
@@ -201,7 +202,14 @@
             htmlGridTable += self.getTableWrapperBeginHtml($target, opts, frozenAlign);
             htmlGridTable += htmlColgroup;
             htmlGridTable += self.templateMap.tbody.begin.replace('{id}', tbodyId);
-            htmlGridTable += self.createTbodyHtml($target, opts, frozenAlign, beginColIndex);
+
+            if (opts.localData) {
+                $target.ns.store = opts.localData;
+                htmlGridTable += self.createTbodyHtml($target, opts, frozenAlign, beginColIndex);
+            } else {
+                self.loadData($target, opts, frozenAlign, beginColIndex, tbodyId);
+            }
+
             htmlGridTable += self.templateMap.tbody.end;
             htmlGridTable += self.templateMap.tableWrapper.end;
             htmlGridTable += self.templateMap.gridTable.end;
@@ -274,14 +282,42 @@
             return self.templateMap.tableWrapper.begin.replace(/\{width\}/g, width + 'px').replace(/\{height\}/g, height + 'px').replace('{overflowMode}', overflowMode);
         },
 
+        loadData: function ($target, opts, frozenAlign, beginColIndex, tbodyId) {
+            var self = this;
+
+            if (opts.url) {
+                $.ajax({
+                    url: opts.url,
+                    type: opts.method,
+                    cache: opts.cache,
+                    timeout: opts.timeout,
+                    beforeSend: opts.onAjaxBeforeSend,
+                    complete: opts.onAjaxComplete,
+                    error: opts.onAjaxError,
+                    success: function (result) {
+                        self.renderTbody($target, opts, frozenAlign, beginColIndex, tbodyId, result);
+                    }
+                });
+            }
+        },
+
+        renderTbody: function ($target, opts, frozenAlign, beginColIndex, tbodyId, result) {
+            var self = this;
+
+            $target.ns.store = result;
+
+            $target.find('#s-grid-tbody-' + tbodyId).html(self.createTbodyHtml($target, opts, frozenAlign, beginColIndex));
+        },
+
         createTbodyHtml: function ($target, opts, frozenAlign, beginColIndex) {
             var self = this;
             var htmlTbody = '';
             var originalColIndex = beginColIndex;
-            var list = opts.localData.list;
+            var list = $target.ns.store.list;
             var listLen = list.length;
             var cols;
             var colsLen;
+            var tempCol;
             var temp;
             var index;
 
@@ -306,8 +342,13 @@
                 }
 
                 for (var j = 0; j < colsLen; j++) {
-                    index = cols[j]['index'];
-                    temp = list[i][index];
+                    tempCol = cols[j];
+                    index = tempCol['index'];
+                    if (tempCol['renderer'] && typeof tempCol['renderer'] === 'function') {
+                        temp = tempCol['renderer'].apply(null, [list[i][index], list[i], list]);
+                    } else {
+                        temp = list[i][index];
+                    }
 
                     htmlTbody += self.templateMap.td.replace('{trHeight}', opts.trHeight).replace('{trLineHeight}', parseInt(opts.trHeight) - 1 + 'px').replace('{content}', temp);
                 }
@@ -337,7 +378,7 @@
             $target.jq.$btnSelectAll = $target.find('.s-table-header .s-grid-check-wrapper');
         },
 
-        initEvents: function ($target) {
+        initEvent: function ($target) {
             var self = this;
 
             $target.find('.s-table-wrapper').on({
@@ -658,14 +699,17 @@
         return this.each(function () {
 
             $.data(this, 'grid', {
-                options: $.extend({}, $.fn.grid.defaults, options)
+                options: $.extend(true, {}, $.fn.grid.defaults, options)
             });
 
             grid.init($(this));
         });
     };
 
-    $.fn.grid.methods = {};
+    $.fn.grid.methods = {
+        getRecord: function () {
+        }
+    };
 
     $.fn.grid.defaults = {
         width: '800px',
@@ -681,15 +725,15 @@
         trHeight: '24px',
         columns: [],
         localData: null,
-        proxy: {
-            url: '',
-            cache: false,
-            timeout: 3000,
-            data: null
-        },
+        url: '',
+        method: 'GET',
+        cache: false,
+        timeout: 3000,
+        params: null,
         onAjaxBeforeSend: null,
         onAjaxComplete: null,
         onAjaxError: null,
+        onBeforeRender: null,
         onAfterRender: null
     };
 });
