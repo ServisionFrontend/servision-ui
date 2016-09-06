@@ -1,0 +1,106 @@
+.s-combobox-container {
+  position: absolute;
+  border: 1px solid #95B8E7;
+  overflow: hidden;
+  display: block;
+  font-family: 'Microsoft YaHei,Verdana,Arial,Helvetica,AppleGothic,sans-serif'; }
+  .s-combobox-container .s-combobox-inner {
+    width: 200px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow: auto;
+    background: #fff; }
+    .s-combobox-container .s-combobox-inner .s-combobox-item, .s-combobox-container .s-combobox-inner .s-combobox-group, .s-combobox-container .s-combobox-inner .s-combobox-gitem {
+      padding: 6px;
+      font-size: 12px; }
+    .s-combobox-container .s-combobox-inner .s-combobox-item.s-combobox-item-hover {
+      background: #d0cfcf; }
+    .s-combobox-container .s-combobox-inner .s-combobox-selected {
+      background: #ffe48d; }
+    .s-combobox-container .s-combobox-inner .s-combobox-group {
+      font-weight: bold; }
+    .s-combobox-container .s-combobox-inner .s-combobox-gitem {
+      padding-left: 12px; }
+
+.s-combobox-p {
+  z-index: 1000; }
+
+.s-textbox {
+  position: relative;
+  border: 1px solid #95B8E7;
+  background: #fff;
+  vertical-align: middle;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+  border-radius: 5px 5px 0 0; }
+  .s-textbox .s-textbox-addon {
+    position: absolute;
+    top: 0; }
+  .s-textbox .s-textbox-addon-right {
+    top: 0;
+    right: 0; }
+  .s-textbox .s-textbox-icon {
+    outline: none;
+    text-decoration: none; }
+  .s-textbox .s-combobox-arrow {
+    background: url("../images/combobox/combo_arrow.png") no-repeat center center #E0ECFF;
+    display: inline-block;
+    overflow: hidden;
+    width: 18px;
+    height: 22px;
+    vertical-align: top;
+    cursor: pointer;
+    opacity: .6; }
+    .s-textbox .s-combobox-arrow:hover {
+      opacity: 1; }
+  .s-textbox .s-textbox-text {
+    font-size: 12px;
+    border: none;
+    padding: 4px;
+    vertical-align: top;
+    outline-style: none;
+    resize: none;
+    white-space: normal; }
+  .s-textbox .s-textbox-disabled {
+    background: #fff; }
+
+.mask-block-msg {
+  border: 1px solid #95B8E7;
+  position: absolute;
+  display: table;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  *position: absolute;
+  *top: 50%;
+  *height: auto;
+  z-index: 5;
+  background: #E0ECFF; }
+
+.mask-block-msg .block-panel {
+  position: relative;
+  display: table-cell;
+  vertical-align: middle;
+  *position: relative;
+  *top: -50%; }
+
+.mask-block-msg .block-panel .block-panel-content {
+  margin: 0 auto;
+  background: #fff;
+  color: #000;
+  text-align: center;
+  width: 100px;
+  border: 2px solid #8c8c8c;
+  border-radius: 4px; }
+
+.mask-block-msg .block-panel .loading {
+  background: url(../images/combobox/loading.gif) no-repeat center #E0ECFF;
+  width: 100%;
+  height: 100%; }
+
+/*# sourceMappingURL=servision.combobox.css.map */

@@ -1,5 +1,5 @@
 	
-	<link rel="stylesheet" href="/stylesheets/component/servision.window.css">
+	<link rel="stylesheet" href="/styles/component/servision.window.css">
 	<script type="text/javascript" src="/scripts/component/jquery.servision.window.js"></script>
 <style type="text/css">
 		h2,h3 {
@@ -69,8 +69,8 @@
 			height: 100%;
 		}
 		.item {
-			min-height: 300px;
-			margin-bottom: 50px;
+			min-height: 200px;
+			margin-bottom: 20px;
 		}
 		.item .title {
 			height: 40px;
@@ -117,7 +117,7 @@
 			*display: inline;
 		}
 		.btn:hover {
-			background: #488a88;
+			background: #2185ac;
 		}
 		table {
 			color: #000;
@@ -135,38 +135,34 @@
 				<div class="btn-wrapper">
 					<div class="btn btn4">查看效果</div>
 				</div>
-				<div class="code-wrapper">
-					<blockquote>
-						<p>$.window({</p>
-						<p>message: $('#test-layer').html(),</p>
-						<p>onAfterOpen: function() {</p>
-						<p>$.window({</p>
-						<p>name: 'test5',</p>
-						<p>message: '&lt;div&gt; class="loading"&lt;/div&gt;',</p>
-						<p>layerWrapper: '#loading-layer'</p>
-						<p>});</p>
-						<p>}</p>
-						<p>});</p>
-					</blockquote>
-				</div>
+				<pre class="brush: js;">
+					$.window({
+						message: $('#test-layer').html(),
+						onAfterOpen: function() {
+							$.window({
+								name: 'test5',
+								message: '&lt;div&gt; class="loading"&lt;/div&gt;',
+								layerWrapper: '#loading-layer'
+							});
+						}
+					});
+				</pre>
 				<h4>方式二</h4>
 				<p>不需要传入name。但必须以jquery对象方式调用。当前jquery对象代表放置新弹出的层的容器。</p>
 				<div class="btn-wrapper">
 					<div class="btn btn5">查看效果1</div>
 					<div class="btn btn8">查看效果2</div>
 				</div>
-				<div class="code-wrapper">
-					<blockquote>
-						<p>$.window({</p>
-						<p>message: $('#test-layer').html(),</p>
-						<p>onAfterOpen: function() {</p>
-						<p>$('#loading-layer').window({</p>
-						<p>message: '&lt;div&gt; class="loading"&lt;/div&gt;',</p>
-						<p>});</p>
-						<p>}</p>
-						<p>});</p>
-					</blockquote>
-				</div>
+				<pre class="brush: js;">
+					$.window({
+						message: $('#test-layer').html(),
+						onAfterOpen: function() {
+							$('#loading-layer').window({
+								message: '&lt;div&gt; class="loading"&lt;/div&gt;',
+							});
+						}
+					});
+				</pre>
 			</div>
 		</div>
 	</div>

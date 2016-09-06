@@ -3,15 +3,24 @@
 <head>
 	<meta charset="UTF-8">
 	<title>servision ui demo</title>
-	<link rel="stylesheet" href="/stylesheets/all.css">
-	<link rel="stylesheet" href="/stylesheets/home.css">
+	<link rel="stylesheet" href="/styles/all.css">
+	<link rel="stylesheet" href="/styles/home.css">
+	<link type="text/css" rel="stylesheet" href="/styles/shCore.css"/>
+	<link type="text/css" rel="stylesheet" href="/styles/shThemeRDark.css"/>
 	<script type="text/javascript" src="/scripts/libs/public/jquery-1.11.3.min.js"></script>
 </head>
 <body>
     <div class="header-wrap" >
     	<div class="header-content">
-    	   <a class="header-logo"></a><span class="header-title">web前端组件</span>
+    	   <a href="/" class="header-logo"></a><span class="header-title">web前端组件</span>
     	</div>
+	</div>
+	<div class="tab-controller">
+		<div class="tab-btn-wrapper">
+			<a class="tab-btn active" href="javascript:;">组件功能</a>
+			<a class="tab-btn" href="javascript:;">API文档</a>
+		</div>
+		
 	</div>
 	<div class="component-list">
 		<ul>
@@ -22,18 +31,53 @@
 			<li><a href="/pagination">pagination</a></li>
 		</ul>
 	</div>
-	<div class="component-content">
-		<div class="component-nav">
-			<div class="component-nav-title">组件功能</div>
-			<ul class="component-nav-list" >
-				<% featureList.forEach(function(item){ %>
-					<li><a href="<%= item.href %>"><%= item.text %></a></li>
-				<% }) %>
-			</ul>
+	<div class="tab-wrapper">
+		<div class="component-content tab-content active">
+			<div class="component-nav">
+				<div class="component-nav-title">组件功能</div>
+				<ul class="component-nav-list" >
+					<% featureList.forEach(function(item){ %>
+						<li><a href="<%= item.href %>"><%= item.text %></a></li>
+					<% }) %>
+				</ul>
+			</div>
+			<div class="component-demo">
+				<%- include(page) %>
+			</div>
 		</div>
-		<div class="component-demo">
-			<%- include(page) %>
+		<div class="api-content tab-content">
+			<%- include(apiPage) %>
 		</div>
 	</div>
+	
+	<script type="text/javascript" src="/scripts/component/public/shCore.js"></script>
+	<script type="text/javascript" src="/scripts/component/public/shAutoloader.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var $tabBtns = $('.tab-btn'),
+				$tabContents = $('.tab-content');
+			$tabBtns.click(function() {
+				var $this = $(this); 
+					index = $this.index();
+
+				if($this.hasClass('active')) {return;}
+				$this.addClass('active').siblings().removeClass('active');
+				$tabContents.eq(index).addClass('active').siblings().removeClass('active');
+			});
+
+			$tabBtns.eq(0).trigger('click');
+			
+			SyntaxHighlighter.autoloader(
+	            ['js','jscript','javascript','/scripts/component/public/shBrushJScript.js'],
+	            ['bash','shell','/scripts/component/public/shBrushBash.js'],
+	            ['css','/scripts/component/public/shBrushCss.js'],
+	            ['xml','html','/scripts/component/public/shBrushXml.js'],
+	            ['sql','/scripts/component/public/shBrushSql.js'],
+	            ['php','/scripts/component/public/shBrushPhp.js']
+	        	);
+	   		SyntaxHighlighter.all();
+		});
+		
+	</script>
 </body>
 </html>

@@ -3,6 +3,12 @@ html, body, header, section, footer, article, nav, aside, div, p, ul, dl, li, dt
     padding: 0;
     border: 0;
 }
+html, body {
+	min-height: 100%;
+	height: 100%;
+	font: 14px/1.8em "Microsoft Yahei", "Arial", "Simhei", "SimSun", "sans-serif";
+    color: #444;
+}
 dl, ul {
     list-style: none;
 }

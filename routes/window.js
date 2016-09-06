@@ -27,6 +27,7 @@ var featureList = [{
 router.get('/', function(req, res, next) {
 	res.render('index.ejs', {
 		page: './window/globalWindow.ejs',
+		apiPage: './window/api.ejs',
 		featureList: featureList
 	});
 });
@@ -34,6 +35,7 @@ router.get('/', function(req, res, next) {
 router.get('/partialWindow', function(req, res, next) {
 	res.render('index.ejs', {
 		page: './window/partWindow.ejs',
+		apiPage: './window/api.ejs',
 		featureList: featureList
 	});
 });
@@ -41,6 +43,7 @@ router.get('/partialWindow', function(req, res, next) {
 router.get('/dragWindow', function(req, res, next) {
 	res.render('index.ejs', {
 		page: './window/dragWindow.ejs',
+		apiPage: './window/api.ejs',
 		featureList: featureList
 	});
 });
@@ -48,6 +51,7 @@ router.get('/dragWindow', function(req, res, next) {
 router.get('/dialogWindow', function(req, res, next) {
 	res.render('index.ejs', {
 		page: './window/dialogWindow.ejs',
+		apiPage: './window/api.ejs',
 		featureList: featureList
 	});
 });
@@ -55,6 +59,7 @@ router.get('/dialogWindow', function(req, res, next) {
 router.get('/displayWindow', function(req, res, next) {
 	res.render('index.ejs', {
 		page: './window/displayWindow.ejs',
+		apiPage: './window/api.ejs',
 		featureList: featureList
 	});
 });
@@ -62,6 +67,7 @@ router.get('/displayWindow', function(req, res, next) {
 router.get('/windowClosing', function(req, res, next) {
 	res.render('index.ejs', {
 		page: './window/windowClosing.ejs',
+		apiPage: './window/api.ejs',
 		featureList: featureList
 	});
 });
@@ -69,6 +75,7 @@ router.get('/windowClosing', function(req, res, next) {
 router.get('/configWindow', function(req, res, next) {
 	res.render('index.ejs', {
 		page: './window/configWindow.ejs',
+		apiPage: './window/api.ejs',
 		featureList: featureList
 	});
 });

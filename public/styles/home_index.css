@@ -1,0 +1,80 @@
+.text-muted {
+    color: #97a0af;
+}
+.btn {
+    display: inline-block;
+    padding: 0 25px;
+    height: 40px;
+    line-height: 40px;
+    background-color: #25be35;
+    color: #fff;
+    letter-spacing: 0.2em;
+    border-radius: 5px;
+    box-shadow: 3px 2px 10px #ddd;
+    text-decoration: none;
+    font-size: 16px;
+}
+.btn:hover {
+    background-color: #2185ac;
+    color: #fff;
+}
+.header-wrap {
+    width: 100%;
+    height: 70px;
+    background-color: #fff;
+    box-shadow: 0px 0px 10px #ddd;
+    position: fixed;
+}
+.header-content {
+    width: 1200px;
+    margin: 0 auto;
+}
+.header-logo {
+    display: inline-block;
+    width: 240px;
+    height: 69px;
+    vertical-align: middle;
+    background: url(/styles/images/logo.png) 10px center no-repeat;
+}
+.banner {
+    height: 400px;
+    padding-top: 70px; 
+    background-color: #ededed;
+}
+.banner .title-wrapper {
+    width: 60%;
+    margin: 0 auto;
+    text-align: center;
+    padding-top: 60px;
+}
+.banner .title-wrapper .title {
+    color: #3a98e0;
+    font-size: 30px;
+}
+.banner .title-wrapper .describe {
+    line-height: 24px;
+    margin: 30px auto 40px;
+    font-size: 16px;
+    width: 65%;
+}
+.content {
+    width: 60%;
+    margin: 30px auto;
+}
+.content .component-list {
+    text-align: center;
+}
+.content .title-box {
+    margin-bottom: 30px;
+}
+.content .component-list .item {
+    display: inline-block;
+    width: 250px;
+    height: 250px;
+    line-height: 250px;
+    margin: 0 50px 30px 0;
+    text-align: center;
+    background-color: #ededed;
+    color: #3a98e0;
+    font-size: 36px;
+}

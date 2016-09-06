@@ -75,7 +75,7 @@ $.fn.window.defaults = {
 	//左按钮
 	leftBtn: '[data-action="left"]',
 
-	//有按钮
+	//右按钮
 	rightBtn: '[data-action="right"]',
 
 	//层打开之前的回调

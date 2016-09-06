@@ -1,5 +1,5 @@
 	
-	<link rel="stylesheet" href="/stylesheets/component/servision.window.css">
+	<link rel="stylesheet" href="/styles/component/servision.window.css">
 	<script type="text/javascript" src="/scripts/component/jquery.servision.window.js"></script>
 <style type="text/css">
 		h2,h3 {
@@ -69,8 +69,8 @@
 			height: 100%;
 		}
 		.item {
-			min-height: 300px;
-			margin-bottom: 50px;
+			min-height: 200px;
+			margin-bottom: 20px;
 		}
 		.item .title {
 			height: 40px;
@@ -117,7 +117,7 @@
 			*display: inline;
 		}
 		.btn:hover {
-			background: #488a88;
+			background: #2185ac;
 		}
 		table {
 			color: #000;
@@ -131,21 +131,13 @@
 		<div class="item">
 			<div class="content">
 				<p>不加参数则代表关闭没有name属性的层</p>
-				<div class="code-wrapper">
-					<blockquote>
-						<p>$.unWindow();</p>
-						<p></p>
-					</blockquote>
-					<blockquote>
-						<p>//或者</p>
-					</blockquote>
-					<br/>
-					<blockquote>
-						<p>$.unWindow({</p>
-						<p>name: 'test1',</p>
-						<p>});</p>
-					</blockquote>
-				</div>
+				<pre class="brush: js;">
+					$.unWindow();
+					<p>//或者</p>
+					$.unWindow({
+						name: 'test1',
+					});
+				</pre>
 			</div>
 		</div>
 	</div>

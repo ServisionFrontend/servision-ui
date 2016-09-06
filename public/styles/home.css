@@ -1,0 +1,163 @@
+body {
+    background-color: #ebebeb;
+}
+.header-wrap {
+    height: 70px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0px 0px 10px #ddd;
+}
+.header-content {
+    width: 1200px;
+    margin: 0 auto;
+}
+.header-logo {
+    display: inline-block;
+    width: 240px;
+    height: 69px;
+    vertical-align: middle;
+    background: url(/styles/images/logo.png) 10px center no-repeat;
+}
+.header-title {
+    color: #0e6bb2;
+    margin-left: 12px;
+    font-size: 18px;
+}
+.component-list {
+    height: 50px;
+    width: 1180px;
+    background-color: #fff;
+    margin: 15px auto;
+    padding: 10px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+.component-list li {
+    display: block;
+    float: left;
+    text-align: left;
+    margin-bottom: 8px;
+    margin-right: 20px;
+    background: url(/styles/images/gears.png) 0 center no-repeat;
+}
+.component-list a {
+    color: #444;
+    padding-left: 20px;
+    padding-right: 5px;
+}
+.api-content, .component-content {
+    width: 1200px;
+    padding: 10px 0;
+    margin: 0px auto 15px;
+    overflow: hidden;
+}
+.component-nav {
+    display: inline-block;
+    width: 280px;
+    padding: 10px;
+    background-color: #fff;
+    float: left;
+}
+.component-nav-title {
+    font-weight: 700;
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+    font-size: 16px;
+}
+.component-nav-title:after {
+    content: '';
+    position: absolute;
+    width: 90px;
+    height: 1px;
+    background: #229dce;
+    left: 0;
+    bottom: -1px;
+}
+.component-nav-list {
+    padding: 10px 5px 5px;
+}
+.component-nav-list li {
+    margin-bottom: 5px;
+    padding-left: 10px;
+}
+.component-demo {
+    float: right;
+    width: 857px;
+    padding: 10px;
+    background: #fff;
+}
+.button {
+    border: 1px solid #ddd;
+    padding: 3px;
+    font-size: 12px;
+}
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
+.tab-controller {
+    padding-left: 
+    height: 50px;
+    background-color: #4ba5c9;
+    text-align: left;
+}
+.tab-controller .tab-btn-wrapper {
+    width: 1200px;
+    margin: 0 auto;
+}
+.tab-controller .tab-btn-wrapper .tab-btn {
+    display: inline-block;
+    height: 50px;
+    line-height: 50px;
+    padding: 0 20px;
+    color: #fff;
+    margin-right: 20px;
+    font-size: 20px;
+}
+.tab-controller .tab-btn.active, .tab-controller .tab-btn:hover {
+    background-color: #2185ac;
+}
+.api-content {
+    width: 1160px;
+    padding: 20px;
+    background-color: #fff;
+}
+.api-item {
+    margin-bottom: 10px;
+}
+.api-item.brief .title{
+    color: #000;
+}
+.api-item .title { 
+    position: relative;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 10px;
+    font-size: 16px;
+    color: #2575ed;
+}
+.api-item .content {
+    padding: 10px;
+}
+.api-item p {
+    margin-top: 0;
+    margin-bottom: 0;
+    text-indent: 2em;
+}
+.api-item table {
+    border: 1px solid #ddd;
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0; 
+}
+.api-item table thead tr {
+    background-color: #eee;
+}
+.api-item table td, table th {
+    border: 1px solid #ddd;
+    padding-left: 10px;
+    line-height: 1.65em;
+    text-align: left;
+}
