@@ -1,0 +1,23 @@
+@charset "UTF-8";
+$defaultColor:		#E0ECFF;
+$defaultSize:		12px;
+$borderColor:		#95B8E7;
+$bgColor:			#fff;
+$defaultWidth:		200px;
+
+.s-tooltip{position: absolute;border-radius:4px;display:none;   border:1px solid $borderColor;padding:5px;background:#fff;
+	.s-tooltip-content{}
+	.s-tooltip-arrow,.s-tooltip-arrow-out{position:absolute;width:0;height:0;border:6px solid transparent;}
+
+	.s-tooltip-arrow.bottom{margin:-12px 0 0 -6px;border-bottom-color:#fff;top:0;left:50%;}
+	.s-tooltip-arrow-out.bottom{margin:-13px 0 0 -6px;border-bottom-color:$borderColor;top:0;left:50%;}
+
+	.s-tooltip-arrow.top{margin:0 0 -12px -6px;border-top-color:#fff;bottom:0;left:50%;}
+	.s-tooltip-arrow-out.top{margin:0 0 -13px -6px;border-top-color:$borderColor;bottom:0;left:50%;}
+
+	.s-tooltip-arrow.right { left: 0; top: 50%; border-color: transparent; border-right-color: #fff; margin: -6px 0 0 -12px; }
+	.s-tooltip-arrow-out.right { left: 0; top: 50%; border-color: transparent; border-right-color: $borderColor; margin: -6px 0 0 -13px; }
+
+	.s-tooltip-arrow.left { right: 0; top: 50%; border-color: transparent; border-left-color: #fff; margin: -6px -12px 0 0; }
+	.s-tooltip-arrow-out.left { right: 0; top: 50%; border-color: transparent; border-left-color: $borderColor; margin: -6px -13px 0 0; }
+}

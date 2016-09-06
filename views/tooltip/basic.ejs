@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="../stylesheets/component/servision.tooltip.css">
+	<script src="../scripts/libs/public/jquery-1.9.0.js"></script>
+	<script src="../scripts/component/jquery.servision.tooltip.js"></script>
+	<script>
+	$(function(){
+		$("[title]").tooltip({
+			position:'top',
+			showDelay:200,
+			hideDelay:200,
+			onShow: function(e) {console.log('show:'+e);},
+			onHide: function(e) {console.log('hide:'+e);},
+			onUpdate: function(e) {console.log('onUpdate:'+e);},
+			onPosition:function(left,top){console.log("left:"+left+"  top:"+top);}
+		});
+	});
+	</script>
+</head>
+	<style>
+
+
+	</style>
+</head>
+<body>
+
+<span style="position:absolute;top:300px;left:300px;height:50px;border:1px solid #f00;" title="Hover ME Hover Hove">Hover meHover meHover meHover meHover <span title="what's wrong" style="border:1px solid #f00;">what's wrong</span> meeHover meHover meHover meHove</span>
+</div>
+	<div class="s-tooltip">
+		<div class="s-tooltip-content">tooltiptoo</div>
+		<div class="s-tooltip-arrow-out"></div>
+		<div class="s-tooltip-arrow"></div>
+	</div>
+</body>
+</html>
