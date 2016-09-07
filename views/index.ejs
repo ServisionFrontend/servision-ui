@@ -35,8 +35,8 @@
 	<div class="tab-wrapper">
 		<div class="component-content tab-content active">
 			<div class="component-nav">
-				<div class="component-nav-title">组件功能</div>
-				<ul class="component-nav-list" >
+				<div class="component-nav-title">组件功能(<%= componentName %>)</div>
+				<ul class="component-nav-list" data-active="<%= activeItem %>">
 					<% featureList.forEach(function(item){ %>
 						<li><a href="<%= item.href %>"><%= item.text %></a></li>
 					<% }) %>
@@ -56,7 +56,9 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			var $tabBtns = $('.tab-btn'),
-				$tabContents = $('.tab-content');
+				$tabContents = $('.tab-content'),
+				$navList = $('.component-nav-list'),
+				activeItem = $navList.attr('data-active');
 			$tabBtns.click(function() {
 				var $this = $(this); 
 					index = $this.index();
@@ -65,8 +67,7 @@
 				$this.addClass('active').siblings().removeClass('active');
 				$tabContents.eq(index).addClass('active').siblings().removeClass('active');
 			});
-
-			$tabBtns.eq(0).trigger('click');
+			$navList.find('li').eq(activeItem).addClass('active').siblings().removeClass('active');
 			
 			SyntaxHighlighter.autoloader(
 	            ['js','jscript','javascript','/scripts/component/public/shBrushJScript.js'],

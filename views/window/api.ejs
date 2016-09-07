@@ -17,150 +17,14 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td>name</td>
-					<td>string</td>
-					<td>表示层的名字，是层的唯一标示，若只想弹出唯一的全局window，可不给</td>
-					<td>default</td>
-				</tr>
-				<tr>
-					<td>message</td>
-					<td>string</td>
-					<td>需要放入弹出层的信息</td>
-					<td>null</td>
-				</tr>
-				<tr>
-					<td>parent</td>
-					<td>string</td>
-					<td>表示当前弹出层的父层，父层关闭时子层也会一起关闭</td>
-					<td>null</td>
-				</tr>
-				<tr>
-					<td>baseZ</td>
-					<td>number</td>
-					<td>弹出层的z-index</td>
-					<td>1000</td>
-				</tr>
-				<tr>
-					<td>speed</td>
-					<td>number</td>
-					<td>弹出层打开关闭的速度</td>
-					<td>300</td>
-				</tr>
-				<tr>
-					<td>draggable</td>
-					<td>boolean</td>
-					<td>弹出层是否可拖动,该配置项生效的前提是dom元素配置可拖动属性</td>
-					<td>true</td>
-				</tr>
-				<tr>
-					<td>dragController</td>
-					<td>string</td>
-					<td>拖动属性生效的触发属性</td>
-					<td>[data-action="drag"]</td>
-				</tr>
-				<tr>
-					<td>overlayCss</td>
-					<td>object</td>
-					<td>遮罩层的样式</td>
-					<td>{}</td>
-				</tr>
-				<tr>
-					<td>css</td>
-					<td>object</td>
-					<td>弹出层的样式</td>
-					<td>{}</td>
-				</tr>
-				<tr>
-					<td>layerWrapper</td>
-					<td>string</td>
-					<td>设置弹出层的包裹层</td>
-					<td>body</td>
-				</tr>
-				<tr>
-					<td>needCloseBtn</td>
-					<td>boolean</td>
-					<td>是否需要全局的关闭按钮</td>
-					<td>false</td>
-				</tr>
-				<tr>
-					<td>needLeftBtn</td>
-					<td>boolean</td>
-					<td>是否需要全局的左侧按钮</td>
-					<td>false</td>
-				</tr>
-				<tr>
-					<td>needRightBtn</td>
-					<td>boolean</td>
-					<td>是否需要全局的右侧按钮</td>
-					<td>false</td>
-				</tr>
-				<tr>
-					<td>closeBtn</td>
-					<td>string</td>
-					<td>关闭按钮触发标志</td>
-					<td>[data-action="close"]</td>
-				</tr>
-				<tr>
-					<td>leftBtn</td>
-					<td>string</td>
-					<td>左侧按钮触发标志</td>
-					<td>[data-action="left"]</td>
-				</tr>
-				<tr>
-					<td>rightBtn</td>
-					<td>string</td>
-					<td>右侧按钮触发标志</td>
-					<td>[data-action="right"]</td>
-				</tr>
-				<tr>
-					<td>confirmBtn</td>
-					<td>string</td>
-					<td>确认按钮触发标志</td>
-					<td>[data-action="confirm"]</td>
-				</tr>
-				<tr>
-					<td>cancelBtn</td>
-					<td>string</td>
-					<td>取消按钮触发标志</td>
-					<td>[data-action="cancel"]</td>
-				</tr>
-				<tr>
-					<td>dialog</td>
-					<td>boolean</td>
-					<td>弹出层是否是弹出框类型,配置为true的话不需要配置message</td>
-					<td>false</td>
-				</tr>
-				<tr>
-					<td>type</td>
-					<td>string</td>
-					<td>弹出框类型。info,warn,ok,error。此配置生效的前提是dialog=true</td>
-					<td>info</td>
-				</tr>
-				<tr>
-					<td>title</td>
-					<td>string</td>
-					<td>弹出框标题。此配置生效的前提是dialog=true</td>
-					<td>提示</td>
-				</tr>
-				<tr>
-					<td>content</td>
-					<td>string</td>
-					<td>弹出框内容。此配置生效的前提是dialog=true</td>
-					<td>提示</td>
-				</tr>
-				<tr>
-					<td>confirm</td>
-					<td>boolean</td>
-					<td>弹出框是否需要确认按钮。此配置生效的前提是dialog=true</td>
-					<td>true</td>
-				</tr>
-				<tr>
-					<td>cancel</td>
-					<td>boolean</td>
-					<td>弹出框是否需要取消按钮。此配置生效的前提是dialog=true</td>
-					<td>true</td>
-				</tr>
+				<% apiList.properties.forEach(function(item) { %>
+					<tr>
+						<td><%= item.name %></td>
+						<td><%= item.type %></td>
+						<td><%= item.describe %></td>
+						<td><%= item.default %></td>
+					</tr>
+				<% }) %>
 			</tbody>
 		</table>
 	</div>
@@ -177,56 +41,13 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td>onBeforeOpen</td>
-					<td>options(创建时的参数)</td>
-					<td>弹出层打开之前触发</td>
-				</tr>
-				<tr>
-					<td>onAfterOpen</td>
-					<td>options</td>
-					<td>弹出层打开之后触发</td>
-				</tr>
-				<tr>
-					<td>onBeforeClose</td>
-					<td>options</td>
-					<td>弹出层关闭之前触发</td>
-				</tr>
-				<tr>
-					<td>onAfterClose</td>
-					<td>options</td>
-					<td>弹出层关闭之后触发</td>
-				</tr>
-				<tr>
-					<td>leftBtnEvent</td>
-					<td>options</td>
-					<td>左侧按钮点击之后触发</td>
-				</tr>
-				<tr>
-					<td>rightBtnEvent</td>
-					<td>options</td>
-					<td>右侧按钮点击之后触发</td>
-				</tr>
-				<tr>
-					<td>onBeforeCancel</td>
-					<td>options</td>
-					<td>点击取消按钮之前触发</td>
-				</tr>
-				<tr>
-					<td>onAfterCancel</td>
-					<td>options</td>
-					<td>点击取消按钮之后触发</td>
-				</tr>
-				<tr>
-					<td>onBeforeConfirm</td>
-					<td>options</td>
-					<td>点击确认按钮之前触发</td>
-				</tr>
-				<tr>
-					<td>onAfterConfirm</td>
-					<td>options</td>
-					<td>点击确认按钮之后触发</td>
-				</tr>
+				<% apiList.events.forEach(function(item) { %>
+					<tr>
+						<td><%= item.name %></td>
+						<td><%= item.param %></td>
+						<td><%= item.describe %></td>
+					</tr>
+				<% }) %>
 			</tbody>
 		</table>
 	</div>
@@ -243,16 +64,13 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td>unWindow</td>
-					<td>options(需要操作的对象)</td>
-					<td>关闭弹层</td>
-				</tr>
-				<tr>
-					<td>setLayerPosition</td>
-					<td>options(需要操作的对象)</td>
-					<td>居中传递过去的层</td>
-				</tr>
+				<% apiList.methods.forEach(function(item) { %>
+					<tr>
+						<td><%= item.name %></td>
+						<td><%= item.param %></td>
+						<td><%= item.describe %></td>
+					</tr>
+				<% }) %>
 			</tbody>
 		</table>
 	</div>

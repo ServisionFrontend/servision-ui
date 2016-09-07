@@ -67,7 +67,7 @@ body {
 .component-nav-title:after {
     content: '';
     position: absolute;
-    width: 90px;
+    width: 150px;
     height: 1px;
     background: #229dce;
     left: 0;
@@ -79,6 +79,9 @@ body {
 .component-nav-list li {
     margin-bottom: 5px;
     padding-left: 10px;
+}
+.component-nav-list li.active a {
+    color: #EBA679;
 }
 .component-demo {
     float: right;
