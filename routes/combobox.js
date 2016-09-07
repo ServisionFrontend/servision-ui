@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var comboList = require('../public/data/combobox.json');
 
-// tree
 var featureList = [{
 	text: '经典',
 	href: '/combobox'
