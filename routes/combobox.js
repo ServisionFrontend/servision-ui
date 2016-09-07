@@ -4,69 +4,83 @@ var comboList = require('../public/data/combobox.json');
 
 // tree
 var featureList = [{
-	text: 'Basic',
+	text: '经典',
 	href: '/combobox'
 }, {
-	text: 'Load Dynamic ComboBox Data',
+	text: '动态数据加载',
 	href: '/combobox/dynamic'
 }, {
-	text: 'Multiple Select',
+	text: '多行选择',
 	href: '/combobox/multiple'
 }, {
-	text: 'Group ComboBox',
+	text: '分组',
 	href: '/combobox/group'
 }, {
-	text: 'Custom Format in ComboBox',
+	text: '自定义格式',
 	href: '/combobox/custom'
 }, {
-	text: 'Cascade ComboBox',
+	text: '多级联动',
 	href: '/combobox/cascade'
 }, {
-	text: 'Combobox Defaults Feature',
+	text: '默认配置',
 	href: '/combobox/feature'
 }];
 
 router.get('/', function(req, res, next) {
 	res.render('index.ejs', {
 		page: './combobox/basic.ejs',
-		featureList: featureList
+		featureList: featureList,
+		componentName: 'Combobox',
+		activeItem: 0
 	});
 });
 
 router.get('/dynamic', function(req, res, next) {
 	res.render('index.ejs', {
 		page: './combobox/dynamic.ejs',
-		featureList: featureList
+		featureList: featureList,
+		componentName: 'Combobox',
+		activeItem: 1
 	});
 });
 router.get('/multiple', function(req, res, next) {
 	res.render('index.ejs', {
 		page: './combobox/multiple.ejs',
-		featureList: featureList
+		featureList: featureList,
+		componentName: 'Combobox',
+		activeItem: 2
 	});
 });
 router.get('/group', function(req, res, next) {
 	res.render('index.ejs', {
 		page: './combobox/group.ejs',
-		featureList: featureList
+		featureList: featureList,
+		componentName: 'Combobox',
+		activeItem: 3
 	});
 });
 router.get('/custom', function(req, res, next) {
 	res.render('index.ejs', {
 		page: './combobox/custom.ejs',
-		featureList: featureList
+		featureList: featureList,
+		componentName: 'Combobox',
+		activeItem: 4
 	});
 });
 router.get('/cascade', function(req, res, next) {
 	res.render('index.ejs', {
 		page: './combobox/cascade.ejs',
-		featureList: featureList
+		featureList: featureList,
+		componentName: 'Combobox',
+		activeItem: 5
 	});
 });
 router.get('/feature', function(req, res, next) {
 	res.render('index.ejs', {
 		page: './combobox/feature.ejs',
-		featureList: featureList
+		featureList: featureList,
+		componentName: 'Combobox',
+		activeItem: 6
 	});
 });
 
