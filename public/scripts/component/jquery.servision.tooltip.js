@@ -1,6 +1,8 @@
 ;
 (function($) {
 
+	var COMBOBOX_SERNO = 10000;
+
 	function init(target) {
 		var state = $.data(target, 'tooltip'),
 			opts = state.options;
@@ -38,14 +40,17 @@
 			pos = pos || 'bottom',
 			poslist = ["left", "right", "top", "bottom"],
 			top = $.isFunction(opts.deltaY) ? opts.deltaY.call(target, pos) : opts.deltaY,
-			left = $.isFunction(opts.deltaX) ? opts.deltaX.call(target, pos) : opts.deltaX;
+			left = $.isFunction(opts.deltaX) ? opts.deltaX.call(target, pos) : opts.deltaX,
+			tnum = opts.trackMouse ? 12 : 0;
 
 		$panel.find(".s-tooltip-arrow-out,.s-tooltip-arrow").removeClass(poslist.join(' ')).addClass(pos);
 
 		if (opts.trackMouse) {
-			left = opts.trackMouseX + left;
-			top = opts.trackMouseY + top;
+			$target = $();
+			left = opts.trackMouseX ? opts.trackMouseX + left : left;
+			top = opts.trackMouseY ? opts.trackMouseY + top : top;
 		} else {
+			$target = $(target);
 			left = $target.offset().left + left;
 			top = $target.offset().top + top;
 		}
@@ -53,19 +58,19 @@
 		switch (pos) {
 			case "top":
 				left -= ($panel.outerWidth() - $target.outerWidth()) / 2;
-				top -= $panel.outerHeight() + 12;
+				top -= $panel.outerHeight() + 12 + tnum;
 				break;
 			case "left":
-				left -= $panel.outerWidth() + 12;
+				left -= $panel.outerWidth() + 12 + tnum;
 				top -= ($panel.outerHeight() - $target.outerHeight()) / 2;
 				break;
 			case "right":
-				left += $target.outerWidth() + 12;
+				left += $target.outerWidth() + 12 + tnum;
 				top -= ($panel.outerHeight() - $target.outerHeight()) / 2;
 				break;
 			case "bottom":
 				left -= ($panel.outerWidth() - $target.outerWidth()) / 2;
-				top += $target.outerHeight() + 12;
+				top += $target.outerHeight() + 12 + tnum;
 				break;
 			default:
 				break;
@@ -82,11 +87,9 @@
 			opts = state.options,
 			$panel = state.panel;
 
-		if (state.showTime) {
-			clearTimeout(state.showTime);
-		}
+		clearTime(target);
+
 		state.showTime = setTimeout(function() {
-			defaultView.render.call(defaultView.render, target);
 
 			$target.tooltip("reposition");
 
@@ -104,12 +107,9 @@
 			opts = state.options,
 			$panel = state.panel;
 
-		if (state.hideTime) {
-			clearTimeout(state.hideTime);
-		}
-		state.hideTime = setTimeout(function() {
-			defaultView.render.call(defaultView.render, target);
+		clearTime(target);
 
+		state.hideTime = setTimeout(function() {
 			$target.tooltip("reposition");
 
 			$panel.hide();
@@ -120,6 +120,18 @@
 		}, opts.hideDelay);
 	}
 
+	function clearTime(target) {
+		var state = $.data(target, 'tooltip');
+		if (state.showTime) {
+			clearTimeout(state.showTime);
+			state.showTime = null;
+		}
+		if (state.hideTime) {
+			clearTimeout(state.hideTime);
+			state.hideTime = null;
+		}
+	}
+
 	function reposition(target) {
 		var $target = $(target),
 			state = $.data(target, 'tooltip'),
@@ -127,58 +139,76 @@
 			opts = state.options,
 			pos = opts.position,
 			_e = {
-				top: -100000,
-				left: -100000
+				top: -10000,
+				left: -10000
 			};
 
-		_e = position(target, pos);
+		if ($target.is(":visible")) {
 
-		if (pos === "top" && _e.top < 0) {
-			_e = position(target, 'bottom');
-		} else {
-			if (pos === "bottom" && $target.offset().top + $target.outerHeight() + $panel.outerHeight() > $(document).scrollTop() + $(window).height()) {
-				_e = position(target, 'top');
-			}
-		}
-		if (_e.left < 0) {
-			if (pos === "left") {
-				_e = position(target, 'right');
+			_e = position(target, pos);
+			if (pos == 'top' && _e.top < 0) {
+				_e = position(target, 'bottom');
 			} else {
-				_e.left = 0;
+				if (pos == 'bottom' && _e.top + $panel.outerHeight() > $(document).scrollTop() + $(window).height()) {
+					_e = position(target, 'top');
+				}
 			}
-
-		} else {
-			if ($target.offset().left + $target.outerWidth() + $panel.outerWidth() > $(document).scrollLeft() + $(window).width()) {
-				if (pos === "right") {
-					_e = position(target, 'left');
+			if (_e.left < 0) {
+				if (pos === "left") {
+					_e = position(target, 'right');
 				} else {
-					_e.left = $(document).scrollLeft() + $(window).width() - $panel.outerWidth();
+					_e.left = 0;
+				}
+			} else {
+				if (_e.left + $panel.outerWidth() > $(document).scrollLeft() + $(window).width()) {
+					if (pos === "right") {
+						_e = position(target, 'left');
+					} else {
+						_e.left = $(document).scrollLeft() + $(window).width() - $panel.outerWidth();
+					}
 				}
 			}
 		}
 
-
 		$panel.css({
 			'top': _e.top,
 			'left': _e.left,
-			zIndex: opts.zIndex ? opts.zIndex : 100000
+			zIndex: opts.zIndex ? opts.zIndex : COMBOBOX_SERNO++
 		});
 
 		opts.onPosition.call(target, _e.left, _e.top);
 	}
 
-	var defaultView = {
-		render: function(target, c) {
-			var $target = $(target),
-				state = $.data(target, 'tooltip'),
-				opts = state.options,
+	function destroy(target) {
+		var state = $.data(target, "tooltip");
+		if (state) {
+			var opts = state.options,
 				$panel = state.panel;
-			if (c)
-				opts.content = c;
-			opts.content = $.isFunction(opts.content) ? opts.content.call(target) : opts.content;
-			$panel.children('.s-tooltip-content').html(opts.content);
+			if (opts._title) {
+				$(target).attr("title", opts._title);
+			}
+			$.removeData(target, 'tooltip');
+			$(target).off(".tooltip");
+			$panel.remove();
+			opts.onDestroy.call(target);
 		}
-	};
+	}
+
+	function render(target, c) {
+		var $target = $(target),
+			state = $.data(target, 'tooltip'),
+			opts = state.options,
+			$panel = state.panel,
+			htm = '';
+		if (c)
+			opts.content = c;
+
+		htm = $.isFunction(opts.content) ? opts.content.call(target) : opts.content;
+		if (htm instanceof jQuery) htm.show();
+
+		$panel.children('.s-tooltip-content').html(htm);
+		opts.onUpdate.call(target, htm);
+	}
 
 
 	$.fn.tooltip = function(options, params) {
@@ -194,10 +224,10 @@
 				$.extend(state.options, options);
 			} else {
 				var dd = [];
-				dd.push('<div class="s-tooltip">');
-				dd.push('<div class="s-tooltip-content"></div>');
-				dd.push('<div class="s-tooltip-arrow-out"></div>');
-				dd.push('<div class="s-tooltip-arrow"></div>');
+				dd.push('<div class="s-tooltip" tabIndex="-1">');
+				dd.push('<div class="s-tooltip-content" tabIndex="-1"></div>');
+				dd.push('<div class="s-tooltip-arrow-out" tabIndex="-1"></div>');
+				dd.push('<div class="s-tooltip-arrow" tabIndex="-1"></div>');
 				dd.push('</div>');
 				$.data(this, "tooltip", {
 					options: $.extend(true, {}, $.fn.tooltip.defaults, $.fn.tooltip.parseOption(this), options),
@@ -206,6 +236,8 @@
 			}
 
 			init(this);
+
+			render(this);
 
 		});
 
@@ -217,6 +249,7 @@
 
 		$t.attr("title", "");
 		return {
+			_title: _title,
 			content: _title
 		};
 	};
@@ -238,6 +271,12 @@
 			return $.data(jq[0], 'tooltip').panel.children(".s-tooltip-arrow-out,.s-tooltip-arrow");
 		},
 
+		update: function(jq, c) {
+			return jq.each(function() {
+				render(this, c);
+			});
+		},
+
 		reposition: function(jq) {
 			return jq.each(function() {
 				reposition(this);
@@ -252,6 +291,11 @@
 		hide: function(jq, e) {
 			return jq.each(function(val) {
 				hide(this, e);
+			});
+		},
+		destroy: function(jq) {
+			return jq.each(function() {
+				destroy(this);
 			});
 		}
 	};
@@ -268,7 +312,7 @@
 		hideDelay: 100,
 		onShow: function(e) {},
 		onHide: function(e) {},
-		onUpdate: function(_2d) {},
+		onUpdate: function(content) {},
 		onPosition: function(left, top) {},
 		onDestroy: function() {}
 	};

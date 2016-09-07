@@ -1,20 +1,22 @@
 
-	<link rel="stylesheet" href="../styles/component/servision.tooltip.css">
+	<link rel="stylesheet" href="../styles/component/servision.tooltip.css">	
 	<script src="../scripts/libs/public/jquery-1.9.0.js"></script>
 	<script src="../scripts/component/jquery.servision.tooltip.js"></script>
 	<script>
-	$(function(){
+	$(function() {
+
 		$("[title]").tooltip({
-			position:'bottom',
-			// content:function(){
-			// },
+			position: 'bottom',
+			content: function() {
+				return "Servision Web Tooltip";
+			},
 			deltaX: 0,
 			deltaY: 0,
-			showDelay:200,
-			hideDelay:200,
-			trackMouse:false,
+			showDelay: 200,
+			hideDelay: 200,
+			trackMouse: true,
 			showEvent: "mouseenter",
-			//hideEvent: "mouseleave",
+			hideEvent: "mouseleave",
 			onShow: function(e) {
 			},
 			onHide: function(e) {
@@ -23,10 +25,10 @@
 			onUpdate: function(html) {
 				// console.log('onUpdate:'+html.html());
 			},
-			onPosition:function(left,top){
+			onPosition: function(left, top) {
 				// console.log("left:"+left+"  top:"+top);
 			},
-			onDestroy:function(){
+			onDestroy: function() {
 				// console.log("destroy callback");
 			}
 		});
@@ -35,30 +37,30 @@
 	<style>
 	.wrap{line-height:50px;height:50px;border:1px solid #eee;margin:20px;}
 	#st{width:200px;}
-	.custom{border:3px solid;width:300px;height:400px;background: #fea;display: none;}
+	.custom{border:3px solid;background: #fea;display: none;}
 	</style>
 
-<div>
 	<div class="wrap" >
-	<span>
-		将鼠标移入此处
-		<a title="Hover ME" style="border:1px solid #555;">Hover ME</a>
-		将会看到效果
+		<span>
+			将鼠标移入此处
+			<a title="Hover ME" style="border:1px solid #555;">Hover ME</a>
+			将会看到效果
 		</span>
 	</div>
-</div>
-<pre class="brush: js;">
+
+	<pre class="brush: js;">
 	$("[title]").tooltip({
-			position:'bottom',
-			// content:function(){
-			// },
+			position: 'bottom',
+			content: function() {
+				return "Servision Web Tooltip";
+			},
 			deltaX: 0,
 			deltaY: 0,
-			showDelay:200,
-			hideDelay:200,
-			trackMouse:false,
+			showDelay: 200,
+			hideDelay: 200,
+			trackMouse: true,
 			showEvent: "mouseenter",
-			//hideEvent: "mouseleave",
+			hideEvent: "mouseleave",
 			onShow: function(e) {
 			},
 			onHide: function(e) {
@@ -67,20 +69,16 @@
 			onUpdate: function(html) {
 				// console.log('onUpdate:'+html.html());
 			},
-			onPosition:function(left,top){
+			onPosition: function(left, top) {
 				// console.log("left:"+left+"  top:"+top);
 			},
-			onDestroy:function(){
+			onDestroy: function() {
 				// console.log("destroy callback");
 			}
 		});
 	</pre>
-</div>
+	</div>
 
-<div class="custom" id="custom">this is a test box</div>
-<!-- <div class="s-tooltip">
-<div class="s-tooltip-content">tooltiptoo</div>
-<div class="s-tooltip-arrow-out"></div>
-<div class="s-tooltip-arrow"></div>
-</div>
--->
+	<div class="custom" id="custom">
+		Servision Web Tooltip
+	</div>

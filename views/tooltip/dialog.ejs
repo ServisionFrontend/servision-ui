@@ -1,0 +1,132 @@
+
+	<link rel="stylesheet" href="../styles/component/servision.tooltip.css">	
+	<script src="../scripts/libs/public/jquery-1.9.0.js"></script>
+	<script src="../scripts/component/jquery.servision.tooltip.js"></script>
+	<script>
+	$(function() {
+
+		$("[title]").tooltip({
+			position: 'bottom',
+			content: function() {
+				return $("#custom").clone();
+			},
+			deltaX: 0,
+			deltaY: 0,
+			showDelay: 200,
+			hideDelay: 200,
+			trackMouse: false,
+			showEvent: "mouseenter",
+			hideEvent: "mouseleave",
+			onShow: function(e) {
+				var $that = $(this);
+				$that.tooltip("panel").one({'mouseenter': function() {
+					$that.tooltip("show");
+				},"mouseleave": function() {
+					$that.tooltip("hide");
+				}});
+			},
+			onHide: function(e) {
+				// console.log('hide:'+e);
+			},
+			onUpdate: function(html) {
+				// console.log('onUpdate:'+html.html());
+			},
+			onPosition: function(left, top) {
+				 console.log("left:"+left+"  top:"+top);
+			},
+			onDestroy: function() {
+				// console.log("destroy callback");
+			}
+		});
+	});
+	</script>
+	<style>
+	.wrap{line-height:50px;height:50px;border:1px solid #eee;margin:20px;}
+	#st{width:200px;}
+	.custom{border:3px solid;background: #fea;display: none;}
+	</style>
+
+	<div class="wrap" >
+		<span>
+			将鼠标移入此处
+			<a title="Hover ME" style="border:1px solid #555;">Hover ME</a>
+			将会看到效果
+		</span>
+	</div>
+
+	<pre class="brush: js;">
+	$("[title]").tooltip({
+			position: 'bottom',
+			content: function() {
+				return $("#custom").clone();
+			},
+			deltaX: 0,
+			deltaY: 0,
+			showDelay: 200,
+			hideDelay: 200,
+			trackMouse: false,
+			showEvent: "mouseenter",
+			hideEvent: "mouseleave",
+			onShow: function(e) {
+				var $that = $(this);
+				$that.tooltip("panel").one({'mouseenter': function() {
+					$that.tooltip("show");
+				},"mouseleave": function() {
+					$that.tooltip("hide");
+				}});
+			},
+			onHide: function(e) {
+				// console.log('hide:'+e);
+			},
+			onUpdate: function(html) {
+				// console.log('onUpdate:'+html.html());
+			},
+			onPosition: function(left, top) {
+				 console.log("left:"+left+"  top:"+top);
+			},
+			onDestroy: function() {
+				// console.log("destroy callback");
+			}
+		});
+	</pre>
+	</div>
+
+	<div class="custom" id="custom">
+	<form action="">
+		<div class="tooltip-content">
+			<div class="panel" style="display: block; width: 200px;">
+				<div class="panel-header" style="width: 200px;">
+					<div class="panel-title">Login</div>
+				</div>
+				<div title="" class="panel-body panel-body-noborder" style="width: 200px;">
+					<div style="padding:5px;">
+						<div style="padding:5px 10px">
+							<div>User Name:</div>
+							<input style="width:160px"></div>
+						<div style="padding:5px 10px">
+							<div>Password:</div>
+							<input type="password" style="width:160px"></div>
+						<div style="padding:5px 10px;text-align:center">
+							<a href="#" class="easyui-linkbutton l-btn l-btn-small" group="" id="">
+								<span class="l-btn-left">
+									<span class="l-btn-text">Login</span>
+								</span>
+							</a>
+							<a href="#" class="easyui-linkbutton l-btn l-btn-small" group="" id="">
+								<span class="l-btn-left">
+									<span class="l-btn-text">Cancel</span>
+								</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+	</div>
+	<!-- <div class="s-tooltip">	
+	<div class="s-tooltip-content">tooltiptoo</div>
+	<div class="s-tooltip-arrow-out"></div>
+	<div class="s-tooltip-arrow"></div>
+	</div>
+	-->

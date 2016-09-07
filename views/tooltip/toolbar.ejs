@@ -1,0 +1,110 @@
+
+	<link rel="stylesheet" href="../styles/component/servision.tooltip.css">	
+	<script src="../scripts/libs/public/jquery-1.9.0.js"></script>
+	<script src="../scripts/component/jquery.servision.tooltip.js"></script>
+	<script>
+	$(function() {
+
+		$("#custom").children('a').tooltip();
+
+		$("#hover_me").tooltip({
+			position: 'bottom',
+			content: function() {
+				return $("#custom");
+			},
+			deltaX: 0,
+			deltaY: 0,
+			showDelay: 200,
+			hideDelay: 200,
+			trackMouse: false,
+			showEvent: "mouseenter",
+			hideEvent: "none",
+			onShow: function(e) {
+				var $that=$(this);
+
+				$that.tooltip('panel').focus().off().one("blur",function(){
+					$that.tooltip('hide');
+				});
+			},
+			onHide: function(e) {
+				// console.log('hide:'+e);
+			},
+			onUpdate: function(html) {
+				// console.log('onUpdate:'+html.html());
+			},
+			onPosition: function(left, top) {
+				// console.log("left:"+left+"  top:"+top);
+			},
+			onDestroy: function() {
+				// console.log("destroy callback");
+			}
+		});
+	});
+	</script>
+	<style>
+	.wrap{line-height:50px;height:50px;border:1px solid #eee;margin:20px;}
+	#st{width:200px;}
+	.custom{border:3px solid;background: #fea;display: none;}
+	.custom a{display:inline-block;vertical-align: middle;width:16px;height:16px;margin:5px;}
+	.custom a:hover{opacity:1;}
+	.edit-add,.edit-remove,.cut,.redo,.undo{opacity:.75;}
+	.edit-add{background: url(../../styles/images/tooltip/edit_add.png);}
+	.edit-remove{background: url(../../styles/images/tooltip/edit_remove.png);}
+	.cut{background: url(../../styles/images/tooltip/cut.png);}
+	.redo{background: url(../../styles/images/tooltip/redo.png);}
+	.undo{background: url(../../styles/images/tooltip/undo.png);}
+	</style>
+
+	<div class="wrap" >
+		<span>
+			将鼠标移入此处
+			<a id="hover_me" title="Hover ME" style="border:1px solid #555;">Hover ME</a>
+			将会看到效果
+		</span>
+	</div>
+
+	<pre class="brush: js;">
+	$("#custom").children('a').tooltip();
+
+		$("#hover_me").tooltip({
+			position: 'bottom',
+			content: function() {
+				return $("#custom");
+			},
+			deltaX: 0,
+			deltaY: 0,
+			showDelay: 200,
+			hideDelay: 200,
+			trackMouse: false,
+			showEvent: "mouseenter",
+			hideEvent: "none",
+			onShow: function(e) {
+				var $that=$(this);
+
+				$that.tooltip('panel').focus().off().one("blur",function(){
+					$that.tooltip('hide');
+				});
+			},
+			onHide: function(e) {
+				// console.log('hide:'+e);
+			},
+			onUpdate: function(html) {
+				// console.log('onUpdate:'+html.html());
+			},
+			onPosition: function(left, top) {
+				// console.log("left:"+left+"  top:"+top);
+			},
+			onDestroy: function() {
+				// console.log("destroy callback");
+			}
+		});
+	</pre>
+	</div>
+
+	<div class="custom" id="custom">
+		<a href="javascript:;" title="edit-add" class="edit-add"></a>
+		<a href="javascript:;" title="edit-remove" class="edit-remove"></a>
+		<a href="javascript:;" title="cut" class="cut"></a>
+		<a href="javascript:;" title="redo" class="redo"></a>
+		<a href="javascript:;" title="undo" class="undo"></a>
+	</div>
