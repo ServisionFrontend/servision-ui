@@ -564,13 +564,22 @@
 
         getFixedTableHeaderW: function (target, opts, align, beginColIndex, deltaW) {
             var self = this;
+            var tempWidth;
 
             if (align) return '';
-            if (target.ns.unFrozenColsW > target.ns.unFrozenColsWrapperW) {
-                if (target.ns.leftFrozenCols.length && beginColIndex) deltaW = 0;
+
+            if (!beginColIndex) {
+                tempWidth = target.ns.unFrozenColsW + deltaW;
+            } else {
+                tempWidth = target.ns.unFrozenColsW + Math.abs(deltaW);
             }
 
-            return (target.ns.unFrozenColsW + deltaW + self.scrollbarWidth) + 'px';
+            if (tempWidth > target.ns.unFrozenColsWrapperW) {
+
+                if (target.ns.leftFrozenCols.length && beginColIndex) deltaW = 0;
+
+                return (target.ns.unFrozenColsW + deltaW + self.scrollbarWidth) + 'px';
+            }
         },
 
         getTableWrapperBeginHtml: function (target, opts, align) {
