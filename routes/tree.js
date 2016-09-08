@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+var xlsxtoJson = require('../server/xlsxtoJson.js');
+var apiList = xlsxtoJson('./api-doc/tree.xlsx');
 
 // tree
 var featureList = [{
@@ -19,28 +21,45 @@ var featureList = [{
 router.get('/', function(req, res, next) {
 	res.render('index.ejs', {
 		page: './tree/basic.ejs',
-		featureList: featureList
+		featureList: featureList,
+		apiPage: './tree/api.ejs',
+		apiList: apiList,
+		componentName: 'tree',
+		activeItem: 0
 	});
 });
+
 
 router.get('/nodeCheckbox', function(req, res, next) {
 	res.render('index.ejs', {
 		page: './tree/nodeCheckbox.ejs',
-		featureList: featureList
+		featureList: featureList,
+		apiPage: './tree/api.ejs',
+		apiList: apiList,
+		componentName: 'tree',
+		activeItem: 0
 	});
 });
 
 router.get('/moveSelection', function(req, res, next) {
 	res.render('index.ejs', {
 		page: './tree/moveSelection.ejs',
-		featureList: featureList
+		featureList: featureList,
+		apiPage: './tree/api.ejs',
+		apiList: apiList,
+		componentName: 'tree',
+		activeItem: 0
 	});
 });
 
 router.get('/expandTo', function(req, res, next) {
 	res.render('index.ejs', {
 		page: './tree/expandTo.ejs',
-		featureList: featureList
+		featureList: featureList,
+		apiPage: './tree/api.ejs',
+		apiList: apiList,
+		componentName: 'tree',
+		activeItem: 0
 	});
 });
 
