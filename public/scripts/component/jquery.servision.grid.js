@@ -568,11 +568,9 @@
             if (align) return '';
             if (target.ns.unFrozenColsW > target.ns.unFrozenColsWrapperW) {
                 if (target.ns.leftFrozenCols.length && beginColIndex) deltaW = 0;
-
-                return (target.ns.unFrozenColsW + deltaW + self.scrollbarWidth) + 'px';
             }
 
-            return '';
+            return (target.ns.unFrozenColsW + deltaW + self.scrollbarWidth) + 'px';
         },
 
         getTableWrapperBeginHtml: function (target, opts, align) {
