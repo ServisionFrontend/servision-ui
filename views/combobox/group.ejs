@@ -2,28 +2,10 @@
 	<link rel="stylesheet" href="../styles/component/servision.combobox.css">
 	<script src="../scripts/component/jquery.servision.combobox.js"></script>
 	<style>
-		.content-view {
-		  padding: 20px;
-		  overflow: hidden;
-		  border: 1px solid #eee; }
-		 .content-view input{height:26px;}
-
-		.source-title {
-		  background: #FAFAFA;
-		  line-height: 40px; }
-		  .source-title h4 {
-		    color: #2575ed;
-		    text-align: left;
-		    text-indent: 2em;
-		    padding: 0;
-		    margin: 0; }
-
-		.source-content {
-		  overflow: auto;
-		  background: #555;
-		  color: #fff;
-		  font-size: 16px;
-		  overflow: auto; }
+	.content-view{padding:20px;overflow:hidden;border:1px solid #eee;}
+	.content-view input{height:26px;}
+	.source-title{background:#FAFAFA;line-height:40px;}
+	.source-title h4{color:#2575ed;text-align:left;text-indent:2em;padding:0;margin:0;}
 
 	</style>
 	<script>
@@ -102,7 +84,7 @@
 	</div>
 	<div class="source-title"><h4>Source Code:</h4></div>
 	<div class="source-content">
-		<pre data-action="basic">
+		<pre class="brush:js">
 			$("#brand").combobox({
 				data: data,
 				groupField: 'BrandCode',
