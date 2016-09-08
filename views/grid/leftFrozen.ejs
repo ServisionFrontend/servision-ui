@@ -1,0 +1,252 @@
+<link rel="stylesheet" href="/styles/component/servision.grid.css">
+<link rel="stylesheet" href="/styles/component/servision.pagination.css">
+<script type="text/javascript" src="/scripts/component/jquery.servision.grid.js"></script>
+<script type="text/javascript" src="/scripts/component/jquery.servision.pagination.js"></script>
+<style type="text/css">
+    h2, h3 {
+        margin: 0;
+    }
+
+    .btnWrapper {
+        width: 200px;
+        height: 200px;
+        position: fixed;
+        z-index: 2000;
+        top: 200px;
+        left: 0;
+    }
+
+    .btnWrapper .btn {
+        background: #1a5257;
+    }
+
+    .layer {
+        width: 500px;
+        height: auto;
+        border: solid 1px #4CCD4C;
+    }
+
+    .layer .title {
+        height: 30px;
+        line-height: 30px;
+        padding: 0 10px;
+        background-color: #4CCD4C;
+    }
+
+    .layer .title span[data-action="close"] {
+        display: inline-block;
+        float: right;
+        font-size: 24px;
+    }
+
+    .layer .content {
+        background-color: #fff;
+        min-height: 100px;
+        position: relative;
+    }
+
+    .layer .content table {
+        width: 100%;
+        text-align: center;
+    }
+
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+    }
+
+    .clearfix:before, .clearfix:after {
+        content: ".";
+        display: block;
+        height: 0;
+        overflow: hidden;
+    }
+
+    .clearfix:after {
+        clear: both;
+    }
+
+    .clearfix {
+        zoom: 1;
+    }
+
+    ul.list li {
+        width: 200px;
+        height: 200px;
+        margin-right: 10px;
+        float: left;
+    }
+
+    ul.list li img {
+        width: 100%;
+        height: 100%;
+    }
+
+    .item {
+        min-height: 200px;
+        margin-bottom: 20px;
+    }
+
+    .item .title {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 10px;
+        background: #555d71;
+        color: #00D2CA;
+        font-size: 16px;
+    }
+
+    .item .content {
+        padding: 10px 10px 20px;
+    }
+
+    .code-wrapper {
+        max-height: 300px;
+        overflow: auto;
+        margin: 0 auto;
+        padding: 5px 0;
+        border-radius: 8px;
+        background: #2d2828;
+        color: #fff;
+    }
+
+    p {
+        margin-top: 1em;
+        margin-bottom: 0.5em;
+        line-height: 100%;
+    }
+
+    .btn-wrapper {
+        margin-bottom: 10px;
+    }
+
+    .btn {
+        min-width: 80px;
+        height: 30px;
+        line-height: 30px;
+        display: inline-block;
+        background: #2185ac;
+        text-align: center;
+        border-radius: 4px;
+        box-shadow: 1px 1px 3px #555;
+        color: #fff;
+        margin: 5px 5px 5px 0;
+        padding: 0 10px;
+        cursor: pointer;
+        *zoom: 1;
+        *display: inline;
+    }
+
+    .btn:hover {
+        background: #2185ac;
+    }
+
+    table {
+        color: #000;
+    }
+
+    .demo-grid {
+        width: 770px;
+        margin: 50px auto 0;
+    }
+
+    tbody a {
+        color: #b00;
+    }
+
+    .demo-pagination {
+        width: 770px;
+        margin: 10px auto 0;
+    }
+
+</style>
+
+<div class="wrapper">
+    <div class="item">
+        <div class="content">
+            <p>需要配置dialog属性为true,并且不需要配置message</p>
+            <div class="demo-grid" id="grid-1"></div>
+            <div class="demo-pagination" id="pagination-1"></div>
+            <pre class="brush: js;">
+                $.window({
+                    name: 'test7',
+                    dialog: true,
+                    content: '请输入需要交流的内容'
+                });
+            </pre>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+
+        $('#grid-1').grid({
+            width: '770px',
+            height: '244px',
+            url: './data.json',
+            plugins: {
+                pagination: $('#pagination-1').pagination({
+                    pageSize: 20,
+                    pageBtnCount: 3,
+                    curPageIndex: 1,
+                    pageSizeList: [5, 10, 15, 20]
+                })
+            },
+            columns: [{
+                title: '测试1',
+                index: 'a1',
+                width: '100px',
+                sortable: true,
+                resizeable: true,
+                renderer: function (value, record, store) {
+                    return '<a class="custom-a" href="http://www.baidu.com" target="_blank">' + value + '</a>';
+                }
+            }, {
+                title: '测试2',
+                index: 'b1',
+                width: '100px',
+                sortable: true,
+                resizeable: true
+            }, {
+                title: '测试3',
+                index: 'c1',
+                width: '100px',
+                sortable: true,
+                resizeable: true
+            }, {
+                title: '测试4',
+                index: 'd1',
+                width: '100px',
+                sortable: true,
+                resizeable: true
+            }, {
+                title: '测试5',
+                index: 'e1',
+                width: '100px',
+                sortable: true,
+                resizeable: true
+            }, {
+                title: '测试6',
+                index: 'f1',
+                width: '100px',
+                sortable: true,
+                resizeable: true
+            }, {
+                title: '测试7',
+                index: 'g1',
+                width: '100px',
+                sortable: true,
+                resizeable: true
+            }, {
+                title: '测试8',
+                index: 'h1',
+                width: '100px',
+                sortable: true,
+                resizeable: true
+            }]
+        });
+    });
+</script>
+

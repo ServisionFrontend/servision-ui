@@ -15,37 +15,37 @@
 
     var query = {
 
-        init: function ($target) {
+        init: function (target) {
             var self = this;
 
-            self.initGlobalScope($target);
-            self.render($target);
+            self.initGlobalScope(target);
+            self.render(target);
         },
 
-        initGlobalScope: function ($target) {
-            var self = this;
-
-        },
-
-        render: function ($target) {
+        initGlobalScope: function (target) {
             var self = this;
 
         },
 
-        initJqueryObject: function ($target) {
+        render: function (target) {
             var self = this;
 
         },
 
-        initEvent: function ($target) {
+        initJqueryObject: function (target) {
+            var self = this;
+
+        },
+
+        initEvent: function (target) {
             var self = this;
 
         }
     };
 
-    $.fn.query = function (options, param) {
+    $.fn.query = function (options, params) {
         if (typeof options == 'string') {
-            return $.fn.query.methods[options](this, param);
+            return $.fn.query.methods[options]($(this), params);
         }
 
         options = options || {};
@@ -71,7 +71,6 @@
         onAjaxBeforeSend: null,
         onAjaxComplete: null,
         onAjaxError: null,
-        onDataLoaded: null,
         onBeforeRender: null,
         onAfterRender: null
     };

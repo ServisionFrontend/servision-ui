@@ -10,6 +10,7 @@ var tree = require('./routes/tree');
 var combobox = require('./routes/combobox');
 var tooltip = require('./routes/tooltip');
 var window = require('./routes/window');
+var grid = require('./routes/grid');
 
 var app = express();
 
@@ -32,6 +33,8 @@ app.use('/tree', tree);
 app.use('/combobox', combobox);
 app.use('/tooltip', tooltip);
 app.use('/window', window);
+app.use('/gird', grid);
+
 
 
 // catch 404 and forward to error handler
