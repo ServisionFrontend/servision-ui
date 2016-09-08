@@ -365,7 +365,8 @@
                     type: opts.method,
                     cache: opts.cache,
                     timeout: opts.timeout,
-                    params: params,
+                    data: params,
+                    dataType: 'json',
                     beforeSend: opts.onAjaxBeforeSend,
                     complete: opts.onAjaxComplete,
                     error: function (err) {
