@@ -8,4 +8,5 @@ router.get('/windowDemo', function(req, res, next) {
 	res.render('window.ejs');
 });
 
+
 module.exports = router;

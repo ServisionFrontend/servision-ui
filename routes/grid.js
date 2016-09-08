@@ -22,7 +22,7 @@ var featureList = [{
 }];
 
 router.get('/', function(req, res, next) {
-
+	console.log(2222);
 	res.render('index.ejs', {
 		page: './grid/withPlugin.ejs',
 		apiPage: './grid/api.ejs',

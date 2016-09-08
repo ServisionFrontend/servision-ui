@@ -33,9 +33,7 @@ app.use('/tree', tree);
 app.use('/combobox', combobox);
 app.use('/tooltip', tooltip);
 app.use('/window', window);
-app.use('/gird', grid);
-
-
+app.use('/grid', grid);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
