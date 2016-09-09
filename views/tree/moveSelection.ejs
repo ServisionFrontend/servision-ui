@@ -25,6 +25,74 @@
 	</div>
 </div>
 
+<pre class="brush: js;">
+	$(document).ready(function(){
+		var $tbcontainer = $('#tree-container');
+
+		var data = [{
+			id: 1,
+			text: 'node-1',
+			children: [{
+				id: 2,
+				text: 'node-2'
+			}, {
+				id: 3,
+				text: 'node-3',
+				children: [{
+					id: 4,
+					text: 'node-4'
+				}, {
+					id: 5,
+					text: 'node-5'
+				}]
+			},{
+				id: 6,
+				text: 'node-6',
+				children: [{
+					id: 7,
+					text: 'node-7'
+				}, {
+					id: 8,
+					text: 'node-8'
+				}]
+			},{
+				id: 9,
+				text: 'node-9',
+				children: [{
+					id: 10,
+					text: 'node-10'
+				}, {
+					id: 11,
+					text: 'node-11'
+				}]
+			}]
+		}];
+
+		$tbcontainer.tree({
+			data:data,
+			expandAll:true
+		});
+
+		$('#btnUp').on('click', function(){
+			var isSelectionFolder = $('#cbCheckbox1').is(':checked');
+			var status = $tbcontainer.tree('prevNodeSelection', isSelectionFolder);
+
+			if (!status){
+				alert('已经到达最前');
+			}
+		});
+
+		$('#btnDown').on('click', function(){
+			var isSelectionFolder = $('#cbCheckbox2').is(':checked');
+			var status = $tbcontainer.tree('nextNodeSelection', isSelectionFolder);
+
+			if (!status){
+				alert('已经到达最后');
+			}
+		});
+	});
+</pre>
+
 <script type="text/javascript" src="/scripts/component/jquery.servision.tree.js"></script>
 
 <script type="text/javascript">

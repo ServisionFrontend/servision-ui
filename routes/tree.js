@@ -37,7 +37,7 @@ router.get('/nodeCheckbox', function(req, res, next) {
 		apiPage: './tree/api.ejs',
 		apiList: apiList,
 		componentName: 'tree',
-		activeItem: 0
+		activeItem: 1
 	});
 });
 
@@ -48,7 +48,7 @@ router.get('/moveSelection', function(req, res, next) {
 		apiPage: './tree/api.ejs',
 		apiList: apiList,
 		componentName: 'tree',
-		activeItem: 0
+		activeItem: 2
 	});
 });
 
@@ -59,7 +59,7 @@ router.get('/expandTo', function(req, res, next) {
 		apiPage: './tree/api.ejs',
 		apiList: apiList,
 		componentName: 'tree',
-		activeItem: 0
+		activeItem: 3
 	});
 });
 
