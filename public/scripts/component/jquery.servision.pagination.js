@@ -36,7 +36,8 @@
             target.ns.curPageIndex = parseInt(opts.curPageIndex);
             target.ns.totalPage = 0;
             target.ns.pageSizeList = opts.pageSizeList;
-            target.ns.templateMap = $.parseJSON(JSON.stringify(self.templateMap).replace(/\{cssPrefix\}/g, target.ns.cssPrefix));
+            target.ns.mode = opts.mode;
+            target.ns.templateMap = $.parseJSON(JSON.stringify(self.templateMap[target.ns.mode]).replace(/\{cssPrefix\}/g, target.ns.cssPrefix));
         },
 
         render: function (target) {
@@ -63,60 +64,21 @@
 
             target.ns.totalPage = Math.floor(target.ns.totalRecord / target.ns.pageSize) + (target.ns.totalRecord % target.ns.pageSize > 0 ? 1 : 0);
 
-            html += templateMap.wrapper.begin;
-            html += templateMap.paginationInfo.begin;
-
-            html += templateMap.record
-                .replace('{totalRecord}', target.ns.totalRecord);
-
-            html += templateMap.slash;
-
-            html += templateMap.page
-                .replace('{totalPage}', target.ns.totalPage);
-
-            html += templateMap.current.replace('{currentPage}', target.ns.curPageIndex);
-
-            html += templateMap.paginationInfo.end;
-            html += templateMap.paginationFunction.begin;
-
-            html += templateMap.btnFirst
-                .replace('{pageIndex}', 1)
-                .replace('{disabled}', self.isFirstBtnDisabled(target) ? 'disabled' : '');
-
-            html += templateMap.btnPrev
-                .replace('{pageIndex}', (target.ns.curPageIndex - 1 > 0) ? (target.ns.curPageIndex - 1) : 1)
-                .replace('{disabled}', self.isPrevBtnDisabled(target) ? 'disabled' : '');
-
-            html += templateMap.btnList.begin;
-
-            html += self.createBtnListHtml(target);
-
-            html += templateMap.btnList.end;
-
-            html += templateMap.btnNext
-                .replace('{pageIndex}', (target.ns.curPageIndex + 1) <= target.ns.totalPage ? (target.ns.curPageIndex + 1) : target.ns.totalPage)
-                .replace('{disabled}', self.isNextBtnDisabled(target) ? 'disabled' : '');
-
-            html += templateMap.btnLast
-                .replace('{pageIndex}', target.ns.totalPage)
-                .replace('{disabled}', self.isLastBtnDisabled(target) ? 'disabled' : '');
-
-            if (opts.withRefresh) html += templateMap.refresh;
-
-            if (opts.withSelect) {
-                html += templateMap.select.begin;
-                for (var j = 0; j < target.ns.pageSizeList.length; j++) {
-                    html += templateMap.option
-                        .replace(/\{value\}/g, target.ns.pageSizeList[j])
-                        .replace('{isSelected}', target.ns.pageSizeList[j] === target.ns.pageSize ? 'selected' : '');
-                }
-                html += templateMap.select.end;
-            }
-
-            html += templateMap.input;
-            html += templateMap.jump;
-            html += templateMap.paginationFunction.end;
-            html += templateMap.wrapper.end;
+            html += templateMap.shell
+                .replace('{totalRecord}', target.ns.totalRecord)
+                .replace('{totalPage}', target.ns.totalPage)
+                .replace('{currentPage}', target.ns.curPageIndex)
+                .replace('{firstPageIndex}', 1)
+                .replace('{firstDisabled}', self.isFirstBtnDisabled(target) ? 'disabled' : '')
+                .replace('{prevPageIndex}', (target.ns.curPageIndex - 1 > 0) ? (target.ns.curPageIndex - 1) : 1)
+                .replace('{prevDisabled}', self.isPrevBtnDisabled(target) ? 'disabled' : '')
+                .replace('{btnListHolder}', self.createBtnListHtml(target))
+                .replace('{nextPageIndex}', (target.ns.curPageIndex + 1) <= target.ns.totalPage ? (target.ns.curPageIndex + 1) : target.ns.totalPage)
+                .replace('{nextDisabled}', self.isNextBtnDisabled(target) ? 'disabled' : '')
+                .replace('{lastPageIndex}', target.ns.totalPage)
+                .replace('{lastDisabled}', self.isLastBtnDisabled(target) ? 'disabled' : '')
+                .replace('{refreshHolder}', opts.withRefresh ? templateMap.refresh : '')
+                .replace('{selectHolder}', self.createSelectHtml(target, opts));
 
             return html;
         },
@@ -168,6 +130,23 @@
             }
 
             return btnListHtml;
+        },
+
+        createSelectHtml: function (target, opts) {
+            var html = '';
+            var templateMap = target.ns.templateMap;
+
+            if (opts.withSelect) {
+                html += templateMap.select.begin;
+                for (var i = 0; i < target.ns.pageSizeList.length; i++) {
+                    html += templateMap.option
+                        .replace(/\{value\}/g, target.ns.pageSizeList[i])
+                        .replace('{isSelected}', target.ns.pageSizeList[i] === target.ns.pageSize ? 'selected' : '');
+                }
+                html += templateMap.select.end;
+            }
+
+            return html;
         },
 
         updatePagination: function (target) {
@@ -410,40 +389,19 @@
         },
 
         templateMap: {
-            wrapper: {
-                begin: '<div class="{cssPrefix}pagination-wrapper">',
-                end: '</div>'
+            mode1: {
+                shell: '<div class="{cssPrefix}pagination-wrapper"><div class="{cssPrefix}pagination-info"><span class="{cssPrefix}pagination-record">共<span class="{cssPrefix}pagination-record-total">{totalRecord}</span>条记录</span><span class="{cssPrefix}pagination-slash">/</span><span class="{cssPrefix}pagination-page">共<span class="{cssPrefix}pagination-page-total">{totalPage}</span>页</span><span class="{cssPrefix}pagination-current">（当前第<span class="{cssPrefix}pagination-page-current">{currentPage}</span>页）</span></div><div class="{cssPrefix}pagination-function"><a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-first {firstDisabled}" data-page-index="{firstPageIndex}" href="javascript:;"></a><a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-prev {prevDisabled}" data-page-index="{prevPageIndex}" href="javascript:;"></a><span class="{cssPrefix}pagination-btn-list">{btnListHolder}</span><a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-next {nextDisabled}" data-page-index="{nextPageIndex}" href="javascript:;"></a><a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-last {lastDisabled}" data-page-index="{lastPageIndex}" href="javascript:;"></a>{refreshHolder}{selectHolder}<input class="{cssPrefix}pagination-input" type="text" /><a class="{cssPrefix}pagination-jump" href="javascript:;">跳转</a></div></div>',
+                btn: '<a class="{cssPrefix}pagination-btn {active}" data-page-index="{pageIndex}" href="javascript:;">{pageIndex}</a>',
+                ellipsis: '<span class="{cssPrefix}pagination-ellipsis">&hellip;</span>',
+                refresh: '<a class="{cssPrefix}pagination-refresh"></a>',
+                select: {
+                    begin: '<select class="{cssPrefix}pagination-select">',
+                    end: '</select>'
+                },
+                option: '<option value="{value}" {isSelected}>{value}</option>'
             },
-            paginationInfo: {
-                begin: '<div class="{cssPrefix}pagination-info">',
-                end: '</div>'
-            },
-            record: '<span class="{cssPrefix}pagination-record">共<span class="{cssPrefix}pagination-record-total">{totalRecord}</span>条记录</span>',
-            slash: '<span class="{cssPrefix}pagination-slash">/</span>',
-            page: '<span class="{cssPrefix}pagination-page">共<span class="{cssPrefix}pagination-page-total">{totalPage}</span>页</span>',
-            current: '<span class="{cssPrefix}pagination-current">（当前第<span class="{cssPrefix}pagination-page-current">{currentPage}</span>页）</span>',
-            paginationFunction: {
-                begin: '<div class="{cssPrefix}pagination-function">',
-                end: '</div>'
-            },
-            btnFirst: '<a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-first {disabled}" data-page-index="{pageIndex}" href="javascript:;"></a>',
-            btnLast: '<a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-last {disabled}" data-page-index="{pageIndex}" href="javascript:;"></a>',
-            btnPrev: '<a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-prev {disabled}" data-page-index="{pageIndex}" href="javascript:;"></a>',
-            btnNext: '<a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-next {disabled}" data-page-index="{pageIndex}" href="javascript:;"></a>',
-            ellipsis: '<span class="{cssPrefix}pagination-ellipsis">&hellip;</span>',
-            refresh: '<a class="{cssPrefix}pagination-refresh"></a>',
-            input: '<input class="{cssPrefix}pagination-input" type="text" />',
-            jump: '<a class="{cssPrefix}pagination-jump" href="javascript:;">跳转</a>',
-            select: {
-                begin: '<select class="{cssPrefix}pagination-select">',
-                end: '</select>'
-            },
-            option: '<option value="{value}" {isSelected}>{value}</option>',
-            btnList: {
-                begin: '<span class="{cssPrefix}pagination-btn-list">',
-                end: '</span>'
-            },
-            btn: '<a class="{cssPrefix}pagination-btn {active}" data-page-index="{pageIndex}" href="javascript:;">{pageIndex}</a>'
+            mode2: {  // 暂无
+            }
         }
     };
 
@@ -477,6 +435,7 @@
 
     $.fn.pagination.defaults = {
         cssPrefix: 's-',
+        mode: 'mode1',
         pageSize: 20,
         pageBtnCount: 3,
         total: 0,
