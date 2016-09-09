@@ -581,6 +581,8 @@
                 if (target.ns.leftFrozenCols.length && beginColIndex) deltaW = 0;
 
                 return (target.ns.unFrozenColsW + deltaW + self.scrollbarWidth) + 'px';
+            } else {
+                return '';
             }
         },
 
