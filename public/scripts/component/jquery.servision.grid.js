@@ -119,8 +119,10 @@
                     var $closestGridTable = $this.closest('.' + cssPrefix + 'grid-table');
 
                     $closestGridTable
-                        .find('.' + cssPrefix + 'table-header-wrapper')
-                        .scrollLeft($this.scrollLeft());
+                        .find('.' + cssPrefix + 'table-header')
+                        .css({
+                            left: -$this.scrollLeft() + 'px'
+                        });
 
                     $closestGridTable
                         .siblings('.' + cssPrefix + 'grid-table')
@@ -579,8 +581,6 @@
                 if (target.ns.leftFrozenCols.length && beginColIndex) deltaW = 0;
 
                 return (target.ns.unFrozenColsW + deltaW + self.scrollbarWidth) + 'px';
-            } else {
-                return target.ns.unFrozenColsWrapperW + self.scrollbarWidth + 'px';
             }
         },
 
