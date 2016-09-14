@@ -11,6 +11,8 @@ var combobox = require('./routes/combobox');
 var tooltip = require('./routes/tooltip');
 var tabs = require('./routes/tabs');
 var window = require('./routes/window');
+var grid = require('./routes/grid');
+var pagination = require('./routes/pagination');
 
 var app = express();
 
@@ -34,7 +36,8 @@ app.use('/combobox', combobox);
 app.use('/tooltip', tooltip);
 app.use('/tabs', tabs);
 app.use('/window', window);
-
+app.use('/grid', grid);
+app.use('/pagination', pagination);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

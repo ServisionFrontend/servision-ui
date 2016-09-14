@@ -17,422 +17,80 @@
 
     var grid = {
 
-        init: function ($target) {
+        init: function (target) {
             var self = this;
 
             self.scrollbarWidth = util.getScrollbarWidth();
-            self.initGlobalScope($target);
-            self.render($target);
-            self.initJqueryObject($target);
-            self.initEvent($target);
+            self.initGlobalScope(target);
+            self.render(target);
+            self.initJqueryObject(target);
+            self.initEvent(target);
+            self.initPlugins(target);
+            self.loadData(target);
         },
 
-        initGlobalScope: function ($target) {
+        initGlobalScope: function (target) {
             var self = this;
+            var $target = $(target);
+            var opts = $target.data('grid').options;
 
-            $target.ns = {};
+            target.ns = {};
 
-            $target.ns.id = _id++;
-            $target.ns.tbodyIdList = [];
-            $target.ns.divDragLine = null;
-            $target.ns.originPointX = 0;
-            $target.ns.leftFrozenCols = [];
-            $target.ns.rightFrozenCols = [];
-            $target.ns.unFrozenCols = [];
-            $target.ns.leftFrozenColsW = 0;
-            $target.ns.rightFrozenColsW = 0;
-            $target.ns.unFrozenColsW = 0;
-            $target.ns.unFrozenColsWrapperW = 0;
-            $target.ns.store = null;
+            target.ns.cssPrefix = $.trim(opts.cssPrefix);
+            target.ns.id = _id++;
+            target.ns.tbodyIdList = [];
+            target.ns.divDragLine = null;
+            target.ns.originPointX = 0;
+            target.ns.leftFrozenCols = [];
+            target.ns.rightFrozenCols = [];
+            target.ns.unFrozenCols = [];
+            target.ns.leftFrozenColsW = 0;
+            target.ns.rightFrozenColsW = 0;
+            target.ns.unFrozenColsW = 0;
+            target.ns.unFrozenColsWrapperW = 0;
+            target.ns.store = null;
+            target.ns.templateMap = $.parseJSON(JSON.stringify(self.templateMap).replace(/\{cssPrefix\}/g, target.ns.cssPrefix));
+            target.ns.multiSelect = opts.multiSelect;
+            target.ns.params = {};
         },
 
-        render: function ($target) {
+        render: function (target) {
             var self = this;
-            var data = $target.data('grid');
-            var html = self.createShellHtml($target, data.options);
+            var $target = $(target);
+            var opts = $target.data('grid').options;
+            var html = self.createShellHtml(target, opts);
 
-            return $target.html(html);
+            opts.onBeforeRender && opts.onBeforeRender.call(null, target);
+
+            $target.html(html);
+
+            opts.onAfterRender && opts.onAfterRender.call(null, target);
         },
 
-        createShellHtml: function ($target, opts) {
+
+        initJqueryObject: function (target) {
             var self = this;
-            var html = '';
-            var htmlLeftFrozenPart = '';
-            var htmlRightFrozenPart = '';
-            var htmlUnfrozenPart = '';
-            var deltaColIndex = 0;
+            var $target = $(target);
+            var cssPrefix = target.ns.cssPrefix;
 
-            if (opts.withCheckbox) deltaColIndex++;
-            if (opts.withRowNumber) deltaColIndex++;
+            target.jq = {};
 
-            self.assignColumns($target, opts);
-
-            html += self.templateMap.wrapper.begin
-                .replace(/\{width\}/g, opts.width);
-
-            switch (opts.frozenColsAlign) {
-                case 'right':
-                    htmlUnfrozenPart = self.createGridTableHtml($target, opts, '', 0);
-                    htmlRightFrozenPart = self.createGridTableHtml($target, opts, 'right', $target.ns.unFrozenCols.length + deltaColIndex);
-                    html += htmlUnfrozenPart + htmlRightFrozenPart;
-                    break;
-                case 'left-right':
-                    htmlLeftFrozenPart = self.createGridTableHtml($target, opts, 'left', 0);
-                    htmlUnfrozenPart = self.createGridTableHtml($target, opts, '', $target.ns.leftFrozenCols.length + deltaColIndex);
-                    htmlRightFrozenPart = self.createGridTableHtml($target, opts, 'right', $target.ns.leftFrozenCols.length + $target.ns.unFrozenCols.length + deltaColIndex);
-                    html += htmlLeftFrozenPart + htmlUnfrozenPart + htmlRightFrozenPart;
-                    break;
-                case 'left':
-                    htmlLeftFrozenPart = self.createGridTableHtml($target, opts, 'left', 0);
-                    htmlUnfrozenPart = self.createGridTableHtml($target, opts, '', $target.ns.leftFrozenCols.length + deltaColIndex);
-                    html += htmlLeftFrozenPart + htmlUnfrozenPart;
-                    break;
-                default:
-                    htmlUnfrozenPart = self.createGridTableHtml($target, opts, '', 0);
-                    html += htmlUnfrozenPart;
-            }
-
-            html += self.templateMap.wrapper.end;
-
-            return html;
+            target.jq.$curDragTarget = null;
+            target.jq.$cols = $target.find('colgroup');
+            target.jq.$rows = $target.find('tr');
+            target.jq.$headerCols = $target.find('.' + cssPrefix + 'table-column');
+            target.jq.$headerColsText = $target.find('.' + cssPrefix + 'table-column:not(.' + cssPrefix + 'grid-disable-sort) .s-grid-text');
+            target.jq.$btnSelectAll = $target.find('.' + cssPrefix + 'table-header .' + cssPrefix + 'grid-check-wrapper');
+            target.jq.$loading = $target.find('.' + cssPrefix + 'grid-loading-mask');
         },
 
-        assignColumns: function ($target, opts) {
+        initEvent: function (target) {
             var self = this;
-            var cols = opts.columns;
-            var len = cols.length;
-            var temp;
+            var $target = $(target);
+            var opts = $target.data('grid').options;
+            var cssPrefix = target.ns.cssPrefix;
 
-            for (var i = 0; i < len; i++) {
-                temp = opts.columns[i];
-                if (temp.frozen) {
-                    switch (opts.frozenColsAlign) {
-                        case 'right':
-                            $target.ns.rightFrozenColsW += parseInt(temp.width);
-                            $target.ns.rightFrozenCols.push(temp);
-                            break;
-                        case 'left-right':
-                            if (temp.frozenAlign === 'right') {
-                                $target.ns.rightFrozenColsW += parseInt(temp.width);
-                                $target.ns.rightFrozenCols.push(temp);
-                            } else {
-                                $target.ns.leftFrozenColsW += parseInt(temp.width);
-                                $target.ns.leftFrozenCols.push(temp);
-                            }
-                            break;
-                        case 'left':
-                        default:
-                            $target.ns.leftFrozenColsW += parseInt(temp.width);
-                            $target.ns.leftFrozenCols.push(temp);
-                    }
-                } else {
-                    $target.ns.unFrozenColsW += parseInt(temp.width);
-                    $target.ns.unFrozenCols.push(temp);
-                }
-            }
-
-            $target.ns.unFrozenColsWrapperW = parseInt(opts.width) - $target.ns.leftFrozenColsW - $target.ns.rightFrozenColsW;
-        },
-
-        createGridTableHtml: function ($target, opts, frozenAlign, beginColIndex) {
-            var self = this;
-            var htmlGridTable = '';
-            var htmlColgroup = '';
-            var originalColIndex = beginColIndex;
-            var cols;
-            var colsW;
-            var deltaW = 0;
-            var tbodyId;
-            var len;
-            var temp;
-
-            if (frozenAlign === 'left') {
-                cols = $target.ns.leftFrozenCols;
-                colsW = $target.ns.leftFrozenColsW;
-            } else if (frozenAlign === 'right') {
-                cols = $target.ns.rightFrozenCols;
-                colsW = $target.ns.rightFrozenColsW;
-            } else {
-                cols = $target.ns.unFrozenCols;
-                colsW = $target.ns.unFrozenColsWrapperW;
-            }
-
-            len = cols.length;
-
-            if (!len) return '';
-
-            tbodyId = $target.ns.id + '-' + $target.ns.tbodyIdList.length;
-            $target.ns.tbodyIdList.push(tbodyId);
-
-            if (originalColIndex) {
-                if (opts.withCheckbox) deltaW -= parseInt(opts.checkboxWidth);
-                if (opts.withRowNumber) deltaW -= parseInt(opts.rowNumberWidth);
-            } else {
-                if (opts.withCheckbox) deltaW += parseInt(opts.checkboxWidth);
-                if (opts.withRowNumber) deltaW += parseInt(opts.rowNumberWidth);
-            }
-
-            htmlGridTable += self.templateMap.gridTable.begin
-                .replace('{frozenAlign}', frozenAlign)
-                .replace('{width}', self.getGridTableW($target, opts, frozenAlign, beginColIndex, colsW, deltaW) + 'px');
-
-            htmlGridTable += self.templateMap.tableHeader.begin
-                .replace('{width}', self.getFixedTableHeaderW($target, opts, frozenAlign, beginColIndex, deltaW))
-                .replace('{theadHeight}', opts.theadHeight)
-                .replace('{theadLineHeight}', opts.theadHeight);
-
-            if (!originalColIndex && opts.withCheckbox) {
-                htmlColgroup += self.templateMap.colgroup
-                    .replace('{width}', opts.checkboxWidth);
-
-                htmlGridTable += self.templateMap.tableColumn.begin
-                    .replace('{classList}', self.createColumnClass({isCheckbox: true}))
-                    .replace('{colIndex}', beginColIndex++)
-                    .replace('{index}', 'checkbox')
-                    .replace('{width}', opts.checkboxWidth)
-                    .replace('{theadHeight}', opts.theadHeight)
-                    .replace('{theadLineHeight}', parseInt(opts.theadHeight) - 1 + 'px');
-
-                htmlGridTable += self.templateMap.checkbox;
-                htmlGridTable += self.templateMap.tableColumn.end;
-            }
-
-            if (!originalColIndex && opts.withRowNumber) {
-                htmlColgroup += self.templateMap.colgroup
-                    .replace('{width}', opts.rowNumberWidth);
-
-                htmlGridTable += self.templateMap.tableColumn.begin
-                    .replace('{classList}', self.createColumnClass({isRowNumber: true}))
-                    .replace('{colIndex}', beginColIndex++)
-                    .replace('{index}', 'checkbox')
-                    .replace('{width}', opts.rowNumberWidth)
-                    .replace('{theadHeight}', opts.theadHeight)
-                    .replace('{theadLineHeight}', parseInt(opts.theadHeight) - 1 + 'px');
-
-                htmlGridTable += self.templateMap.gridText
-                    .replace('{title}', '序号');
-                htmlGridTable += self.templateMap.tableColumn.end;
-            }
-
-            for (var i = 0; i < len; i++) {
-                temp = cols[i];
-                htmlColgroup += self.templateMap.colgroup
-                    .replace('{width}', temp.width);
-
-                htmlGridTable += self.templateMap.tableColumn.begin
-                    .replace('{classList}', self.createColumnClass(temp))
-                    .replace('{colIndex}', beginColIndex++)
-                    .replace('{index}', temp.index)
-                    .replace('{width}', temp.width)
-                    .replace('{theadHeight}', opts.theadHeight)
-                    .replace('{theadLineHeight}', parseInt(opts.theadHeight) - 1 + 'px');
-
-                htmlGridTable += self.templateMap.gridText
-                    .replace('{title}', temp.title);
-
-                if (temp.resizeable) {
-                    htmlGridTable += self.templateMap.dragQuarantine;
-                }
-                htmlGridTable += self.templateMap.tableColumn.end;
-            }
-            htmlGridTable += self.templateMap.tableHeader.end;
-            htmlGridTable += self.getTableWrapperBeginHtml($target, opts, frozenAlign);
-            htmlGridTable += htmlColgroup;
-            htmlGridTable += self.templateMap.tbody.begin
-                .replace('{id}', tbodyId);
-
-            if (opts.localData) {
-                $target.ns.store = opts.localData;
-                htmlGridTable += self.createTbodyHtml($target, opts, frozenAlign, beginColIndex);
-            } else {
-                self.loadData($target, opts, frozenAlign, beginColIndex, tbodyId);
-            }
-
-            htmlGridTable += self.templateMap.tbody.end;
-            htmlGridTable += self.templateMap.tableWrapper.end;
-            htmlGridTable += self.templateMap.gridTable.end;
-
-            return htmlGridTable;
-        },
-
-        getGridTableW: function ($target, opts, frozenAlign, beginColIndex, colsW, deltaW) {
-            var self = this;
-
-            if (!$target.ns.leftFrozenCols.length && frozenAlign === '') {
-                return colsW;
-            } else if (frozenAlign === 'right') {
-                return colsW
-            } else {
-                return colsW + deltaW;
-            }
-        },
-
-        createColumnClass: function (opt) {
-            var classList = ['s-table-column'];
-
-            if (opt.isCheckbox) classList.push('s-grid-checkbox');
-            if (opt.isRowNumber) classList.push('s-grid-rownumber');
-            if (!opt.resizeable) classList.push('s-grid-disable-resize');
-            if (!opt.sortable) classList.push('s-grid-disable-sort');
-
-            return classList.join(' ');
-        },
-
-        getFixedTableHeaderW: function ($target, opts, frozenAlign, beginColIndex, deltaW) {
-            var self = this;
-
-            if (frozenAlign) return '';
-            if ($target.ns.unFrozenColsW > $target.ns.unFrozenColsWrapperW) {
-                if ($target.ns.leftFrozenCols.length && beginColIndex) deltaW = 0;
-
-                return ($target.ns.unFrozenColsW + deltaW + self.scrollbarWidth) + 'px';
-            }
-
-            return '';
-        },
-
-        getTableWrapperBeginHtml: function ($target, opts, frozenAlign) {
-            var self = this;
-            var width;
-            var height;
-            var tbodyHeight;
-            var overflowMode;
-            var temp;
-
-            if (frozenAlign === 'left') {
-                width = $target.ns.leftFrozenColsW;
-                overflowMode = 'hidden';
-                tbodyHeight = parseInt(opts.size) * parseInt(opts.trHeight);
-                temp = parseInt(opts.height) - parseInt(opts.theadHeight);
-                height = tbodyHeight > temp ? temp - self.scrollbarWidth : temp;
-            } else if (frozenAlign === 'right') {
-                width = $target.ns.rightFrozenColsW;
-                overflowMode = 'hidden';
-                tbodyHeight = parseInt(opts.size) * parseInt(opts.trHeight);
-                temp = parseInt(opts.height) - parseInt(opts.theadHeight);
-                height = tbodyHeight > temp ? temp - self.scrollbarWidth : temp;
-            } else {
-                width = $target.ns.unFrozenColsW;
-                overflowMode = 'auto';
-                height = parseInt(opts.height) - parseInt(opts.theadHeight);
-            }
-
-            return self.templateMap.tableWrapper.begin
-                .replace(/\{width\}/g, width + 'px')
-                .replace(/\{height\}/g, height + 'px')
-                .replace('{overflowMode}', overflowMode);
-        },
-
-        loadData: function ($target, opts, frozenAlign, beginColIndex, tbodyId) {
-            var self = this;
-
-            if (opts.url) {
-                $.ajax({
-                    url: opts.url,
-                    type: opts.method,
-                    cache: opts.cache,
-                    timeout: opts.timeout,
-                    beforeSend: opts.onAjaxBeforeSend,
-                    complete: opts.onAjaxComplete,
-                    error: opts.onAjaxError,
-                    success: function (result) {
-                        self.renderTbody($target, opts, frozenAlign, beginColIndex, tbodyId, result);
-                    }
-                });
-            }
-        },
-
-        renderTbody: function ($target, opts, frozenAlign, beginColIndex, tbodyId, result) {
-            var self = this;
-
-            $target.ns.store = result;
-
-            $target.find('#s-grid-tbody-' + tbodyId).html(self.createTbodyHtml($target, opts, frozenAlign, beginColIndex));
-        },
-
-        createTbodyHtml: function ($target, opts, frozenAlign, beginColIndex) {
-            var self = this;
-            var htmlTbody = '';
-            var originalColIndex = beginColIndex;
-            var list = $target.ns.store.list;
-            var listLen = list.length;
-            var cols;
-            var colsLen;
-            var tempCol;
-            var temp;
-            var index;
-
-            if (frozenAlign === 'left') {
-                cols = $target.ns.leftFrozenCols;
-            } else if (frozenAlign === 'right') {
-                cols = $target.ns.rightFrozenCols;
-            } else {
-                cols = $target.ns.unFrozenCols;
-            }
-
-            colsLen = cols.length;
-
-            if (!colsLen) return '';
-
-            for (var i = 0; i < listLen; i++) {
-                htmlTbody += self.templateMap.tr.begin
-                    .replace('{rowIndex}', i);
-
-                if (self.isGridTableNeed($target, opts, frozenAlign)) {
-                    if (opts.withCheckbox) htmlTbody += self.templateMap.tdCheckbox
-                        .replace('{trHeight}', opts.trHeight)
-                        .replace('{trLineHeight}', parseInt(opts.trHeight) - 1 + 'px');
-
-                    if (opts.withRowNumber) htmlTbody += self.templateMap.tdRowNumber
-                        .replace('{trHeight}', opts.trHeight)
-                        .replace('{trLineHeight}', parseInt(opts.trHeight) - 1 + 'px')
-                        .replace('{number}', i + 1);
-                }
-
-                for (var j = 0; j < colsLen; j++) {
-                    tempCol = cols[j];
-                    index = tempCol['index'];
-                    if (tempCol['renderer'] && typeof tempCol['renderer'] === 'function') {
-                        temp = tempCol['renderer'].apply(null, [list[i][index], list[i], list]);
-                    } else {
-                        temp = list[i][index];
-                    }
-
-                    htmlTbody += self.templateMap.td
-                        .replace('{trHeight}', opts.trHeight)
-                        .replace('{trLineHeight}', parseInt(opts.trHeight) - 1 + 'px')
-                        .replace('{content}', temp);
-                }
-                htmlTbody += self.templateMap.tr.end;
-            }
-
-            return htmlTbody;
-        },
-
-        isGridTableNeed: function ($target, opts, frozenAlign) {
-            if (!frozenAlign && !$target.ns.leftFrozenCols.length) return true;
-            if (frozenAlign === 'left') return true;
-            if (frozenAlign === 'right' && !$target.ns.leftFrozenCols.length && !$target.ns.unFrozenCols.length) return true;
-
-            return false;
-        },
-
-        initJqueryObject: function ($target) {
-            var self = this;
-
-            $target.jq = {};
-
-            $target.jq.$curDragTarget = null;
-            $target.jq.$cols = $target.find('colgroup');
-            $target.jq.$rows = $target.find('tr');
-            $target.jq.$headerCols = $target.find('.s-table-column');
-            $target.jq.$btnSelectAll = $target.find('.s-table-header .s-grid-check-wrapper');
-        },
-
-        initEvent: function ($target) {
-            var self = this;
-
-            $target.find('.s-table-wrapper').on({
+            $target.find('.' + cssPrefix + 'table-wrapper').on({
                 'mousewheel DOMMouseScroll': function (e) {
                     var $this = $(this);
                     var $table = $this.find('table');
@@ -440,7 +98,7 @@
                     var tableWrapperH = $this.height();
                     var tableH = $table.outerHeight();
                     var boundLength = tableH - tableWrapperH + 50;
-                    var $closestGridTable = $this.closest('.s-grid-table');
+                    var $closestGridTable = $this.closest('.' + cssPrefix + 'grid-table');
                     var temp;
 
                     if (util.getMousewheelDirection(e) === 'up') {  // 鼠标向上滚动
@@ -452,26 +110,28 @@
                     }
 
                     $closestGridTable
-                        .siblings('.s-grid-table')
-                        .find('.s-table-wrapper')
+                        .siblings('.' + cssPrefix + 'grid-table')
+                        .find('.' + cssPrefix + 'table-wrapper')
                         .scrollTop($this.scrollTop());
                 },
                 'scroll': function (e) {
                     var $this = $(this);
-                    var $closestGridTable = $this.closest('.s-grid-table');
+                    var $closestGridTable = $this.closest('.' + cssPrefix + 'grid-table');
 
                     $closestGridTable
-                        .find('.s-table-header-wrapper')
-                        .scrollLeft($this.scrollLeft());
+                        .find('.' + cssPrefix + 'table-header')
+                        .css({
+                            left: -$this.scrollLeft() + 'px'
+                        });
 
                     $closestGridTable
-                        .siblings('.s-grid-table')
-                        .find('.s-table-wrapper')
+                        .siblings('.' + cssPrefix + 'grid-table')
+                        .find('.' + cssPrefix + 'table-wrapper')
                         .scrollTop($this.scrollTop());
                 }
             });
 
-            $target.find('.s-table-column:not(.s-grid-disable-resize)').on({
+            $target.find('.' + cssPrefix + 'table-column:not(.' + cssPrefix + 'grid-disable-resize)').on({
                 'mousedown': function (e) {
                     var $this = $(this);
                     var offsetLeft = $this.offset().left;
@@ -479,9 +139,9 @@
                     var pointX = offsetLeft + width - e.pageX;
 
                     if (pointX >= 0 && pointX < 5) {
-                        $target.jq.$curDragTarget = $this;
-                        $target.ns.originPointX = e.pageX;
-                        self.createTableDragMask($target, e);
+                        target.jq.$curDragTarget = $this;
+                        target.ns.originPointX = e.pageX;
+                        self.createTableDragMask(target, e);
                     }
                 },
                 'mouseenter mousemove': function (e) {
@@ -498,105 +158,602 @@
                 }
             });
 
-            $target.jq.$rows.on({
-                'mouseenter': function (e) {
-                    var $this = $(this);
-                    var rowIndex = $this.data('row-index');
-                    var len = $target.jq.$rows.length;
-
-                    for (var i = 0; i < len; i++) {
-                        var $temp = $($target.jq.$rows[i]);
-
-                        $temp.is('tr[data-row-index="' + rowIndex + '"]') ? $temp.addClass('s-grid-row-hover') : $temp.removeClass('s-grid-row-hover');
-                    }
-                },
-                'click': function (e) {
-                    var $this = $(this);
-                    var rowIndex = $this.data('row-index');
-                    var len = $target.jq.$rows.length;
-                    var $temp;
-
-                    if ($this.is('.s-grid-row-selected')) {
-                        $target.jq.$btnSelectAll.removeClass('s-grid-row-selected');
-
-                        for (var i = 0; i < len; i++) {
-                            $temp = $($target.jq.$rows[i]);
-                            if ($temp.is('tr[data-row-index="' + rowIndex + '"]')) $temp.removeClass('s-grid-row-selected');
-                        }
-                        return;
-                    }
-
-                    for (var j = 0; j < len; j++) {
-                        $temp = $($target.jq.$rows[j]);
-
-                        $temp.is('tr[data-row-index="' + rowIndex + '"]') ? $temp.addClass('s-grid-row-selected') : $temp.removeClass('s-grid-row-selected');
-                    }
-                }
-            });
-
-            $target.jq.$btnSelectAll.on({
+            target.jq.$btnSelectAll.on({
                 'click': function (e) {
                     var $this = $(this);
 
-                    if ($this.is('.s-grid-row-selected')) {
-                        $this.removeClass('s-grid-row-selected');
-                        $target.jq.$rows.removeClass('s-grid-row-selected');
+                    if ($this.is('.' + cssPrefix + 'grid-row-selected')) {
+                        $this.removeClass(cssPrefix + 'grid-row-selected');
+                        target.jq.$rows.removeClass(cssPrefix + 'grid-row-selected');
                     } else {
-                        $this.addClass('s-grid-row-selected');
-                        $target.jq.$rows.addClass('s-grid-row-selected');
+                        $this.addClass(cssPrefix + 'grid-row-selected');
+                        target.jq.$rows.addClass(cssPrefix + 'grid-row-selected');
                     }
                 }
             });
 
             $target.find('table').on({
                 'mouseleave': function () {
-                    var len = $target.jq.$rows.length;
+                    var len = target.jq.$rows.length;
 
                     for (var i = 0; i < len; i++) {
-                        var $temp = $($target.jq.$rows[i]);
+                        var $temp = $(target.jq.$rows[i]);
 
-                        $temp.removeClass('s-grid-row-hover');
+                        $temp.removeClass(cssPrefix + 'grid-row-hover');
                     }
                 }
             });
 
-            $target.jq.$headerCols.on({
+            target.jq.$headerColsText.on({
                 'click': function () {
-                    var $this = $(this);
-                    var len = $target.jq.$headerCols.length;
+                    var $curCol = $(this).closest('.s-table-column');
+                    var len = target.jq.$headerCols.length;
                     var $temp = null;
+
+                    opts.onBeforeSort && opts.onBeforeSort.call(null, this);
 
                     for (var i = 0; i < len; i++) {
 
-                        if ($target.jq.$headerCols[i] !== this) {
-                            $temp = $($target.jq.$headerCols[i]);
-                            $temp.removeClass('s-grid-sort-asc').removeClass('s-grid-sort-desc');
+                        if (target.jq.$headerCols[i] !== $curCol[0]) {
+                            $temp = $(target.jq.$headerCols[i]);
+                            $temp.removeClass(cssPrefix + 'grid-sort-asc').removeClass(cssPrefix + 'grid-sort-desc');
                         }
                     }
 
-                    if ($this.hasClass('s-grid-sort-asc')) {
-                        $this.removeClass('s-grid-sort-asc').addClass('s-grid-sort-desc');
-                    } else if ($this.hasClass('s-grid-sort-desc')) {
-                        $this.removeClass('s-grid-sort-desc');
+                    if ($curCol.hasClass(cssPrefix + 'grid-sort-asc')) {
+                        $curCol.removeClass(cssPrefix + 'grid-sort-asc').addClass(cssPrefix + 'grid-sort-desc');
+                    } else if ($curCol.hasClass(cssPrefix + 'grid-sort-desc')) {
+                        $curCol.removeClass(cssPrefix + 'grid-sort-desc');
                     } else {
-                        if ($this.is(':not(.s-grid-disable-sort)')) {
-                            $this.addClass('s-grid-sort-asc');
+                        if ($curCol.is(':not(.' + cssPrefix + 'grid-disable-sort)')) {
+                            $curCol.addClass(cssPrefix + 'grid-sort-asc');
                         }
+                    }
+
+                    self.loadData(target);
+
+                    opts.onAfterSort && opts.onAfterSort.call(null, this);
+                }
+            });
+
+            self.initRowEvent(target);
+        },
+
+        initRowEvent: function (target) {
+            var cssPrefix = target.ns.cssPrefix;
+            var opts = $(target).data('grid').options;
+
+            target.jq.$rows.on({
+                'mouseenter': function (e) {
+                    var $this = $(this);
+                    var rowIndex = $this.data('row-index');
+                    var len = target.jq.$rows.length;
+
+                    for (var i = 0; i < len; i++) {
+                        var $temp = $(target.jq.$rows[i]);
+
+                        $temp.is('tr[data-row-index="' + rowIndex + '"]') ? $temp.addClass(cssPrefix + 'grid-row-hover') : $temp.removeClass(cssPrefix + 'grid-row-hover');
+                    }
+                },
+                'click': function (e) {
+                    var $this = $(this);
+                    var rowIndex = $this.data('row-index');
+                    var len = target.jq.$rows.length;
+                    var count = 0;
+                    var $temp;
+
+                    opts.onClickRow && opts.onClickRow.call(null, this);
+
+                    if ($this.is('.' + cssPrefix + 'grid-row-selected')) {
+
+                        target.jq.$btnSelectAll.removeClass(cssPrefix + 'grid-row-selected');
+
+                        for (var i = 0; i < len; i++) {
+                            $temp = $(target.jq.$rows[i]);
+                            if ($temp.is('tr[data-row-index="' + rowIndex + '"]')) $temp.removeClass(cssPrefix + 'grid-row-selected');
+                        }
+                        return;
+                    }
+
+                    if (target.ns.multiSelect) {
+                        for (var j = 0; j < len; j++) {
+                            $temp = $(target.jq.$rows[j]);
+
+                            if ($temp.is('tr[data-row-index="' + rowIndex + '"]')) {
+                                $temp.addClass(cssPrefix + 'grid-row-selected');
+                                count++;
+                            } else if ($temp.is('.' + cssPrefix + 'grid-row-selected')) {
+                                count++;
+                            }
+                        }
+
+                        if (count === len) {
+                            target.jq.$btnSelectAll.addClass(cssPrefix + 'grid-row-selected');
+                        } else {
+                            target.jq.$btnSelectAll.removeClass(cssPrefix + 'grid-row-selected');
+                        }
+
+                        return;
+                    }
+
+                    for (var k = 0; k < len; k++) {
+                        $temp = $(target.jq.$rows[k]);
+
+                        $temp.is('tr[data-row-index="' + rowIndex + '"]') ? $temp.addClass(cssPrefix + 'grid-row-selected') : $temp.removeClass(cssPrefix + 'grid-row-selected');
                     }
                 }
             });
         },
 
-        createTableDragMask: function ($target, e) {
+        initPlugins: function (target) {
             var self = this;
+            var $target = $(target);
+            var plugins = $target.data('grid').options.plugins;
+
+            target.plugins = {};
+
+            plugins && $.extend(target.plugins, plugins);
+
+            self.initPluginsEvent(target);
+        },
+
+        initPluginsEvent: function (target) {
+            var self = this;
+            var plugins = target.plugins;
+
+            for (var i in plugins) {
+                if (plugins.hasOwnProperty(i)) {
+                    var $temp = plugins[i];
+
+                    if (i === 'pagination') {
+                        $temp.on({
+                            'changePage': function (e, params) {
+                                self.loadData(target, params);
+                            }
+                        });
+                    } else if (i === 'query') {
+                        $temp.on({
+                            'query': function (e, params) {
+                                self.loadData(target, params);
+                            }
+                        });
+                    }
+                }
+            }
+        },
+
+        createShellHtml: function (target, opts) {
+            var self = this;
+            var templateMap = target.ns.templateMap;
+            var html = '';
+
+            self.assignColumns(target, opts);
+
+            html += templateMap.wrapper.begin
+                .replace(/\{width\}/g, opts.width);
+
+            html += templateMap.loading
+                .replace('{top}', opts.theadHeight);
+
+            html += self.controlCreateHtml(target, opts, false);
+
+            html += templateMap.wrapper.end;
+
+            return html;
+        },
+
+        assignColumns: function (target, opts) {
+            var self = this;
+            var cols = opts.columns;
+            var len = cols.length;
+            var temp;
+
+            for (var i = 0; i < len; i++) {
+                temp = opts.columns[i];
+                if (temp.frozen) {
+                    switch (opts.frozenAlign) {
+                        case 'right':
+                            target.ns.rightFrozenColsW += parseInt(temp.width);
+                            target.ns.rightFrozenCols.push(temp);
+                            break;
+                        case 'left-right':
+                            if (temp.align === 'right') {
+                                target.ns.rightFrozenColsW += parseInt(temp.width);
+                                target.ns.rightFrozenCols.push(temp);
+                            } else {
+                                target.ns.leftFrozenColsW += parseInt(temp.width);
+                                target.ns.leftFrozenCols.push(temp);
+                            }
+                            break;
+                        case 'left':
+                        default:
+                            target.ns.leftFrozenColsW += parseInt(temp.width);
+                            target.ns.leftFrozenCols.push(temp);
+                    }
+                } else {
+                    target.ns.unFrozenColsW += parseInt(temp.width);
+                    target.ns.unFrozenCols.push(temp);
+                }
+            }
+
+            target.ns.unFrozenColsWrapperW = parseInt(opts.width) - target.ns.leftFrozenColsW - target.ns.rightFrozenColsW;
+        },
+
+        controlCreateHtml: function (target, opts, isOnlyUpdateTbody) {
+            var self = this;
+            var html = null;
+            var htmlLeftFrozenPart = '';
+            var htmlRightFrozenPart = '';
+            var htmlUnfrozenPart = '';
+            var createHtml = isOnlyUpdateTbody ? self.createTbodyHtml : self.createGridTableHtml;
+
+            var deltaColIndex = 0;
+
+            if (opts.withCheckbox) deltaColIndex++;
+            if (opts.withRowNumber) deltaColIndex++;
+
+            switch (opts.frozenAlign) {
+                case 'right':
+                    htmlUnfrozenPart = createHtml.call(self, target, opts, '', 0);
+                    htmlRightFrozenPart = createHtml.call(self, target, opts, 'right', target.ns.unFrozenCols.length + deltaColIndex);
+                    html = [htmlUnfrozenPart, htmlRightFrozenPart];
+                    break;
+                case 'left-right':
+                    htmlLeftFrozenPart = createHtml.call(self, target, opts, 'left', 0);
+                    htmlUnfrozenPart = createHtml.call(self, target, opts, '', target.ns.leftFrozenCols.length + deltaColIndex);
+                    htmlRightFrozenPart = createHtml.call(self, target, opts, 'right', target.ns.leftFrozenCols.length + target.ns.unFrozenCols.length + deltaColIndex);
+                    html = [htmlLeftFrozenPart, htmlUnfrozenPart, htmlRightFrozenPart];
+                    break;
+                case 'left':
+                    htmlLeftFrozenPart = createHtml.call(self, target, opts, 'left', 0);
+                    htmlUnfrozenPart = createHtml.call(self, target, opts, '', target.ns.leftFrozenCols.length + deltaColIndex);
+                    html = [htmlLeftFrozenPart, htmlUnfrozenPart];
+                    break;
+                default:
+                    htmlUnfrozenPart = createHtml.call(self, target, opts, '', 0);
+                    html = [htmlUnfrozenPart];
+            }
+
+            return isOnlyUpdateTbody ? html : html.join('');
+        },
+
+        createGridTableHtml: function (target, opts, align, beginColIndex) {
+            var self = this;
+            var templateMap = target.ns.templateMap;
+            var htmlGridTable = '';
+            var htmlColgroup = '';
+            var originalColIndex = beginColIndex;
+            var cols;
+            var colsW;
+            var deltaW = 0;
+            var tbodyId;
+            var len;
+            var temp;
+
+            if (align === 'left') {
+                cols = target.ns.leftFrozenCols;
+                colsW = target.ns.leftFrozenColsW;
+            } else if (align === 'right') {
+                cols = target.ns.rightFrozenCols;
+                colsW = target.ns.rightFrozenColsW;
+            } else {
+                cols = target.ns.unFrozenCols;
+                colsW = target.ns.unFrozenColsWrapperW;
+            }
+
+            len = cols.length;
+
+            if (!len) return '';
+
+            tbodyId = target.ns.cssPrefix + 'grid-tbody-' + target.ns.id + '-' + target.ns.tbodyIdList.length;
+            target.ns.tbodyIdList.push(tbodyId);
+
+            if (originalColIndex) {
+                if (opts.withCheckbox) deltaW -= parseInt(opts.checkboxWidth);
+                if (opts.withRowNumber) deltaW -= parseInt(opts.rowNumberWidth);
+            } else {
+                if (opts.withCheckbox) deltaW += parseInt(opts.checkboxWidth);
+                if (opts.withRowNumber) deltaW += parseInt(opts.rowNumberWidth);
+            }
+
+            htmlGridTable += templateMap.gridTable.begin
+                .replace('{align}', align)
+                .replace('{width}', self.getGridTableW(target, opts, align, beginColIndex, colsW, deltaW) + 'px');
+
+            htmlGridTable += templateMap.tableHeader.begin
+                .replace('{width}', self.getFixedTableHeaderW(target, opts, align, beginColIndex, deltaW))
+                .replace('{theadHeight}', opts.theadHeight)
+                .replace('{theadLineHeight}', opts.theadHeight);
+
+            if (!originalColIndex && opts.withCheckbox) {
+                htmlColgroup += templateMap.colgroup
+                    .replace('{width}', opts.checkboxWidth);
+
+                htmlGridTable += templateMap.tableColumn.begin
+                    .replace('{classList}', self.createColumnClass(target, {isCheckbox: true}))
+                    .replace('{colIndex}', beginColIndex++)
+                    .replace('{index}', 'checkbox')
+                    .replace('{width}', opts.checkboxWidth)
+                    .replace('{theadHeight}', opts.theadHeight)
+                    .replace('{theadLineHeight}', parseInt(opts.theadHeight) - 1 + 'px');
+
+                if (opts.multiSelect) {
+                    htmlGridTable += templateMap.checkbox;
+                }
+
+                htmlGridTable += templateMap.tableColumn.end;
+            }
+
+            if (!originalColIndex && opts.withRowNumber) {
+                htmlColgroup += templateMap.colgroup
+                    .replace('{width}', opts.rowNumberWidth);
+
+                htmlGridTable += templateMap.tableColumn.begin
+                    .replace('{classList}', self.createColumnClass(target, {isRowNumber: true}))
+                    .replace('{colIndex}', beginColIndex++)
+                    .replace('{index}', 'checkbox')
+                    .replace('{width}', opts.rowNumberWidth)
+                    .replace('{theadHeight}', opts.theadHeight)
+                    .replace('{theadLineHeight}', parseInt(opts.theadHeight) - 1 + 'px');
+
+                htmlGridTable += templateMap.gridText
+                    .replace('{title}', '序号');
+                htmlGridTable += templateMap.tableColumn.end;
+            }
+
+            for (var i = 0; i < len; i++) {
+                temp = cols[i];
+                htmlColgroup += templateMap.colgroup
+                    .replace('{width}', temp.width);
+
+                htmlGridTable += templateMap.tableColumn.begin
+                    .replace('{classList}', self.createColumnClass(target, temp))
+                    .replace('{colIndex}', beginColIndex++)
+                    .replace('{index}', temp.index)
+                    .replace('{width}', temp.width)
+                    .replace('{theadHeight}', opts.theadHeight)
+                    .replace('{theadLineHeight}', parseInt(opts.theadHeight) - 1 + 'px');
+
+                htmlGridTable += templateMap.gridText
+                    .replace('{title}', temp.title);
+
+                if (temp.resizeable) {
+                    htmlGridTable += templateMap.dragQuarantine;
+                }
+                htmlGridTable += templateMap.tableColumn.end;
+            }
+            htmlGridTable += templateMap.tableHeader.end;
+            htmlGridTable += self.getTableWrapperBeginHtml(target, opts, align);
+            htmlGridTable += htmlColgroup;
+            htmlGridTable += templateMap.tbody.begin
+                .replace('{id}', tbodyId);
+
+            if (opts.localData) {
+                target.ns.store = opts.localData;
+                htmlGridTable += self.createTbodyHtml(target, opts, align, beginColIndex);
+            }
+
+            htmlGridTable += templateMap.tbody.end;
+            htmlGridTable += templateMap.tableWrapper.end;
+            htmlGridTable += templateMap.gridTable.end;
+
+            return htmlGridTable;
+        },
+
+        getGridTableW: function (target, opts, align, beginColIndex, colsW, deltaW) {
+            var self = this;
+
+            if (!target.ns.leftFrozenCols.length && align === '') {
+                return colsW;
+            } else if (align === 'right') {
+                return colsW
+            } else {
+                return colsW + deltaW;
+            }
+        },
+
+        createColumnClass: function (target, opt) {
+            var cssPrefix = target.ns.cssPrefix;
+            var classList = [cssPrefix + 'table-column'];
+
+            if (opt.isCheckbox) classList.push(cssPrefix + 'grid-checkbox');
+            if (opt.isRowNumber) classList.push(cssPrefix + 'grid-rownumber');
+            if (!opt.resizeable) classList.push(cssPrefix + 'grid-disable-resize');
+            if (!opt.sortable) classList.push(cssPrefix + 'grid-disable-sort');
+
+            return classList.join(' ');
+        },
+
+        getFixedTableHeaderW: function (target, opts, align, beginColIndex, deltaW) {
+            var self = this;
+            var tempWidth;
+
+            if (align) return '';
+
+            if (!beginColIndex) {
+                tempWidth = target.ns.unFrozenColsW + deltaW;
+            } else {
+                tempWidth = target.ns.unFrozenColsW + Math.abs(deltaW);
+            }
+
+            if (tempWidth > target.ns.unFrozenColsWrapperW) {
+
+                if (target.ns.leftFrozenCols.length && beginColIndex) deltaW = 0;
+
+                return (target.ns.unFrozenColsW + deltaW + self.scrollbarWidth) + 'px';
+            } else {
+                return '';
+            }
+        },
+
+        getTableWrapperBeginHtml: function (target, opts, align) {
+            var self = this;
+            var templateMap = target.ns.templateMap;
+            var width;
+            var height;
+            var tbodyHeight;
+            var overflowMode;
+            var temp;
+
+            if (align === 'left') {
+                width = target.ns.leftFrozenColsW;
+                overflowMode = 'hidden';
+                tbodyHeight = parseInt(opts.size) * parseInt(opts.trHeight);
+                temp = parseInt(opts.height) - parseInt(opts.theadHeight);
+                height = tbodyHeight > temp ? temp - self.scrollbarWidth : temp;
+            } else if (align === 'right') {
+                width = target.ns.rightFrozenColsW;
+                overflowMode = 'hidden';
+                tbodyHeight = parseInt(opts.size) * parseInt(opts.trHeight);
+                temp = parseInt(opts.height) - parseInt(opts.theadHeight);
+                height = tbodyHeight > temp ? temp - self.scrollbarWidth : temp;
+            } else {
+                width = target.ns.unFrozenColsW;
+                overflowMode = 'auto';
+                height = parseInt(opts.height) - parseInt(opts.theadHeight);
+            }
+
+            return templateMap.tableWrapper.begin
+                .replace(/\{width\}/g, width + 'px')
+                .replace(/\{height\}/g, height + 'px')
+                .replace('{overflowMode}', overflowMode);
+        },
+
+        loadData: function (target, params) {
+            var self = this;
+            var $target = $(target);
+            var opts = $target.data('grid').options;
+
+            if (opts.url) {
+
+                target.jq.$loading.show();
+
+                $.extend(true, target.ns.params, params);
+
+                $.ajax({
+                    url: opts.url,
+                    type: opts.method,
+                    cache: opts.cache,
+                    timeout: opts.timeout,
+                    data: target.ns.params,
+                    dataType: 'json',
+                    beforeSend: opts.onAjaxBeforeSend,
+                    complete: opts.onAjaxComplete,
+                    error: function (err) {
+                        target.jq.$loading.hide();
+                        opts.onAjaxError && opts.onAjaxError.apply(null, err);
+                    },
+                    success: function (result) {
+                        self.renderTbody(target, opts, result);
+                        target.jq.$rows = $target.find('tr');
+                        self.initRowEvent(target);
+                        target.jq.$loading.hide();
+
+                        var pagination = target.plugins.pagination;
+
+                        pagination && pagination.pagination && pagination.pagination('update', result);
+                        opts.onAjaxSuccess && opts.onAjaxSuccess.apply(null, [result]);
+                    }
+                });
+            }
+        },
+
+        renderTbody: function (target, opts, result) {
+            var self = this;
+            var $target = $(target);
+            var htmlList;
+            var temp;
+
+            target.ns.store = result;
+
+            htmlList = self.controlCreateHtml(target, opts, true);
+
+            for (var i = 0; i < target.ns.tbodyIdList.length; i++) {
+                temp = target.ns.tbodyIdList[i];
+                $target.find('#' + temp).html(htmlList[i]);
+            }
+        },
+
+        createTbodyHtml: function (target, opts, align, beginColIndex) {
+            var self = this;
+            var templateMap = target.ns.templateMap;
+            var htmlTbody = '';
+            var originalColIndex = beginColIndex;
+            var list = target.ns.store[opts.root];
+            var listLen = list.length;
+            var cols;
+            var colsLen;
+            var tempCol;
+            var temp;
+            var index;
+
+            if (align === 'left') {
+                cols = target.ns.leftFrozenCols;
+            } else if (align === 'right') {
+                cols = target.ns.rightFrozenCols;
+            } else {
+                cols = target.ns.unFrozenCols;
+            }
+
+            colsLen = cols.length;
+
+            if (!colsLen) return '';
+
+            for (var i = 0; i < listLen; i++) {
+                htmlTbody += templateMap.tr.begin
+                    .replace('{rowIndex}', i);
+
+                if (self.isGridTableNeed(target, opts, align)) {
+                    if (opts.withCheckbox) htmlTbody += templateMap.tdCheckbox
+                        .replace('{trHeight}', opts.trHeight)
+                        .replace('{trLineHeight}', parseInt(opts.trHeight) - 1 + 'px');
+
+                    if (opts.withRowNumber) htmlTbody += templateMap.tdRowNumber
+                        .replace('{trHeight}', opts.trHeight)
+                        .replace('{trLineHeight}', parseInt(opts.trHeight) - 1 + 'px')
+                        .replace('{number}', i + 1);
+                }
+
+                for (var j = 0; j < colsLen; j++) {
+                    tempCol = cols[j];
+                    index = tempCol['index'];
+                    if (tempCol['renderer'] && typeof tempCol['renderer'] === 'function') {
+                        temp = tempCol['renderer'].apply(null, [list[i][index], list[i], list]);
+                    } else {
+                        temp = list[i][index];
+                    }
+
+                    htmlTbody += templateMap.td
+                        .replace('{className}', tempCol.className ? 'class="' + tempCol['className'] + '"' : '')
+                        .replace('{trHeight}', opts.trHeight)
+                        .replace('{trLineHeight}', parseInt(opts.trHeight) - 1 + 'px')
+                        .replace('{content}', temp);
+                }
+                htmlTbody += templateMap.tr.end;
+            }
+
+            return htmlTbody;
+        },
+
+        isGridTableNeed: function (target, opts, align) {
+            if (!align && !target.ns.leftFrozenCols.length) return true;
+            if (align === 'left') return true;
+            if (align === 'right' && !target.ns.leftFrozenCols.length && !target.ns.unFrozenCols.length) return true;
+
+            return false;
+        },
+
+        createTableDragMask: function (target, e) {
+            var self = this;
+            var cssPrefix = target.ns.cssPrefix;
             var mousePosition = util.getEventPosition(e);
-            var gridWrapperH = $target.jq.$curDragTarget.closest('.s-grid-wrapper').outerHeight();
+            var gridWrapperH = target.jq.$curDragTarget.closest('.' + cssPrefix + 'grid-wrapper').outerHeight();
 
-            $target.ns.divDragLine = document.createElement('div');
-            $target.ns.divDragLine.className = 's-grid-drag-line';
-            $target.ns.divDragLine.style.cssText = 'width:1px;height:' + gridWrapperH + 'px;left:' + mousePosition.x + 'px;top:' + $target.jq.$curDragTarget.offset().top + 'px;position:absolute;background:black;z-index:999900;';
+            target.ns.divDragLine = document.createElement('div');
+            target.ns.divDragLine.className = cssPrefix + 'grid-drag-line';
+            target.ns.divDragLine.style.cssText = 'width:1px;height:' + gridWrapperH + 'px;left:' + mousePosition.x + 'px;top:' + target.jq.$curDragTarget.offset().top + 'px;position:absolute;background:black;z-index:999900;';
 
-            document.body.appendChild($target.ns.divDragLine);
+            document.body.appendChild(target.ns.divDragLine);
 
             $(document).on({
                 'mousemove': dragAndCalculate,
@@ -605,20 +762,21 @@
 
             function dragAndCalculate(e) {
                 var minColumnW = 30;
-                var curDragTargetW = $target.jq.$curDragTarget.outerWidth();
+                var curDragTargetW = target.jq.$curDragTarget.outerWidth();
                 var mousePosition = util.getEventPosition(e);
-                var $gridWrapper = $target.jq.$curDragTarget.closest('.s-grid-wrapper');
+                var $gridWrapper = target.jq.$curDragTarget.closest('.' + cssPrefix + 'grid-wrapper');
                 var gridWrapperW = $gridWrapper.outerWidth();
+                var gridWrapperLeft = $gridWrapper.offset().left;
 
                 util.clearDocumentSelection();
 
-                if (curDragTargetW + mousePosition.x - $target.ns.originPointX >= minColumnW) {
-                    if (mousePosition.x < $gridWrapper.offset().left + gridWrapperW - self.scrollbarWidth) {
-                        $target.ns.divDragLine.style.opacity = 1;
+                if (curDragTargetW + mousePosition.x - target.ns.originPointX >= minColumnW) {
+                    if (mousePosition.x < gridWrapperLeft + gridWrapperW - self.scrollbarWidth && mousePosition.x > gridWrapperLeft) {
+                        target.ns.divDragLine.style.opacity = 1;
                     } else {
-                        $target.ns.divDragLine.style.opacity = 0;
+                        target.ns.divDragLine.style.opacity = 0;
                     }
-                    $target.ns.divDragLine.style.left = mousePosition.x + 'px';
+                    target.ns.divDragLine.style.left = mousePosition.x + 'px';
                 }
             }
 
@@ -631,23 +789,23 @@
                     'mouseup': finishResizeColumn
                 });
 
-                $target.ns.divDragLine && document.body.removeChild($target.ns.divDragLine);
-                $target.jq.$curDragTarget = null;
+                target.ns.divDragLine && document.body.removeChild(target.ns.divDragLine);
+                target.jq.$curDragTarget = null;
             }
 
             function resizeColumn() {
-                var colIndex = $target.jq.$curDragTarget.data('col-index');
-                var deltaX = parseInt($target.ns.divDragLine.style.left) - $target.ns.originPointX;
-                var $curCol = $($target.jq.$cols[colIndex]).find('col');
+                var colIndex = target.jq.$curDragTarget.data('col-index');
+                var deltaX = parseInt(target.ns.divDragLine.style.left) - target.ns.originPointX;
+                var $curCol = $(target.jq.$cols[colIndex]).find('col');
                 var $curTable = $curCol.closest('table');
-                var $curTableHeader = $target.jq.$curDragTarget.closest('.s-table-header');
-                var $curGridTable = $target.jq.$curDragTarget.closest('.s-grid-table');
-                var $gridWrapper = $target.jq.$curDragTarget.closest('.s-grid-wrapper');
-                var $gridWrapperInner = $target.jq.$curDragTarget.closest('.s-grid-wrapper-inner');
+                var $curTableHeader = target.jq.$curDragTarget.closest('.' + cssPrefix + 'table-header');
+                var $curGridTable = target.jq.$curDragTarget.closest('.' + cssPrefix + 'grid-table');
+                var $gridWrapper = target.jq.$curDragTarget.closest('.' + cssPrefix + 'grid-wrapper');
+                var $gridWrapperInner = target.jq.$curDragTarget.closest('.' + cssPrefix + 'grid-wrapper-inner');
                 var gridWrapperW = $gridWrapper.outerWidth();
                 var curColumnW = $curCol.outerWidth() + deltaX;
 
-                $target.jq.$curDragTarget[0].style.width = $curCol[0].style.width = curColumnW + 'px';
+                target.jq.$curDragTarget[0].style.width = $curCol[0].style.width = curColumnW + 'px';
 
                 $curTableHeader[0].style.width = $curTableHeader.outerWidth() + deltaX + 'px';
 
@@ -663,40 +821,41 @@
 
         templateMap: {
             wrapper: {
-                begin: '<div class="s-grid-wrapper-outer"><div class="s-grid-wrapper" style="width:{width};"><div class="s-grid-wrapper-inner" style="width:{width};">',
+                begin: '<div class="{cssPrefix}grid-wrapper-outer"><div class="{cssPrefix}grid-wrapper" style="width:{width};"><div class="{cssPrefix}grid-wrapper-inner" style="width:{width};">',
                 end: '</div></div></div>'
             },
             gridTable: {
-                begin: '<div class="s-grid-table" data-frozen="{frozenAlign}" style="width:{width};">',
+                begin: '<div class="{cssPrefix}grid-table" data-frozen="{align}" style="width:{width};">',
                 end: '</div>'
             },
             tableHeader: {
-                begin: '<div class="s-table-header-wrapper" style="overflow:hidden;"><div class="s-table-header" style="width:{width};height:{theadHeight};line-height:{theadLineHeight};">',
+                begin: '<div class="{cssPrefix}table-header-wrapper" style="overflow:hidden;"><div class="{cssPrefix}table-header" style="width:{width};height:{theadHeight};line-height:{theadLineHeight};">',
                 end: '</div></div>'
             },
             tableColumn: {
-                begin: '<div class="{classList}" data-col-index="{colIndex}" data-index="{index}" style="width:{width};height:{theadHeight};line-height:{theadLineHeight};"><div class="s-grid-text-wrapper">',
+                begin: '<div class="{classList}" data-col-index="{colIndex}" data-index="{index}" style="width:{width};height:{theadHeight};line-height:{theadLineHeight};"><div class="{cssPrefix}grid-text-wrapper">',
                 end: '</div></div>'
             },
-            checkbox: '<span class="s-grid-check-wrapper"><span class="s-grid-check"></span></span>',
-            gridText: '<span class="s-grid-text">{title}</span>',
+            checkbox: '<span class="{cssPrefix}grid-check-wrapper"><span class="{cssPrefix}grid-check"></span></span>',
+            gridText: '<span class="{cssPrefix}grid-text">{title}</span>',
             dragQuarantine: '<span class="sc-grid-drag-quarantine"></span>',
             tableWrapper: {
-                begin: '<div class="s-table-wrapper" style="height:{height};overflow:{overflowMode};"><div style="height:{height};"><table style="width:{width};" cellspacing="0" cellpadding="0" border="0">',
+                begin: '<div class="{cssPrefix}table-wrapper" style="height:{height};overflow:{overflowMode};"><div style="height:{height};"><table style="width:{width};" cellspacing="0" cellpadding="0" border="0">',
                 end: '</table></div></div>'
             },
             colgroup: '<colgroup><col style="width:{width};"/></colgroup>',
             tbody: {
-                begin: '<tbody id="s-grid-tbody-{id}">',
+                begin: '<tbody id="{id}">',
                 end: '</tbody>'
             },
             tr: {
                 begin: '<tr data-row-index="{rowIndex}">',
                 end: '</tr>'
             },
-            td: '<td style="height:{trHeight};line-height:{trLineHeight};">{content}</td>',
-            tdCheckbox: '<td class="s-grid-checkbox" style="height:{trHeight};line-height:{trLineHeight};"><span class="s-grid-check-wrapper"><span class="s-grid-check"></span></span></td>',
-            tdRowNumber: '<td class="s-grid-rownumber" style="height:{trHeight};line-height:{trLineHeight};">{number}</td>'
+            td: '<td {className} style="height:{trHeight};line-height:{trLineHeight};">{content}</td>',
+            tdCheckbox: '<td class="{cssPrefix}grid-checkbox" style="height:{trHeight};line-height:{trLineHeight};"><span class="{cssPrefix}grid-check-wrapper"><span class="{cssPrefix}grid-check"></span></span></td>',
+            tdRowNumber: '<td class="{cssPrefix}grid-rownumber" style="height:{trHeight};line-height:{trLineHeight};">{number}</td>',
+            loading: '<div class="{cssPrefix}grid-loading-mask" style="top:{top};"><span class="{cssPrefix}grid-loading"></span></div>'
         }
     };
 
@@ -740,9 +899,9 @@
         }
     };
 
-    $.fn.grid = function (options, param) {
+    $.fn.grid = function (options, params) {
         if (typeof options == 'string') {
-            return $.fn.grid.methods[options](this, param);
+            return $.fn.grid.methods[options](this, params);
         }
 
         options = options || {};
@@ -753,16 +912,19 @@
                 options: $.extend(true, {}, $.fn.grid.defaults, options)
             });
 
-            grid.init($(this));
+            grid.init(this);
         });
     };
 
     $.fn.grid.methods = {
-        getRecord: function () {
+        loadData: function ($target, params) {
+
+            grid.loadData($target, params);
         }
     };
 
     $.fn.grid.defaults = {
+        cssPrefix: 's-',
         width: '800px',
         height: '200px',
         size: 20,
@@ -771,20 +933,26 @@
         withRowNumber: true,
         rowNumberWidth: '44px',
         multiSelect: false,
-        frozenColsAlign: '',  // 'left' | 'right' | 'left-right'
+        frozenAlign: '',  // 'left' | 'right' | 'left-right' | ''
         theadHeight: '24px',
         trHeight: '24px',
         columns: [],
+        plugins: null,
         localData: null,
         url: '',
         method: 'GET',
         cache: false,
         timeout: 3000,
+        root: 'list',
         params: null,
         onAjaxBeforeSend: null,
         onAjaxComplete: null,
         onAjaxError: null,
+        onAjaxSuccess: null,
         onBeforeRender: null,
-        onAfterRender: null
+        onAfterRender: null,
+        onClickRow: null,
+        onBeforeSort: null,
+        onAfterSort: null
     };
 });
