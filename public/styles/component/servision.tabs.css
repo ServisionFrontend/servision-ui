@@ -1,0 +1,80 @@
+.s-tabs-container {
+  background: #E0ECFF;
+  overflow: hidden;
+  font-size: 12px; }
+
+.s-tabs-header {
+  border: 1px solid #95B8E7;
+  border-bottom-width: 0;
+  padding-top: 2px;
+  position: relative; }
+  .s-tabs-header .s-tabs-wrap {
+    overflow: hidden;
+    position: relative; }
+  .s-tabs-header .s-tabs {
+    border-bottom: 1px solid #95B8E7;
+    list-style: none;
+    width: 500000px;
+    padding-left: 10px; }
+  .s-tabs-header .s-tabs li {
+    position: relative;
+    display: inline-block;
+    margin: 0 4px -1px 0; }
+  .s-tabs-header .s-tabs-selected .s-tabs-inner {
+    background: #fff;
+    border-bottom: 1px solid #fff; }
+  .s-tabs-header .s-tabs-disabled {
+    background: #ccc; }
+  .s-tabs-header .s-tabs-inner {
+    display: inline-block;
+    border: 1px solid #95B8E7;
+    border-radius: 4px 4px 0 0;
+    padding: 0 10px; }
+    .s-tabs-header .s-tabs-inner .s-tabs-title {
+      padding-right: 8px; }
+    .s-tabs-header .s-tabs-inner:hover {
+      color: #000; }
+  .s-tabs-header .s-tabs-closed {
+    position: absolute;
+    top: 50%;
+    margin-top: -6px;
+    display: inline-block;
+    right: 5px;
+    width: 12px;
+    height: 12px;
+    background: url(../images/tabs/tabs_icons.png) no-repeat -34px center transparent;
+    opacity: .75;
+    transition: transform .3s; }
+    .s-tabs-header .s-tabs-closed:hover {
+      opacity: 1;
+      transform: rotate(90deg) scale(1.5);
+      transition: transform .3s; }
+  .s-tabs-header .s-scroller-left,
+  .s-tabs-header .s-scroller-right {
+    position: absolute;
+    top: 0;
+    display: none;
+    width: 16px;
+    height: 100%;
+    opacity: .75;
+    z-index: 10; }
+    .s-tabs-header .s-scroller-left-hover,
+    .s-tabs-header .s-scroller-right-hover {
+      opacity: 1;
+      cursor: pointer; }
+  .s-tabs-header .s-scroller-left {
+    left: 0;
+    background: url(../images/tabs/tabs_icons.png) no-repeat 0px center #000; }
+  .s-tabs-header .s-scroller-right {
+    right: 0;
+    background: url(../images/tabs/tabs_icons.png) no-repeat -16px center #000; }
+
+.s-tabs-panels {
+  border: 1px solid #95B8E7;
+  border-top-width: 0;
+  background: #fff; }
+  .s-tabs-panels .s-tabs-panel {
+    padding: 0 10px;
+    display: none; }
+
+/*# sourceMappingURL=servision.tabs.css.map */

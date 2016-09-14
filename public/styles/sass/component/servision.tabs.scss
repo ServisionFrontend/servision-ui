@@ -1,0 +1,128 @@
+@charset "UTF-8";
+$defaultColor: #E0ECFF;
+$defaultSize: 12px;
+$borderColor: #95B8E7;
+$selectedCls: #fff;
+$disabledCls: #ccc;
+$scrollCls: #000;
+$panelsBg: #fff;
+$hoverTextCls:#000;
+
+
+.s-tabs-container {
+    background: $defaultColor;
+    overflow: hidden;
+    font-size:$defaultSize;
+}
+
+.s-tabs-header {
+    border: 1px solid $borderColor;
+    border-bottom-width: 0;
+    padding-top: 2px;
+    position: relative;
+
+	.s-tabs-wrap{overflow:hidden;position: relative;}
+    .s-tabs {
+        border-bottom: 1px solid $borderColor;
+        list-style: none;
+        width: 500000px;
+        padding-left: 10px;
+    }
+
+    .s-tabs li {
+        position: relative;
+        display: inline-block;
+        margin: 0 4px -1px 0;
+    }
+
+    .s-tabs-first {
+    }
+
+    .s-tabs-last {
+    }
+
+    .s-tabs-selected {
+        .s-tabs-inner {
+            background: $selectedCls;
+            border-bottom: 1px solid $selectedCls;
+        }
+
+    }
+
+    .s-tabs-disabled {
+        background: $disabledCls;
+    }
+
+    .s-tabs-inner {
+        display: inline-block;
+        border: 1px solid $borderColor;
+        border-radius: 4px 4px 0 0;
+        padding: 0 10px;
+
+
+        .s-tabs-title {
+            padding-right: 8px;
+        }
+
+        &:hover{color:$hoverTextCls;}
+
+    }
+
+    .s-tabs-closed {
+        position: absolute;
+        top: 50%;
+        margin-top: -6px;
+        display: inline-block;
+        right: 5px;
+        width: 12px;
+        height: 12px;
+        background: url(../images/tabs/tabs_icons.png) no-repeat -34px center transparent;
+        opacity: .75;
+        transition:transform .3s;
+        &:hover {
+            opacity: 1;
+            transform:rotate(90deg) scale(1.5);
+            transition:transform .3s;
+        }
+
+    }
+
+    .s-scroller-left,
+    .s-scroller-right {
+        position: absolute;
+        top: 0;
+        display: none;
+        width: 16px;
+        height: 100%;
+        opacity: .75;
+        z-index: 10;
+
+        &-hover {
+            opacity: 1;
+            cursor: pointer;
+        }
+    }
+
+    .s-scroller-left {
+        left: 0;
+        background: url(../images/tabs/tabs_icons.png) no-repeat 0px center $scrollCls;
+    }
+
+    .s-scroller-right {
+        right: 0;
+        background: url(../images/tabs/tabs_icons.png) no-repeat -16px center $scrollCls;
+    }
+
+}
+
+.s-tabs-panels {
+    border: 1px solid $borderColor;
+    border-top-width: 0;
+    background: $panelsBg;
+
+    .s-tabs-panel {
+        padding: 0 10px;
+        display: none;
+    }
+
+}

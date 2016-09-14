@@ -9,6 +9,7 @@ var routes = require('./routes/index');
 var tree = require('./routes/tree');
 var combobox = require('./routes/combobox');
 var tooltip = require('./routes/tooltip');
+var tabs = require('./routes/tabs');
 var window = require('./routes/window');
 
 var app = express();
@@ -31,6 +32,7 @@ app.use('/', routes);
 app.use('/tree', tree);
 app.use('/combobox', combobox);
 app.use('/tooltip', tooltip);
+app.use('/tabs', tabs);
 app.use('/window', window);
 
 
