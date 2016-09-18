@@ -8,7 +8,7 @@
 		var $cc = $("#ttabc");
 		$cc.tabs({
 			width: 'auto',
-			height: 500,
+			height:'auto',
 			closable: true,
 			moveDistance: 0,
 			onAdd: function(title, index) {
@@ -39,7 +39,6 @@
 				content: '<div style="padding:10px">Content' + count + '</div>',
 			});
 			count++;
-
 		});
 
 		$("#remove").on("click", function() {
@@ -62,27 +61,15 @@
 	<button id="add">addTab</button>
 	<button id="remove">removeTab</button>
 	<div id="ttabc" class="s-tabs-container">
-		<div title="custom 1">
+	<div title="custom 1">
 			custom 1
 			<br>custom 1</div>
-		<div title="custom 2" closable='true'>
-			custom 2
-			<br>	
-			custom
-			<br>custom</div>
-		<div title="custom 3" closable='true'>
-			custom 3
-			<br>	
-			custom
-			<br>	
-			custom
-			<br>custom</div>
 	</div>
 	<pre class="brush: js;">
-	var $cc = $("#ttabc");
+		var $cc = $("#ttabc");
 		$cc.tabs({
 			width: 'auto',
-			height: 500,
+			height:'auto',
 			closable: true,
 			moveDistance: 0,
 			onAdd: function(title, index) {
@@ -113,7 +100,6 @@
 				content: '<div style="padding:10px">Content' + count + '</div>',
 			});
 			count++;
-
 		});
 
 		$("#remove").on("click", function() {
@@ -130,45 +116,3 @@
 			}
 		});
 	</pre>
-
-	<!-- <div class="s-tabs-container">	
-	<div class="s-tabs-header">
-		<div class="s-scroller-left"></div>
-		<div class="s-scroller-right"></div>
-		<div class="s-tabs-wrap">
-			<ul class="s-tabs">
-				<li class="s-tabs-first">
-					<a href="javascript:;" class="s-tabs-inner">
-						<span class="s-tabs-title">Tabs-1</span>
-						<span></span>
-					</a>
-					<a href="javascript:;" class="s-tabs-closed"></a>
-				</li>
-				<li>
-					<a href="javascript:;" class="s-tabs-inner">
-						<span class="s-tabs-title">Tabs-2</span>
-						<span></span>
-					</a>
-					<a href="javascript:;" class="s-tabs-closed"></a>
-				</li>
-				<li class="s-tabs-last">
-					<a href="javascript:;" class="s-tabs-inner">
-						<span class="s-tabs-title">Tabs-2</span>
-						<span></span>
-					</a>
-					<a href="javascript:;" class="s-tabs-closed"></a>
-				</li>
-			</ul>
-		</div>
-
-		<div class="s-tabs-tools"></div>
-	</div>
-	<div class="s-tabs-panels">
-		<div class="s-tabs-panel">
-			<div title >
-				custom 1
-				<br>custom 1</div>
-		</div>
-	</div>
-	</div>
-	-->

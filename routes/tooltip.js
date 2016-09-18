@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-
+var xlsxtoJson = require('../server/xlsxtoJson.js');
+var apiList = xlsxtoJson('./api-doc/tooltip.xlsx');
 // tree
 var featureList = [{
 	text: '经典',
@@ -24,6 +25,8 @@ var featureList = [{
 
 router.get('/', function(req, res, next) {
 	res.render('index.ejs', {
+		apiPage: './tooltip/api.ejs',
+		apiList: apiList,
 		page: './tooltip/basic.ejs',
 		featureList: featureList,
 		componentName: 'Tooltip',
@@ -33,6 +36,8 @@ router.get('/', function(req, res, next) {
 
 router.get('/position', function(req, res, next) {
 	res.render('index.ejs', {
+		apiPage: './tooltip/api.ejs',
+		apiList: apiList,
 		page: './tooltip/Position.ejs',
 		featureList: featureList,
 		componentName: 'Tooltip',
@@ -42,6 +47,8 @@ router.get('/position', function(req, res, next) {
 
 router.get('/dialog', function(req, res, next) {
 	res.render('index.ejs', {
+		apiPage: './tooltip/api.ejs',
+		apiList: apiList,
 		page: './tooltip/dialog.ejs',
 		featureList: featureList,
 		componentName: 'Tooltip',
@@ -51,6 +58,8 @@ router.get('/dialog', function(req, res, next) {
 
 router.get('/customcontent', function(req, res, next) {
 	res.render('index.ejs', {
+		apiPage: './tooltip/api.ejs',
+		apiList: apiList,
 		page: './tooltip/custom-content.ejs',
 		featureList: featureList,
 		componentName: 'Tooltip',
@@ -60,6 +69,8 @@ router.get('/customcontent', function(req, res, next) {
 
 router.get('/toolbar', function(req, res, next) {
 	res.render('index.ejs', {
+		apiPage: './tooltip/api.ejs',
+		apiList: apiList,
 		page: './tooltip/toolbar.ejs',
 		featureList: featureList,
 		componentName: 'Tooltip',
@@ -69,6 +80,8 @@ router.get('/toolbar', function(req, res, next) {
 
 router.get('/trackmouse', function(req, res, next) {
 	res.render('index.ejs', {
+		apiPage: './tooltip/api.ejs',
+		apiList: apiList,
 		page: './tooltip/trackmouse.ejs',
 		featureList: featureList,
 		componentName: 'Tooltip',

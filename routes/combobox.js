@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var comboList = require('../public/data/combobox.json');
+var xlsxtoJson = require('../server/xlsxtoJson.js');
+var apiList = xlsxtoJson('./api-doc/combobox.xlsx');
 
 var featureList = [{
 	text: '经典',
@@ -27,6 +29,8 @@ var featureList = [{
 
 router.get('/', function(req, res, next) {
 	res.render('index.ejs', {
+		apiPage: './combobox/api.ejs',
+		apiList: apiList,
 		page: './combobox/basic.ejs',
 		featureList: featureList,
 		componentName: 'Combobox',
@@ -36,6 +40,8 @@ router.get('/', function(req, res, next) {
 
 router.get('/dynamic', function(req, res, next) {
 	res.render('index.ejs', {
+		apiPage: './combobox/api.ejs',
+		apiList: apiList,
 		page: './combobox/dynamic.ejs',
 		featureList: featureList,
 		componentName: 'Combobox',
@@ -44,6 +50,8 @@ router.get('/dynamic', function(req, res, next) {
 });
 router.get('/multiple', function(req, res, next) {
 	res.render('index.ejs', {
+		apiPage: './combobox/api.ejs',
+		apiList: apiList,
 		page: './combobox/multiple.ejs',
 		featureList: featureList,
 		componentName: 'Combobox',
@@ -52,6 +60,8 @@ router.get('/multiple', function(req, res, next) {
 });
 router.get('/group', function(req, res, next) {
 	res.render('index.ejs', {
+		apiPage: './combobox/api.ejs',
+		apiList: apiList,
 		page: './combobox/group.ejs',
 		featureList: featureList,
 		componentName: 'Combobox',
@@ -60,6 +70,8 @@ router.get('/group', function(req, res, next) {
 });
 router.get('/custom', function(req, res, next) {
 	res.render('index.ejs', {
+		apiPage: './combobox/api.ejs',
+		apiList: apiList,
 		page: './combobox/custom.ejs',
 		featureList: featureList,
 		componentName: 'Combobox',
@@ -68,6 +80,8 @@ router.get('/custom', function(req, res, next) {
 });
 router.get('/cascade', function(req, res, next) {
 	res.render('index.ejs', {
+		apiPage: './combobox/api.ejs',
+		apiList: apiList,
 		page: './combobox/cascade.ejs',
 		featureList: featureList,
 		componentName: 'Combobox',
@@ -76,6 +90,8 @@ router.get('/cascade', function(req, res, next) {
 });
 router.get('/feature', function(req, res, next) {
 	res.render('index.ejs', {
+		apiPage: './combobox/api.ejs',
+		apiList: apiList,
 		page: './combobox/feature.ejs',
 		featureList: featureList,
 		componentName: 'Combobox',

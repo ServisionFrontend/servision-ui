@@ -36,9 +36,11 @@
 		$(header.join('')).prependTo(cc);
 
 		panels.children('div').each(function() {
+
 			var opts = $.extend({}, options, {
 				disabled: ($(this).attr("disabled") ? true : false),
 				selected: ($(this).attr("selected") ? true : false),
+				closable: ($(this).attr("closable") ? true : false)
 			});
 
 			createTab(container, opts, $(this));
@@ -82,8 +84,12 @@
 		t.push('<span></span>');
 		t.push('</a>');
 
-		if (opts.closable && !opts.disabled) {
+		// console.log(opts)
+		if (opts.closable) {
 			t.push('<a href="javascript:;" class="s-tabs-closed"></a>');
+		}
+		if (opts.closable && opts.disabled) {
+			t.splice(t.length - 1, 1);
 		}
 		t.push('</li>');
 
@@ -110,10 +116,14 @@
 			tabs.splice(opts.index, 0, p);
 		}
 
+		if (!options.tabHeight) {
+			options.tabHeight = ul.outerHeight();
+		}
+
 		tab.children('a.s-tabs-inner').css({
 			'width': options.tabWidth,
-			'height': options.tabHeight || ul.outerHeight(),
-			'line-height': (options.tabHeight || ul.outerHeight()) + 'px'
+			'height': options.tabHeight,
+			'line-height': options.tabHeight + 'px'
 		});
 
 		ul.children('li').removeClass("s-tabs-first s-tabs-last");
@@ -170,12 +180,13 @@
 			opts = state.options,
 			header = $cc.children(".s-tabs-header"),
 			ul = header.find('.s-tabs'),
-			tbW = parseFloat(ul.css("borderBottomWidth")) + parseFloat(ul.css("borderTopWidth"));
+			tbW = parseFloat(ul.css("borderBottomWidth")) + parseFloat(ul.css("borderTopWidth")),
+			ulH = header.height() - tbW > 0 ? header.height() - tbW : opts.tabHeight + tbW;
 
 
 		$cc.width(opts.width == 'auto' ? 'auto' : opts.width);
 		$cc.children(".s-tabs-panels").height(opts.height == 'auto' ? 'auto' : opts.height - header.outerHeight(true));
-		ul.height(header.height() - tbW);
+		ul.height(ulH);
 	}
 
 	function doFirstSelect(container) {
@@ -232,12 +243,14 @@
 		var state = $.data(container, 'tabs'),
 			tabs = state.tabs,
 			ul = $(container).children(".s-tabs-header").find(".s-tabs"),
-			p, prev;
+			p, prev, tabOpts;
 
 		if (idx < 0) {
 			idx = ul.children('li:first').index();
 		}
 		p = getTab(container, idx);
+
+		p = getNodisabled(p, idx);
 
 		if (p && !p.is(":visible")) {
 
@@ -259,6 +272,17 @@
 			state.options.onSelect.call(container, title, idx);
 
 			scrollBy(container, false, idx);
+		}
+
+		function getNodisabled(p, i) {
+			if (!p) return;
+			tabOpts = $.data(p[0], 'options');
+			idx = i;
+			if (tabOpts.disabled) {
+				p = getTab(container, --idx);
+				return getNodisabled(p, idx);
+			}
+			return p;
 		}
 	}
 
@@ -288,6 +312,8 @@
 			selectIdx = $cc.tabs('options').selected,
 			tab = getTab(container, which, true),
 			tabOpts = $.data(tab[0], 'options');
+
+		if (tabOpts.disabled) return;
 
 		//remove tab by index and tabpanel
 		tab.remove();
@@ -339,7 +365,7 @@
 		$wrap.stop(false, true).animate({
 			"scrollLeft": curScrollw
 		});
-		state.scrollFlag = curScrollw;
+		state.scrollFlag = curScrollw < 0 ? 0 : curScrollw;
 	}
 
 	function bindEvents(container) {
@@ -423,8 +449,8 @@
 			return $.data(jq[0], 'tabs').tabs;
 		},
 
-		selectTab: function(jq, idx) {
-			return selectTab(jq[0], idx);
+		selectTab: function(jq, which) {
+			return selectTab(jq[0], which);
 		},
 
 		getTab: function(jq, which) {
@@ -454,6 +480,7 @@
 		height: 'auto',
 		tabWidth: 'auto',
 		selected: false,
+		disabled: false,
 		tabHeight: 27,
 		closable: false,
 		moveDistance: 200,

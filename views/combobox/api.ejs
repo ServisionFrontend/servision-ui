@@ -1,0 +1,77 @@
+<div class="api-item brief">
+	<div class="title">Combobox</div>
+	<div class="content">
+		<p>Combobox组合框支持单选，多选，数据实时筛选等功能</p>
+	</div>
+</div>
+<div class="api-item">
+	<div class="title">属性</div>
+	<div class="content">
+		<table>
+			<thead>
+				<tr>
+					<th>名字</th>
+					<th>类型</th>
+					<th>描述</th>
+					<th>默认</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% apiList.properties.forEach(function(item) { %>
+					<tr>
+						<td><%= item.name %></td>
+						<td><%= item.type %></td>
+						<td><%= item.describe %></td>
+						<td><%= item.default %></td>
+					</tr>
+				<% }) %>
+			</tbody>
+		</table>
+	</div>
+</div>
+<div class="api-item">
+	<div class="title">事件</div>
+	<div class="content">
+		<table>
+			<thead>
+				<tr>
+					<th>名字</th>
+					<th>参数</th>
+					<th>描述</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% apiList.events.forEach(function(item) { %>
+					<tr>
+						<td><%= item.name %></td>
+						<td><%= item.param %></td>
+						<td><%= item.describe %></td>
+					</tr>
+				<% }) %>
+			</tbody>
+		</table>
+	</div>
+</div>
+<div class="api-item">
+	<div class="title">方法</div>
+	<div class="content">
+		<table>
+			<thead>
+				<tr>
+					<th>名字</th>
+					<th>参数</th>
+					<th>描述</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% apiList.methods.forEach(function(item) { %>
+					<tr>
+						<td><%= item.name %></td>
+						<td><%= item.param %></td>
+						<td><%= item.describe %></td>
+					</tr>
+				<% }) %>
+			</tbody>
+		</table>
+	</div>
+</div>
