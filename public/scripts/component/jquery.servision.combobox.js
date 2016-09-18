@@ -776,6 +776,11 @@
 			});
 		},
 
+		getValue: function(jq) {
+			var values = jq.combobox("getValues");
+			return values.length ? values[0] : "";
+		},
+
 		getValues: function(jq) {
 			var state = $.data(jq[0], 'combobox'),
 				opts = state.options,
