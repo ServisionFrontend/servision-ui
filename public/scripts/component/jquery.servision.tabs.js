@@ -22,6 +22,7 @@
 		cc.children('div').each(function() {
 			panels[0].appendChild(this);
 		});
+
 		cc[0].appendChild(panels[0]);
 
 		header.push('<div class="s-tabs-header">');
@@ -158,19 +159,20 @@
 
 			$lIcon.add($rIcon).fadeIn();
 			$ul.css("paddingLeft", lw);
-			$wrap.css({
-				"width": w,
-				"margin-left": lw,
-				"margin-right": rw
+			$wrap.stop(false, true).animate({
+				"width": w + "px",
+				"margin-left": lw + "px",
+				"margin-right": rw + "px"
 			});
 		} else {
 			$lIcon.add($rIcon).fadeOut();
 			$ul.css("paddingLeft", '');
 			$wrap.stop(false, true).animate({
-				"width": headerW,
-				"margin-left": 0,
-				"margin-right": 0
+				"width": headerW + "px",
+				"margin-left": "0px",
+				"margin-right": "0px"
 			});
+
 		}
 	}
 
@@ -277,7 +279,7 @@
 		function getNodisabled(p, i) {
 			if (!p) return;
 			tabOpts = $.data(p[0], 'options');
-			idx = i;
+			var idx = i;
 			if (tabOpts.disabled) {
 				p = getTab(container, --idx);
 				return getNodisabled(p, idx);
@@ -363,8 +365,9 @@
 		}
 
 		$wrap.stop(false, true).animate({
-			"scrollLeft": curScrollw
+			"scrollLeft": curScrollw + "px"
 		});
+
 		state.scrollFlag = curScrollw < 0 ? 0 : curScrollw;
 	}
 
@@ -414,6 +417,7 @@
 			if (method) {
 				return method(this, params);
 			}
+			return null;
 		}
 		options = options || {};
 		return this.each(function() {

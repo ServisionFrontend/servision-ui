@@ -31,8 +31,10 @@ $hoverTextCls:#000;
 
     .s-tabs li {
         position: relative;
+         margin: 0 4px -1px 0;
         display: inline-block;
-        margin: 0 4px -1px 0;
+        *display:inline;
+        *zoom:1;
     }
 
     .s-tabs-first {

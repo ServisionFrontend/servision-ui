@@ -18,8 +18,10 @@
     padding-left: 10px; }
   .s-tabs-header .s-tabs li {
     position: relative;
+    margin: 0 4px -1px 0;
     display: inline-block;
-    margin: 0 4px -1px 0; }
+    *display: inline;
+    *zoom: 1; }
   .s-tabs-header .s-tabs-selected .s-tabs-inner {
     background: #fff;
     border-bottom: 1px solid #fff; }
