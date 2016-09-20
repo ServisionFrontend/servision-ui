@@ -104,7 +104,11 @@
                     var params = self.getParams(target);
 
                     opts.onBeforeQuery && opts.onBeforeQuery.call(null);
-                    self.doQuery(target, params);
+
+                    if (params) {
+                        self.doQuery(target, params);
+                    }
+
                     opts.onAfterQuery && opts.onAfterQuery.call(null);
                 }
             });
@@ -185,6 +189,8 @@
             var withAll = config.withAll || opts.withAll;
             var withAllText = config.withAllText || opts.withAllText;
             var html = withAll ? '<option value="">' + withAllText + '</option>' : '';
+
+            if (!config.localData) return '';
 
             for (var i = 0; i < config.localData.length; i++) {
                 html += '<option value="' + config.localData[i].code + '">' + config.localData[i].name + '</option>';
@@ -424,6 +430,7 @@
         onBeforeReset: null,
         onAfterReset: null,
         onRequiredIsEmpty: function () {
+            alert('有必填项尚未填写！');
         },
         onSelectAjaxError: function () {
         }

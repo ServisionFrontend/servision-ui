@@ -1,0 +1,157 @@
+<link rel="stylesheet" href="/styles/component/servision.combobox.css">
+<link rel="stylesheet" href="/styles/component/servision.query.css">
+<script type="text/javascript" src="/scripts/component/jquery.servision.combobox.js"></script>
+<script type="text/javascript" src="/scripts/component/jquery.servision.query.js"></script>
+<style type="text/css">
+    .demo-query {
+        width: 837px;
+        margin: 10px auto 0;
+    }
+
+    .demo-query input {
+        height: 26px;
+        width: 100% !important;
+    }
+</style>
+
+<div class="wrapper">
+    <div class="item">
+        <div class="content">
+            <p>原生select</p>
+            <div class="demo-query"></div>
+            <pre class="brush: js;">
+        $('#grid-1').grid({
+            width: '857px',
+            height: '244px',
+            url: '/grid/data',
+            multiSelect: true,
+            frozenAlign: 'left-right',
+            columns: [{
+                title: '测试1',
+                index: 'a1',
+                width: '100px',
+                sortable: true,
+                resizeable: false,
+                frozen: true,
+                align: 'left',
+                renderer: function (value, record, store) {
+                    return '<a class="custom-a" href="http://www.baidu.com" target="_blank">' + value + '</a>';
+                }
+            }, {
+                title: '测试2',
+                index: 'b1',
+                width: '100px',
+                sortable: true,
+                resizeable: false,
+                frozen: true,
+                align: 'right'
+            }, {
+                title: '测试3',
+                index: 'c1',
+                width: '100px',
+                sortable: true,
+                resizeable: false,
+                frozen: true,
+                align: 'right'
+            }, {
+                title: '测试4',
+                index: 'd1',
+                width: '100px',
+                sortable: true,
+                resizeable: true
+            }, {
+                title: '测试5',
+                index: 'e1',
+                width: '100px',
+                sortable: true,
+                resizeable: true
+            }, {
+                title: '测试6',
+                index: 'f1',
+                width: '100px',
+                sortable: true,
+                resizeable: true
+            }, {
+                title: '测试7',
+                index: 'g1',
+                width: '100px',
+                sortable: true,
+                resizeable: true
+            }, {
+                title: '测试8',
+                index: 'h1',
+                width: '100px',
+                sortable: true,
+                resizeable: true
+            }]
+        });</pre>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+
+        $('.demo-query').query({
+            items: [
+                {
+                    type: 'select',
+                    id: 'test1',
+                    name: 'test1',
+                    label: '测试1',
+                    required: true,
+                    config: {
+                        url: '/query/data',
+                        withAll: true,
+                        withAllText: '请选择',
+                        preload: true,
+                        next: '#test2',
+                        clearIds: ["#test2", "#test3"]
+                    }
+                }, {
+                    type: 'select',
+                    id: 'test2',
+                    name: 'test2',
+                    label: '测试2',
+                    config: {
+                        url: '/query/data',
+                        withAll: true,
+                        withAllText: '请选择',
+                        preload: false,
+                        next: '#test3',
+                        dependenciesIds: ["#test1"],
+                        clearIds: ["#test3"],
+                    }
+                }, {
+                    type: 'select',
+                    id: 'test3',
+                    name: 'test3',
+                    label: '测试3',
+                    config: {
+                        url: '/query/data',
+                        withAll: true,
+                        withAllText: '请选择',
+                        preload: false,
+                        dependenciesIds: ["#test2"]
+                    }
+                }, {
+                    type: 'text',
+                    id: 'test4',
+                    name: 'test4',
+                    label: '测试4'
+                }, {
+                    type: 'text',
+                    id: 'test5',
+                    name: 'test5',
+                    label: '测试5'
+                }, {
+                    type: 'text',
+                    id: 'test6',
+                    name: 'test6',
+                    label: '测试6'
+                }
+            ]
+        });
+    });
+</script>
+

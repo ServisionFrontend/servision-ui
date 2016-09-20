@@ -1,0 +1,174 @@
+<link rel="stylesheet" href="/styles/component/servision.combobox.css">
+<link rel="stylesheet" href="/styles/component/servision.query.css">
+<script type="text/javascript" src="/scripts/component/jquery.servision.combobox.js"></script>
+<script type="text/javascript" src="/scripts/component/jquery.servision.query.js"></script>
+<style type="text/css">
+    .demo-query {
+        width: 837px;
+        margin: 10px auto 0;
+    }
+
+    .demo-query input {
+        height: 26px;
+        width: 100% !important;
+    }
+</style>
+
+<div class="wrapper">
+    <div class="item">
+        <div class="content">
+            <p>集成combobox</p>
+            <div class="demo-query"></div>
+            <pre class="brush: js;">
+
+        $('.demo-query').query({
+            items: [
+                {
+                    type: 'combobox',
+                    id: 'test1',
+                    name: 'test1',
+                    label: '测试1',
+                    required: true,
+                    config: {
+                        url: '/combobox/getComboList/brand',
+                        mode: 'remote',
+                        textField: 'Description',
+                        valueField: 'Code',
+                        queryMatch: 'Description',
+                        clearIds: ["#test2", "#test3"],
+                        loadFilter: function (data) {
+                            return data.Data;
+                        }
+                    }
+                }, {
+                    type: 'combobox',
+                    id: 'test2',
+                    name: 'test2',
+                    label: '测试2',
+                    config: {
+                        url: '/combobox/getComboList/series',
+                        mode: 'remote',
+                        textField: 'Description',
+                        valueField: 'Code',
+                        dependenciesIds: ["#test1"],
+                        queryMatch: 'Description',
+                        clearIds: ["#test3"],
+                        loadFilter: function (data) {
+                            return data.Data;
+                        }
+                    }
+                }, {
+                    type: 'combobox',
+                    id: 'test3',
+                    name: 'test3',
+                    label: '测试3',
+                    config: {
+                        url: '/combobox/getComboList/year',
+                        mode: 'remote',
+                        textField: 'Description',
+                        valueField: 'Code',
+                        queryMatch: 'Description',
+                        dependenciesIds: ["#test2"],
+                        loadFilter: function (data) {
+                            return data.Data;
+                        }
+                    }
+                }, {
+                    type: 'text',
+                    id: 'test4',
+                    name: 'test4',
+                    label: '测试4'
+                }, {
+                    type: 'text',
+                    id: 'test5',
+                    name: 'test5',
+                    label: '测试5'
+                }, {
+                    type: 'text',
+                    id: 'test6',
+                    name: 'test6',
+                    label: '测试6'
+                }
+            ]
+        });
+            </pre>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+
+        $('.demo-query').query({
+            items: [
+                {
+                    type: 'combobox',
+                    id: 'test1',
+                    name: 'test1',
+                    label: '测试1',
+                    required: true,
+                    config: {
+                        url: '/combobox/getComboList/brand',
+                        mode: 'remote',
+                        textField: 'Description',
+                        valueField: 'Code',
+                        queryMatch: 'Description',
+                        clearIds: ["#test2", "#test3"],
+                        loadFilter: function (data) {
+                            return data.Data;
+                        }
+                    }
+                }, {
+                    type: 'combobox',
+                    id: 'test2',
+                    name: 'test2',
+                    label: '测试2',
+                    config: {
+                        url: '/combobox/getComboList/series',
+                        mode: 'remote',
+                        textField: 'Description',
+                        valueField: 'Code',
+                        dependenciesIds: ["#test1"],
+                        queryMatch: 'Description',
+                        clearIds: ["#test3"],
+                        loadFilter: function (data) {
+                            return data.Data;
+                        }
+                    }
+                }, {
+                    type: 'combobox',
+                    id: 'test3',
+                    name: 'test3',
+                    label: '测试3',
+                    config: {
+                        url: '/combobox/getComboList/year',
+                        mode: 'remote',
+                        textField: 'Description',
+                        valueField: 'Code',
+                        queryMatch: 'Description',
+                        dependenciesIds: ["#test2"],
+                        loadFilter: function (data) {
+                            return data.Data;
+                        }
+                    }
+                }, {
+                    type: 'text',
+                    id: 'test4',
+                    name: 'test4',
+                    label: '测试4'
+                }, {
+                    type: 'text',
+                    id: 'test5',
+                    name: 'test5',
+                    label: '测试5'
+                }, {
+                    type: 'text',
+                    id: 'test6',
+                    name: 'test6',
+                    label: '测试6'
+                }
+            ]
+        });
+    });
+</script>
+
