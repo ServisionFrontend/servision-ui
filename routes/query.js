@@ -3,7 +3,7 @@ var xlsxtoJson = require('../server/xlsxtoJson.js');
 var queryData = require('../public/data/query.json');
 var router = express.Router();
 
-var apiList = xlsxtoJson('./api-doc/grid.xlsx');
+var apiList = xlsxtoJson('./api-doc/query.xlsx');
 
 var featureList = [{
     text: '集成combobox',
@@ -37,6 +37,7 @@ router.get('/withSelect', function (req, res, next) {
 
 
 router.get('/data', function (req, res, next) {
+
 
     res.send(queryData);
 });
