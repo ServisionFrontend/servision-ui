@@ -21,7 +21,11 @@
             <div class="demo-query"></div>
             <pre class="brush: js;">
 
+
         $('.demo-query').query({
+            onRequiredIsEmpty: function () {
+                alert('有必填项尚未填写！');
+            },
             items: [
                 {
                     type: 'combobox',
@@ -100,6 +104,9 @@
     $(function () {
 
         $('.demo-query').query({
+            onRequiredIsEmpty: function () {
+                alert('有必填项尚未填写！');
+            },
             items: [
                 {
                     type: 'combobox',

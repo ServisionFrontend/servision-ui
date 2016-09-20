@@ -39,7 +39,6 @@
             <div class="demo-pagination" id="pagination-1"></div>
             <pre class="brush: js;">
 
-
         $('#grid-1').grid({
             width: '857px',
             height: '244px',
@@ -53,6 +52,9 @@
                     pageSizeList: [5, 10, 15, 20]
                 }),
                 query: $('#query-1').query({
+                    onRequiredIsEmpty: function () {
+                        alert('有必填项尚未填写！');
+                    },
                     items: [
                         {
                             type: 'combobox',
@@ -197,6 +199,9 @@
                     pageSizeList: [5, 10, 15, 20]
                 }),
                 query: $('#query-1').query({
+                    onRequiredIsEmpty: function () {
+                        alert('有必填项尚未填写！');
+                    },
                     items: [
                         {
                             type: 'combobox',
