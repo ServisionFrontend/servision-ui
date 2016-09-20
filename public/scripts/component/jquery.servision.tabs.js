@@ -47,6 +47,7 @@
 			createTab(container, opts, $(this));
 		});
 
+
 		cc.children(".s-tabs-header").on({
 			"mouseenter": function(e) {
 				var cls = $(this).attr("data-action");
@@ -152,7 +153,6 @@
 			lw = $lIcon.width(),
 			rw = $rIcon.width(),
 			sumWidth = getTableWidth(container);
-
 
 		if (sumWidth > $ul.parent().width()) {
 			var w = headerW - lw - rw;
@@ -421,6 +421,7 @@
 		}
 		options = options || {};
 		return this.each(function() {
+
 			var state = $.data(this, 'tabs');
 			if (state) {
 				$.extend(state.options, options);
@@ -431,6 +432,7 @@
 				});
 				wrapTabs(this);
 			}
+
 
 			bindEvents(this);
 
