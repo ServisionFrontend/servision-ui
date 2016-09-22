@@ -13,6 +13,7 @@ var tabs = require('./routes/tabs');
 var window = require('./routes/window');
 var grid = require('./routes/grid');
 var pagination = require('./routes/pagination');
+var query = require('./routes/query');
 
 var app = express();
 
@@ -38,6 +39,7 @@ app.use('/tabs', tabs);
 app.use('/window', window);
 app.use('/grid', grid);
 app.use('/pagination', pagination);
+app.use('/query', query);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

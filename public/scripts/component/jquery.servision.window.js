@@ -115,7 +115,12 @@
 				});
 
 				layer2.attr("data-id", self.opts.name).empty().append(wrapDiv);
-				wrapDiv.html(self.opts.message);
+				if (self.opts.message.jquery || self.opts.message.nodeType) {
+					self.opts.msgParent = self.opts.message.parent();
+					wrapDiv.append(self.opts.message.show());
+				} else {
+					wrapDiv.html(self.opts.message);
+				}
 				self.opts.msgBox = wrapDiv;
 
 				if (layer1 && !isEmptyObject(self.opts.overlayCss)) {
@@ -360,10 +365,14 @@
 				$.each(layers, function(index, item) {
 					canOpen = false;
 					var exsitLayers = item.opts.layers;
+					
 					$.each(exsitLayers, function(index, item) {
 						item.fadeOut(options.speed, function() {
 							item.remove();
 							if (index === exsitLayers.length - 1) {
+							    	if (options.msgParent) {
+								    options.msgParent.append(options.message.hide())
+								} 
 								canOpen = true;
 								clearTimeout(self.timer);
 							}
@@ -397,7 +406,7 @@
 				var self = this;
 
 				for (var i in openedLayers) {
-					var single = options && 　options.name;
+					var single = options && options.name;
 					var layer = single ? openedLayers[options.name] : openedLayers[i],
 						msgBox = layer.opts.msgBox,
 						wrapDom = layer.opts.layerWrapper === 'body' ? global : layer.opts.layerWrapper;
@@ -576,7 +585,7 @@
 	};
 
 	if (typeof define === 'function') {
-		define([], steup);
+		define([], setup);
 	} else {
 		setup();
 	}

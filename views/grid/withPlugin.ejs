@@ -1,8 +1,21 @@
+<link rel="stylesheet" href="/styles/component/servision.combobox.css">
+<link rel="stylesheet" href="/styles/component/servision.query.css">
 <link rel="stylesheet" href="/styles/component/servision.grid.css">
 <link rel="stylesheet" href="/styles/component/servision.pagination.css">
+<script type="text/javascript" src="/scripts/component/jquery.servision.combobox.js"></script>
+<script type="text/javascript" src="/scripts/component/jquery.servision.query.js"></script>
 <script type="text/javascript" src="/scripts/component/jquery.servision.grid.js"></script>
 <script type="text/javascript" src="/scripts/component/jquery.servision.pagination.js"></script>
 <style type="text/css">
+    .demo-query {
+        width: 837px;
+        margin: 10px auto 0;
+    }
+
+    .demo-query input {
+        height: 26px;
+        width: 100% !important;
+    }
     .demo-grid {
         width: 857px;
         margin: 10px auto 0;
@@ -21,6 +34,7 @@
     <div class="item">
         <div class="content">
             <p>根据配置，可调整列宽、排序、自定义类名前缀，自定义渲染等功能</p>
+            <div class="demo-query"  id="query-1"></div>
             <div class="demo-grid" id="grid-1"></div>
             <div class="demo-pagination" id="pagination-1"></div>
             <pre class="brush: js;">
@@ -36,12 +50,85 @@
                     pageBtnCount: 3,
                     curPageIndex: 1,
                     pageSizeList: [5, 10, 15, 20]
+                }),
+                query: $('#query-1').query({
+                    onRequiredIsEmpty: function () {
+                        alert('有必填项尚未填写！');
+                    },
+                    items: [
+                        {
+                            type: 'combobox',
+                            id: 'test1',
+                            name: 'test1',
+                            label: '测试1',
+                            required: true,
+                            config: {
+                                url: '/combobox/getComboList/brand',
+                                mode: 'remote',
+                                textField: 'Description',
+                                valueField: 'Code',
+                                queryMatch: 'Description',
+                                clearIds: ["#test2", "#test3"],
+                                loadFilter: function (data) {
+                                    return data.Data;
+                                }
+                            }
+                        }, {
+                            type: 'combobox',
+                            id: 'test2',
+                            name: 'test2',
+                            label: '测试2',
+                            config: {
+                                url: '/combobox/getComboList/series',
+                                mode: 'remote',
+                                textField: 'Description',
+                                valueField: 'Code',
+                                dependenciesIds: ["#test1"],
+                                queryMatch: 'Description',
+                                clearIds: ["#test3"],
+                                loadFilter: function (data) {
+                                    return data.Data;
+                                }
+                            }
+                        }, {
+                            type: 'combobox',
+                            id: 'test3',
+                            name: 'test3',
+                            label: '测试3',
+                            config: {
+                                url: '/combobox/getComboList/year',
+                                mode: 'remote',
+                                textField: 'Description',
+                                valueField: 'Code',
+                                queryMatch: 'Description',
+                                dependenciesIds: ["#test2"],
+                                loadFilter: function (data) {
+                                    return data.Data;
+                                }
+                            }
+                        }, {
+                            type: 'text',
+                            id: 'test4',
+                            name: 'test4',
+                            label: '测试4'
+                        }, {
+                            type: 'text',
+                            id: 'test5',
+                            name: 'test5',
+                            label: '测试5'
+                        }, {
+                            type: 'text',
+                            id: 'test6',
+                            name: 'test6',
+                            label: '测试6'
+                        }
+                    ]
                 })
             },
             columns: [{
                 title: '测试1',
                 index: 'a1',
-                width: '100px',
+                width: 100,
                 sortable: true,
                 resizeable: true,
                 renderer: function (value, record, store) {
@@ -50,43 +137,43 @@
             }, {
                 title: '测试2',
                 index: 'b1',
-                width: '100px',
+                width: 100,
                 sortable: true,
                 resizeable: true
             }, {
                 title: '测试3',
                 index: 'c1',
-                width: '100px',
+                width: 100,
                 sortable: true,
                 resizeable: true
             }, {
                 title: '测试4',
                 index: 'd1',
-                width: '100px',
+                width: 100,
                 sortable: true,
                 resizeable: true
             }, {
                 title: '测试5',
                 index: 'e1',
-                width: '100px',
+                width: 100,
                 sortable: true,
                 resizeable: true
             }, {
                 title: '测试6',
                 index: 'f1',
-                width: '100px',
+                width: 100,
                 sortable: true,
                 resizeable: true
             }, {
                 title: '测试7',
                 index: 'g1',
-                width: '100px',
+                width: 100,
                 sortable: true,
                 resizeable: true
             }, {
                 title: '测试8',
                 index: 'h1',
-                width: '100px',
+                width: 100,
                 sortable: true,
                 resizeable: true
             }]
@@ -108,14 +195,87 @@
                 pagination: $('#pagination-1').pagination({
                     pageSize: 20,
                     pageBtnCount: 3,
-                    curPageIndex: 1,
+                    curPageIndex: 0,
                     pageSizeList: [5, 10, 15, 20]
+                }),
+                query: $('#query-1').query({
+                    onRequiredIsEmpty: function () {
+                        alert('有必填项尚未填写！');
+                    },
+                    items: [
+                        {
+                            type: 'combobox',
+                            id: 'test1',
+                            name: 'test1',
+                            label: '测试1',
+                            required: true,
+                            config: {
+                                url: '/combobox/getComboList/brand',
+                                mode: 'remote',
+                                textField: 'Description',
+                                valueField: 'Code',
+                                queryMatch: 'Description',
+                                clearIds: ["#test2", "#test3"],
+                                loadFilter: function (data) {
+                                    return data.Data;
+                                }
+                            }
+                        }, {
+                            type: 'combobox',
+                            id: 'test2',
+                            name: 'test2',
+                            label: '测试2',
+                            config: {
+                                url: '/combobox/getComboList/series',
+                                mode: 'remote',
+                                textField: 'Description',
+                                valueField: 'Code',
+                                dependenciesIds: ["#test1"],
+                                queryMatch: 'Description',
+                                clearIds: ["#test3"],
+                                loadFilter: function (data) {
+                                    return data.Data;
+                                }
+                            }
+                        }, {
+                            type: 'combobox',
+                            id: 'test3',
+                            name: 'test3',
+                            label: '测试3',
+                            config: {
+                                url: '/combobox/getComboList/year',
+                                mode: 'remote',
+                                textField: 'Description',
+                                valueField: 'Code',
+                                queryMatch: 'Description',
+                                dependenciesIds: ["#test2"],
+                                loadFilter: function (data) {
+                                    return data.Data;
+                                }
+                            }
+                        }, {
+                            type: 'text',
+                            id: 'test4',
+                            name: 'test4',
+                            label: '测试4'
+                        }, {
+                            type: 'text',
+                            id: 'test5',
+                            name: 'test5',
+                            label: '测试5'
+                        }, {
+                            type: 'text',
+                            id: 'test6',
+                            name: 'test6',
+                            label: '测试6'
+                        }
+                    ]
                 })
             },
             columns: [{
                 title: '测试1',
                 index: 'a1',
-                width: '100px',
+                width: 100,
                 sortable: true,
                 resizeable: true,
                 renderer: function (value, record, store) {
@@ -124,43 +284,43 @@
             }, {
                 title: '测试2',
                 index: 'b1',
-                width: '100px',
+                width: 100,
                 sortable: true,
                 resizeable: true
             }, {
                 title: '测试3',
                 index: 'c1',
-                width: '100px',
+                width: 100,
                 sortable: true,
                 resizeable: true
             }, {
                 title: '测试4',
                 index: 'd1',
-                width: '100px',
+                width: 100,
                 sortable: true,
                 resizeable: true
             }, {
                 title: '测试5',
                 index: 'e1',
-                width: '100px',
+                width: 100,
                 sortable: true,
                 resizeable: true
             }, {
                 title: '测试6',
                 index: 'f1',
-                width: '100px',
+                width: 100,
                 sortable: true,
                 resizeable: true
             }, {
                 title: '测试7',
                 index: 'g1',
-                width: '100px',
+                width: 100,
                 sortable: true,
                 resizeable: true
             }, {
                 title: '测试8',
                 index: 'h1',
-                width: '100px',
+                width: 100,
                 sortable: true,
                 resizeable: true
             }]

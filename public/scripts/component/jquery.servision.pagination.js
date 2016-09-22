@@ -1,4 +1,4 @@
-!(function (fn) {
+;(function (fn) {
     "use strict";
 
     if (typeof define === 'function' && typeof define.amd === 'object' && define.amd) {
@@ -44,7 +44,7 @@
             var self = this;
             var $target = $(target);
             var opts = $(target).data('pagination').options;
-            var html = self.createPaginationHtml(target);
+            var html = self.createPaginationHtml(target, opts);
 
             opts.onBeforeRender && opts.onBeforeRender.call(null, target);
 
@@ -56,10 +56,9 @@
             opts.onAfterRender && opts.onAfterRender.call(null, target);
         },
 
-        createPaginationHtml: function (target) {
+        createPaginationHtml: function (target, opts) {
             var self = this;
             var templateMap = target.ns.templateMap;
-            var opts = $(target).data('pagination').options;
             var html = '';
 
             target.ns.totalPage = Math.floor(target.ns.totalRecord / target.ns.pageSize) + (target.ns.totalRecord % target.ns.pageSize > 0 ? 1 : 0);
@@ -348,8 +347,8 @@
                     dataType: 'json',
                     beforeSend: opts.onAjaxBeforeSend,
                     complete: opts.onAjaxComplete,
-                    error: function (err) {
-                        opts.onAjaxError && opts.onAjaxError.apply(null, err);
+                    error: function () {
+                        opts.onAjaxError && opts.onAjaxError.apply(null, Array.prototype.slice.apply(null, arguments));
                     },
                     success: function (result) {
                         target.jq.$boxBtnList.html(self.createBtnListHtml(target));
@@ -430,6 +429,12 @@
             };
 
             pagination.goto($target[0], pageInfo, true);
+        },
+        getParams: function ($target) {
+            return {
+                page: $target[0].ns.curPageIndex,
+                size: $target[0].ns.pageSize
+            };
         }
     };
 
