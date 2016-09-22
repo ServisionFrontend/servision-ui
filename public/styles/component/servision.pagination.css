@@ -1,39 +1,181 @@
-/*
-Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.
-        on line 37 of D:\git_fe\servision-ui\public\styles\component\servision.pagination.css
+body, div, ul, dl, ol, dt, dd, li, p, a, label, span, i, img, input, textarea, header, footer, article, section, nav, aside, figure, h1, h2, h3, h4, h5, h6, table, thead, tbody, tr, td, th {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  -webkit-box-sizing: inherit;
+  -moz-box-sizing: inherit;
+  box-sizing: inherit;
+}
 
-32: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/bin/scss:13:in `<top (required)>'
-33: C:/Ruby22/bin/scss:23:in `load'
-34: C:/Ruby22/bin/scss:23:in `<main>'
-35: *\/
-36: body:before {
-37:   white-space: pre;
-38:   font-family: monospace;
-39:   content: "Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 37 of D:\git_fe\servision-ui\public\styles\component\servision.pagination.css\A \A 32: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/bin/scss:13:in `<top (required)>'\A 33: C:/Ruby22/bin/scss:23:in `load'\A 34: C:/Ruby22/bin/scss:23:in `<main>'\A 35: *\/\A 36: body:before {\A 37:   white-space: pre;\A 38:   font-family: monospace;\A 39:   content: \"Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 37 of D:\git_fe\servision-ui\public\styles\component\servision.pagination.css\A \A 32: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/bin/scss:13:in `<top (required)>'\A 33: C:/Ruby22/bin/scss:23:in `load'\A 34: C:/Ruby22/bin/scss:23:in `<main>'\A 35: *\/\A 36: body:before {\A 37:   white-space: pre;\A 38:   font-family: monospace;\A 39:   content: \\"Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 37 of D:\git_fe\servision-ui\public\styles\component\servision.pagination.css\A \A 32: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/bin/scss:13:in `<top (required)>'\A 33: C:/Ruby22/bin/scss:23:in `load'\A 34: C:/Ruby22/bin/scss:23:in `<main>'\A 35: *\/\A 36: body:before {\A 37:   white-space: pre;\A 38:   font-family: monospace;\A 39:   content: \\\"Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 37 of D:\git_fe\servision-ui\public\styles\component\servision.pagination.css\A \A 32: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/bin/scss:13:in `<top (required)>'\A 33: C:/Ruby22/bin/scss:23:in `load'\A 34: C:/Ruby22/bin/scss:23:in `<main>'\A 35: *\/\A 36: body:before {\A 37:   white-space: pre;\A 38:   font-family: monospace;\A 39:   content: \\\\"Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 37 of D:\git_fe\servision-ui\public\styles\component\servision.pagination.css\A \A 32: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/bin/scss:13:in `<top (required)>'\A 33: C:/Ruby22/bin/scss:23:in `load'\A 34: C:/Ruby22/bin/scss:23:in `<main>'\A 35: *\/\A 36: body:before {\A 37:   white-space: pre;\A 38:   font-family: monospace;\A 39:   content: \\\\\"Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 37 of D:\git_fe\servision-ui\public\styles\component\servision.pagination.css\A \A 32: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/bin/scss:13:in `<top (required)>'\A 33: C:/Ruby22/bin/scss:23:in `load'\A 34: C:/Ruby22/bin/scss:23:in `<main>'\A 35: *\/\A 36: body:before {\A 37:   white-space: pre;\A 38:   font-family: monospace;\A 39:   content: \\\\\\"Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 37 of D:\git_fe\servision-ui\public\styles\component\servision.pagination.css\A \A 32: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/bin/scss:13:in `<top (required)>'\A 33: C:/Ruby22/bin/scss:23:in `load'\A 34: C:/Ruby22/bin/scss:23:in `<main>'\A 35: *\/\A 36: body:before {\A 37:   white-space: pre;\A 38:   font-family: monospace;\A 39:   content: \\\\\\\"Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 41 of D:\git_fe\servision-ui\public\styles\component\servision.pagination.css\A \A 36: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/bin/scss:13:in `<top (required)>'\A 37: C:/Ruby22/bin/scss:23:in `load'\A 38: C:/Ruby22/bin/scss:23:in `<main>'\A 39: *\/\A 40: body:before {\A 41:   white-space: pre;\A 42:   font-family: monospace;\A 43:   content: \\\\\\\\"Error: Invalid property: \\\\\\\\\"Backtrace:\\\\\\\\\" (no value).\A         on line 4 of D:\git_fe\servision-ui\public\styles\component\servision.pagination.css\A \A 1: /*\A 2: Errno::ENOENT: No such file or directory @ rb_sysopen - D:\git_fe\servision-ui\public\styles\component\servision.pagination.css\A 3: \A 4: Backtrace:\A 5: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/plugin/compiler.rb:482:in `read'\A 6: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/plugin/compiler.rb:482:in `update_stylesheet'\A 7: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/plugin/compiler.rb:215:in `block in update_stylesheets'\A 8: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/plugin/compiler.rb:209:in `each'\A 9: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/plugin/compiler.rb:209:in `update_stylesheets'\\\\\\\\"; }\\\\\\\"; }\\\\\\"; }\\\\\"; }\\\\"; }\\\"; }\\"; }\"; }"; }
+ul, dl, ol {
+  list-style: none;
+}
 
-Backtrace:
-D:\git_fe\servision-ui\public\styles\component\servision.pagination.css:37
-C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/engine.rb:483:in `block in tabulate'
-C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/engine.rb:441:in `each'
-C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/engine.rb:441:in `each_with_index'
-C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/engine.rb:441:in `tabulate'
-C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/engine.rb:406:in `_to_tree'
-C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/engine.rb:378:in `_render_with_sourcemap'
-C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/engine.rb:295:in `render_with_sourcemap'
-C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/plugin/compiler.rb:490:in `update_stylesheet'
-C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/plugin/compiler.rb:215:in `block in update_stylesheets'
-C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/plugin/compiler.rb:209:in `each'
-C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/plugin/compiler.rb:209:in `update_stylesheets'
-C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/plugin.rb:82:in `update_stylesheets'
-C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/exec/sass_scss.rb:361:in `watch_or_update'
-C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/exec/sass_scss.rb:51:in `process_result'
-C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/exec/base.rb:52:in `parse'
-C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/exec/base.rb:19:in `parse!'
-C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/bin/scss:13:in `<top (required)>'
-C:/Ruby22/bin/scss:23:in `load'
-C:/Ruby22/bin/scss:23:in `<main>'
-*/
-body:before {
-  white-space: pre;
-  font-family: monospace;
-  content: "Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 37 of D:\git_fe\servision-ui\public\styles\component\servision.pagination.css\A \A 32: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/bin/scss:13:in `<top (required)>'\A 33: C:/Ruby22/bin/scss:23:in `load'\A 34: C:/Ruby22/bin/scss:23:in `<main>'\A 35: */\A 36: body:before {\A 37:   white-space: pre;\A 38:   font-family: monospace;\A 39:   content: \"Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 37 of D:\git_fe\servision-ui\public\styles\component\servision.pagination.css\A \A 32: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/bin/scss:13:in `<top (required)>'\A 33: C:/Ruby22/bin/scss:23:in `load'\A 34: C:/Ruby22/bin/scss:23:in `<main>'\A 35: */\A 36: body:before {\A 37:   white-space: pre;\A 38:   font-family: monospace;\A 39:   content: \\"Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 37 of D:\git_fe\servision-ui\public\styles\component\servision.pagination.css\A \A 32: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/bin/scss:13:in `<top (required)>'\A 33: C:/Ruby22/bin/scss:23:in `load'\A 34: C:/Ruby22/bin/scss:23:in `<main>'\A 35: */\A 36: body:before {\A 37:   white-space: pre;\A 38:   font-family: monospace;\A 39:   content: \\\"Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 37 of D:\git_fe\servision-ui\public\styles\component\servision.pagination.css\A \A 32: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/bin/scss:13:in `<top (required)>'\A 33: C:/Ruby22/bin/scss:23:in `load'\A 34: C:/Ruby22/bin/scss:23:in `<main>'\A 35: */\A 36: body:before {\A 37:   white-space: pre;\A 38:   font-family: monospace;\A 39:   content: \\\\"Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 37 of D:\git_fe\servision-ui\public\styles\component\servision.pagination.css\A \A 32: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/bin/scss:13:in `<top (required)>'\A 33: C:/Ruby22/bin/scss:23:in `load'\A 34: C:/Ruby22/bin/scss:23:in `<main>'\A 35: */\A 36: body:before {\A 37:   white-space: pre;\A 38:   font-family: monospace;\A 39:   content: \\\\\"Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 37 of D:\git_fe\servision-ui\public\styles\component\servision.pagination.css\A \A 32: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/bin/scss:13:in `<top (required)>'\A 33: C:/Ruby22/bin/scss:23:in `load'\A 34: C:/Ruby22/bin/scss:23:in `<main>'\A 35: */\A 36: body:before {\A 37:   white-space: pre;\A 38:   font-family: monospace;\A 39:   content: \\\\\\"Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 37 of D:\git_fe\servision-ui\public\styles\component\servision.pagination.css\A \A 32: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/bin/scss:13:in `<top (required)>'\A 33: C:/Ruby22/bin/scss:23:in `load'\A 34: C:/Ruby22/bin/scss:23:in `<main>'\A 35: */\A 36: body:before {\A 37:   white-space: pre;\A 38:   font-family: monospace;\A 39:   content: \\\\\\\"Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 37 of D:\git_fe\servision-ui\public\styles\component\servision.pagination.css\A \A 32: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/bin/scss:13:in `<top (required)>'\A 33: C:/Ruby22/bin/scss:23:in `load'\A 34: C:/Ruby22/bin/scss:23:in `<main>'\A 35: */\A 36: body:before {\A 37:   white-space: pre;\A 38:   font-family: monospace;\A 39:   content: \\\\\\\\"Error: Inconsistent indentation: 2 spaces were used for indentation, but the rest of the document was indented using 8 spaces.\A         on line 41 of D:\git_fe\servision-ui\public\styles\component\servision.pagination.css\A \A 36: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/bin/scss:13:in `<top (required)>'\A 37: C:/Ruby22/bin/scss:23:in `load'\A 38: C:/Ruby22/bin/scss:23:in `<main>'\A 39: */\A 40: body:before {\A 41:   white-space: pre;\A 42:   font-family: monospace;\A 43:   content: \\\\\\\\\"Error: Invalid property: \\\\\\\\\\"Backtrace:\\\\\\\\\\" (no value).\A         on line 4 of D:\git_fe\servision-ui\public\styles\component\servision.pagination.css\A \A 1: /*\A 2: Errno::ENOENT: No such file or directory @ rb_sysopen - D:\git_fe\servision-ui\public\styles\component\servision.pagination.css\A 3: \A 4: Backtrace:\A 5: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/plugin/compiler.rb:482:in `read'\A 6: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/plugin/compiler.rb:482:in `update_stylesheet'\A 7: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/plugin/compiler.rb:215:in `block in update_stylesheets'\A 8: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/plugin/compiler.rb:209:in `each'\A 9: C:/Ruby22/lib/ruby/gems/2.2.0/gems/sass-3.4.19/lib/sass/plugin/compiler.rb:209:in `update_stylesheets'\\\\\\\\\"; }\\\\\\\\"; }\\\\\\\"; }\\\\\\"; }\\\\\"; }\\\\"; }\\\"; }\\"; }\"; }"; }
+input, textarea, select, a {
+  outline: none;
+}
+
+.s-pagination-wrapper {
+  width: 100%;
+  font-family: 'Microsoft Yahei', Arial, STHeiti, sans-serif;
+  font-size: 12px;
+  color: #333;
+  height: 26px;
+  line-height: 26px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.s-pagination-wrapper a {
+  color: inherit;
+  text-decoration: none;
+}
+.s-pagination-wrapper .s-pagination-info {
+  float: left;
+}
+.s-pagination-wrapper .s-pagination-info .s-pagination-record-total {
+  color: #d1291a;
+  margin: 0 2px;
+  font-weight: bold;
+}
+.s-pagination-wrapper .s-pagination-info .s-pagination-slash, .s-pagination-wrapper .s-pagination-info .s-pagination-page-total, .s-pagination-wrapper .s-pagination-info .s-pagination-page-current {
+  margin: 0 2px;
+}
+.s-pagination-wrapper .s-pagination-function {
+  float: right;
+  height: 26px;
+  font-size: 0;
+}
+.s-pagination-wrapper .s-pagination-function .s-pagination-btn {
+  display: inline-block;
+  cursor: pointer;
+  vertical-align: top;
+  font-size: 12px;
+}
+.s-pagination-wrapper .s-pagination-function .s-pagination-ellipsis {
+  display: inline-block;
+  font-size: 12px;
+  width: 26px;
+  height: 26px;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: top;
+}
+.s-pagination-wrapper .s-pagination-function .s-pagination-btn-list {
+  margin-left: 10px;
+}
+.s-pagination-wrapper .s-pagination-function .s-pagination-btn-list .s-pagination-btn {
+  padding: 0 10px;
+}
+.s-pagination-wrapper .s-pagination-function .s-pagination-btn-list .s-pagination-btn.active {
+  background: #d1291a;
+  color: #fff;
+}
+.s-pagination-wrapper .s-pagination-function .s-pagination-select {
+  height: 26px;
+  line-height: 26px;
+  background: transparent;
+  margin-left: 10px;
+}
+.s-pagination-wrapper .s-pagination-function .s-pagination-input {
+  vertical-align: top;
+  letter-spacing: normal;
+  word-spacing: normal;
+  border: 1px solid #e7e7e7;
+  width: 60px;
+  padding: 0 5px;
+  text-align: center;
+  height: 26px;
+  line-height: 24px;
+  margin-left: 10px;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+.s-pagination-wrapper .s-pagination-function .s-pagination-input:focus {
+  -webkit-box-shadow: 0 0 3px #d1291a;
+  -moz-box-shadow: 0 0 3px #d1291a;
+  box-shadow: 0 0 3px #d1291a;
+  border-color: #d1291a;
+}
+.s-pagination-wrapper .s-pagination-function .s-pagination-jump {
+  display: inline-block;
+  cursor: pointer;
+  vertical-align: top;
+  font-size: 12px;
+  background: #d1291a;
+  color: #fff;
+  padding: 0 10px;
+  margin-left: 10px;
+  height: 26px;
+  line-height: 26px;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+.s-pagination-wrapper .s-pagination-function .s-pagination-btn-first {
+  width: 26px;
+  height: 26px;
+  border: 1px solid #e7e7e7;
+  margin-left: 10px;
+  background: url(../images/pagination/paginition_icons.png) 7px 6px no-repeat;
+}
+.s-pagination-wrapper .s-pagination-function .s-pagination-btn-first:hover {
+  background: #d1291a url(../images/pagination/paginition_icons.png) 7px -15px no-repeat;
+}
+.s-pagination-wrapper .s-pagination-function .s-pagination-btn-first.disabled {
+  background: #eff0f1 url(../images/pagination/paginition_icons.png) 7px 6px no-repeat;
+}
+.s-pagination-wrapper .s-pagination-function .s-pagination-btn-last {
+  width: 26px;
+  height: 26px;
+  border: 1px solid #e7e7e7;
+  margin-left: 10px;
+  background: url(../images/pagination/paginition_icons.png) -53px 6px no-repeat;
+}
+.s-pagination-wrapper .s-pagination-function .s-pagination-btn-last:hover {
+  background: #d1291a url(../images/pagination/paginition_icons.png) -53px -15px no-repeat;
+}
+.s-pagination-wrapper .s-pagination-function .s-pagination-btn-last.disabled {
+  background: #eff0f1 url(../images/pagination/paginition_icons.png) -53px 6px no-repeat;
+}
+.s-pagination-wrapper .s-pagination-function .s-pagination-btn-prev {
+  width: 26px;
+  height: 26px;
+  border: 1px solid #e7e7e7;
+  margin-left: 10px;
+  background: url(../images/pagination/paginition_icons.png) -13px 6px no-repeat;
+}
+.s-pagination-wrapper .s-pagination-function .s-pagination-btn-prev:hover {
+  background: #d1291a url(../images/pagination/paginition_icons.png) -13px -15px no-repeat;
+}
+.s-pagination-wrapper .s-pagination-function .s-pagination-btn-prev.disabled {
+  background: #eff0f1 url(../images/pagination/paginition_icons.png) -13px 6px no-repeat;
+}
+.s-pagination-wrapper .s-pagination-function .s-pagination-btn-next {
+  width: 26px;
+  height: 26px;
+  border: 1px solid #e7e7e7;
+  margin-left: 10px;
+  background: url(../images/pagination/paginition_icons.png) -33px 6px no-repeat;
+}
+.s-pagination-wrapper .s-pagination-function .s-pagination-btn-next:hover {
+  background: #d1291a url(../images/pagination/paginition_icons.png) -33px -15px no-repeat;
+}
+.s-pagination-wrapper .s-pagination-function .s-pagination-btn-next.disabled {
+  background: #eff0f1 url(../images/pagination/paginition_icons.png) -33px 6px no-repeat;
+}
+.s-pagination-wrapper .s-pagination-function .s-pagination-refresh {
+  width: 26px;
+  height: 26px;
+  display: inline-block;
+  cursor: pointer;
+  vertical-align: top;
+  margin-left: 10px;
+  background: url(../images/pagination/refresh.png) center center no-repeat;
+}
+.s-pagination-wrapper .s-pagination-function .s-pagination-refresh.disabled {
+  background: #eff0f1 url(../images/pagination/refresh.png) center center no-repeat;
+}
+
+/*# sourceMappingURL=servision.pagination.css.map */
