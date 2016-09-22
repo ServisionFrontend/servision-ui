@@ -19,6 +19,7 @@
 
         init: function (target) {
             var self = this;
+            var opts = $(target).data('grid').options;
 
             self.scrollbarWidth = util.getScrollbarWidth();
             self.initGlobalScope(target);
@@ -26,7 +27,7 @@
             self.initJqueryObject(target);
             self.initEvent(target);
             self.initPlugins(target);
-            self.loadData(target);
+            if (opts.autoLoad) self.loadData(target);
         },
 
         initGlobalScope: function (target) {
@@ -683,8 +684,12 @@
             var $target = $(target);
             var opts = $target.data('grid').options;
             var pagination = target.plugins.pagination;
+            var query = target.plugins.query;
 
             if (opts.url) {
+
+                if (query && query.query && query.query('isRequiredIsEmpty')) return;
+
                 var paginationParams = {
                     paging: pagination && pagination.pagination && pagination.pagination('getParams')
                 };
@@ -993,6 +998,7 @@
         width: '800px',
         height: '200px',
         size: 20,
+        autoLoad: false,
         withCheckbox: true,
         checkboxWidth: '26px',
         withRowNumber: true,
