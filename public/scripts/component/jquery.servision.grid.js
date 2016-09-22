@@ -36,6 +36,7 @@
 
             target.ns = {};
 
+            target.ns.minWidth = '30px';
             target.ns.cssPrefix = $.trim(opts.cssPrefix);
             target.ns.id = _id++;
             target.ns.tbodyIdList = [];
@@ -51,7 +52,11 @@
             target.ns.store = null;
             target.ns.templateMap = $.parseJSON(JSON.stringify(self.templateMap).replace(/\{cssPrefix\}/g, target.ns.cssPrefix));
             target.ns.multiSelect = opts.multiSelect;
-            target.ns.params = {};
+            target.ns.params = {
+                paging: {},
+                filters: {},
+                sorts: []
+            };
         },
 
         render: function (target) {
@@ -66,7 +71,6 @@
 
             opts.onAfterRender && opts.onAfterRender.call(null, target);
         },
-
 
         initJqueryObject: function (target) {
             var self = this;
@@ -121,7 +125,7 @@
                     $closestGridTable
                         .find('.' + cssPrefix + 'table-header')
                         .css({
-                            left: - $this.scrollLeft() + 'px'
+                            left: -$this.scrollLeft() + 'px'
                         });
 
                     $closestGridTable
@@ -189,8 +193,14 @@
                     var $curCol = $(this).closest('.s-table-column');
                     var len = target.jq.$headerCols.length;
                     var $temp = null;
+                    var query = target.plugins.query;
+                    var params = {
+                        sorts: []
+                    };
 
                     opts.onBeforeSort && opts.onBeforeSort.call(null, this);
+
+                    if (query && query.query && query.query('isRequiredIsEmpty')) return;
 
                     for (var i = 0; i < len; i++) {
 
@@ -210,7 +220,16 @@
                         }
                     }
 
-                    self.loadData(target);
+                    var index = $curCol.data('index');
+                    var isAsc = $curCol.is('.' + cssPrefix + 'grid-sort-asc') ? true : $curCol.is('.' + cssPrefix + 'grid-sort-desc') ? false : null;
+
+                    if (typeof isAsc === 'boolean') {
+                        params.sorts.push({
+                            field: index,
+                            asc: isAsc
+                        });
+                    }
+                    self.loadData(target, params);
 
                     opts.onAfterSort && opts.onAfterSort.call(null, this);
                 }
@@ -292,7 +311,7 @@
 
             target.plugins = {};
 
-            plugins && $.extend(target.plugins, plugins);
+            plugins && $.extend(true, target.plugins, plugins);
 
             self.initPluginsEvent(target);
         },
@@ -308,13 +327,13 @@
                     if (i === 'pagination') {
                         $temp.on({
                             'changePage': function (e, params) {
-                                self.loadData(target, params);
+                                self.loadData(target, {paging: params});
                             }
                         });
                     } else if (i === 'query') {
                         $temp.on({
                             'query': function (e, params) {
-                                self.loadData(target, params);
+                                self.loadData(target, {filters: params});
                             }
                         });
                     }
@@ -348,35 +367,75 @@
             var len = cols.length;
             var temp;
 
+            self.resetFlexWidth(target, opts);
+
             for (var i = 0; i < len; i++) {
-                temp = opts.columns[i];
+                temp = cols[i];
                 if (temp.frozen) {
                     switch (opts.frozenAlign) {
                         case 'right':
-                            target.ns.rightFrozenColsW += parseInt(temp.width);
+                            target.ns.rightFrozenColsW += temp.width;
                             target.ns.rightFrozenCols.push(temp);
                             break;
                         case 'left-right':
                             if (temp.align === 'right') {
-                                target.ns.rightFrozenColsW += parseInt(temp.width);
+                                target.ns.rightFrozenColsW += temp.width;
                                 target.ns.rightFrozenCols.push(temp);
                             } else {
-                                target.ns.leftFrozenColsW += parseInt(temp.width);
+                                target.ns.leftFrozenColsW += temp.width;
                                 target.ns.leftFrozenCols.push(temp);
                             }
                             break;
                         case 'left':
                         default:
-                            target.ns.leftFrozenColsW += parseInt(temp.width);
+                            target.ns.leftFrozenColsW += temp.width;
                             target.ns.leftFrozenCols.push(temp);
                     }
                 } else {
-                    target.ns.unFrozenColsW += parseInt(temp.width);
+                    target.ns.unFrozenColsW += temp.width;
                     target.ns.unFrozenCols.push(temp);
                 }
             }
 
             target.ns.unFrozenColsWrapperW = parseInt(opts.width) - target.ns.leftFrozenColsW - target.ns.rightFrozenColsW;
+        },
+
+        resetFlexWidth: function (target, opts) {
+            var self = this;
+            var cols = opts.columns;
+            var len = cols.length;
+            var widthCount = 0;
+            var flexCount = 0;
+            var temp;
+            var flexCols = [];
+            var unitWidth;
+            var result;
+
+            if (opts.withCheckbox) widthCount += parseInt(opts.checkboxWidth);
+            if (opts.withRowNumber) widthCount += parseInt(opts.rowNumberWidth);
+
+            for (var i = 0; i < len; i++) {
+                temp = cols[i];
+                if (temp.width) {
+                    temp.width = parseInt(temp.width);
+                    widthCount += temp.width;
+                } else if (temp.flex) {
+                    temp.flex = parseInt(temp.flex);
+                    flexCount += temp.flex;
+                    flexCols.push(temp);
+                } else {
+                    temp.width = parseInt(target.ns.minWidth);
+                    widthCount += temp.width;
+                }
+            }
+
+            unitWidth = flexCount ? (parseInt(opts.width) - widthCount) / flexCount : 0;
+            result = parseInt(unitWidth > parseInt(target.ns.minWidth) ? unitWidth : target.ns.minWidth);
+
+            for (var j = 0; j < flexCols.length; j++) {
+                temp = flexCols[j];
+                temp.width = result * temp.flex;
+            }
         },
 
         controlCreateHtml: function (target, opts, isOnlyUpdateTbody) {
@@ -504,13 +563,13 @@
             for (var i = 0; i < len; i++) {
                 temp = cols[i];
                 htmlColgroup += templateMap.colgroup
-                    .replace('{width}', temp.width);
+                    .replace('{width}', temp.width + 'px');
 
                 htmlGridTable += templateMap.tableColumn.begin
                     .replace('{classList}', self.createColumnClass(target, temp))
                     .replace('{colIndex}', beginColIndex++)
                     .replace('{index}', temp.index)
-                    .replace('{width}', temp.width)
+                    .replace('{width}', temp.width + 'px')
                     .replace('{theadHeight}', opts.theadHeight)
                     .replace('{theadLineHeight}', parseInt(opts.theadHeight) - 1 + 'px');
 
@@ -623,19 +682,24 @@
             var self = this;
             var $target = $(target);
             var opts = $target.data('grid').options;
+            var pagination = target.plugins.pagination;
 
             if (opts.url) {
+                var paginationParams = {
+                    paging: pagination && pagination.pagination && pagination.pagination('getParams')
+                };
 
                 target.jq.$loading.show();
 
-                $.extend(true, target.ns.params, params);
+                $.extend(target.ns.params, paginationParams, params);
+
+                var queryString = opts.rebuildAjaxParams ? (opts.rebuildAjaxParams.call(target, target.ns.params) || '?args=' + JSON.stringify(target.ns.params)) : '?args=' + JSON.stringify(target.ns.params);
 
                 $.ajax({
-                    url: opts.url,
+                    url: encodeURI(opts.url + queryString),
                     type: opts.method,
                     cache: opts.cache,
                     timeout: opts.timeout,
-                    data: target.ns.params,
                     dataType: 'json',
                     beforeSend: opts.onAjaxBeforeSend,
                     complete: opts.onAjaxComplete,
@@ -644,12 +708,12 @@
                         opts.onAjaxError && opts.onAjaxError.apply(null, Array.prototype.slice.apply(null, arguments));
                     },
                     success: function (result) {
+                        result = opts.rebuildAjaxResponse ? (opts.rebuildAjaxResponse.call(target, result) || result) : result;
+
                         self.renderTbody(target, opts, result);
                         target.jq.$rows = $target.find('tr');
                         self.initRowEvent(target);
                         target.jq.$loading.hide();
-
-                        var pagination = target.plugins.pagination;
 
                         pagination && pagination.pagination && pagination.pagination('update', result);
                         opts.onAjaxSuccess && opts.onAjaxSuccess.apply(null, [result]);
@@ -680,6 +744,7 @@
             var htmlTbody = '';
             var originalColIndex = beginColIndex;
             var list = target.ns.store[opts.root];
+            var rowNumberStart = target.ns.store.start || 0;
             var listLen = list.length;
             var cols;
             var colsLen;
@@ -711,7 +776,7 @@
                     if (opts.withRowNumber) htmlTbody += templateMap.tdRowNumber
                         .replace('{trHeight}', opts.trHeight)
                         .replace('{trLineHeight}', parseInt(opts.trHeight) - 1 + 'px')
-                        .replace('{number}', i + 1);
+                        .replace('{number}', rowNumberStart + i + 1);
                 }
 
                 for (var j = 0; j < colsLen; j++) {
@@ -761,7 +826,7 @@
             });
 
             function dragAndCalculate(e) {
-                var minColumnW = 30;
+                var minColumnW = parseInt(target.ns.minWidth);
                 var curDragTargetW = target.jq.$curDragTarget.outerWidth();
                 var mousePosition = util.getEventPosition(e);
                 var $gridWrapper = target.jq.$curDragTarget.closest('.' + cssPrefix + 'grid-wrapper');
@@ -912,7 +977,7 @@
                 options: $.extend(true, {}, $.fn.grid.defaults, options)
             });
 
-            grid.init(this);
+            return grid.init(this);
         });
     };
 
@@ -953,6 +1018,8 @@
         onAfterRender: null,
         onClickRow: null,
         onBeforeSort: null,
-        onAfterSort: null
+        onAfterSort: null,
+        rebuildAjaxParams: null,
+        rebuildAjaxResponse: null
     };
 });

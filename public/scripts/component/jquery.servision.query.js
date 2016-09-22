@@ -400,13 +400,16 @@
                 options: $.extend(true, {}, $.fn.query.defaults, options)
             });
 
-            query.init($(this));
+            return query.init(this);
         });
     };
 
     $.fn.query.methods = {
         getParams: function ($target) {
             return query.getParams($target[0]);
+        },
+        isRequiredIsEmpty: function ($target) {
+            return query.getParams($target[0]) ? false : true;
         }
     };
 

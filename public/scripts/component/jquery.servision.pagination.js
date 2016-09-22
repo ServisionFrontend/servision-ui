@@ -429,6 +429,12 @@
             };
 
             pagination.goto($target[0], pageInfo, true);
+        },
+        getParams: function ($target) {
+            return {
+                page: $target[0].ns.curPageIndex,
+                size: $target[0].ns.pageSize
+            };
         }
     };
 
