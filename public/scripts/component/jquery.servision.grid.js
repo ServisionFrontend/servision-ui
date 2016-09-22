@@ -977,9 +977,10 @@
         options = options || {};
 
         return this.each(function () {
-
             $.data(this, 'grid', {
-                options: $.extend(true, {}, $.fn.grid.defaults, options)
+                options: $.extend(true, {}, $.fn.grid.defaults, {
+                    width: ($(this).width() || 0) + 'px'
+                }, options)
             });
 
             return grid.init(this);
