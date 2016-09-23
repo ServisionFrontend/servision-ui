@@ -433,9 +433,9 @@
 			var value = val;
 
 			for (var i = 0, row; row = data[i]; i++) {
-				var t = row[opts.textField],
-					v = row[opts.valueField],
-					g = row[opts.groupField];
+				var t = row[opts.textField] || '',
+					v = row[opts.valueField] || '',
+					g = row[opts.groupField] || '';
 				if (t.toLowerCase().indexOf(val.toLowerCase()) > -1) {
 
 					var $el = opts.finder.getEl(target, v).show();
@@ -651,10 +651,14 @@
 			matchfield = state.options.queryMatch || state.options.valueField;
 		}
 		for (var i = 0; i < state.data.length; i++) {
-			if (state.data[i][matchfield].toLowerCase() == value.toLowerCase()) {
-				return i;
+			var v = state.data[i][matchfield];
+			if (v != undefined) {
+				if (v.toLowerCase() == value.toLowerCase()) {
+					return i;
+				}
 			}
 		}
+		return -1;
 	}
 
 	function nav(target, dir) {
