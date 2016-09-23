@@ -63,21 +63,21 @@
 
             target.ns.totalPage = Math.floor(target.ns.totalRecord / target.ns.pageSize) + (target.ns.totalRecord % target.ns.pageSize > 0 ? 1 : 0);
 
-            html += templateMap.shell
-                .replace('{totalRecord}', target.ns.totalRecord)
-                .replace('{totalPage}', target.ns.totalPage)
-                .replace('{currentPage}', target.ns.curPageIndex)
-                .replace('{firstPageIndex}', 1)
-                .replace('{firstDisabled}', self.isFirstBtnDisabled(target) ? 'disabled' : '')
-                .replace('{prevPageIndex}', (target.ns.curPageIndex - 1 > 0) ? (target.ns.curPageIndex - 1) : 1)
-                .replace('{prevDisabled}', self.isPrevBtnDisabled(target) ? 'disabled' : '')
-                .replace('{btnListHolder}', self.createBtnListHtml(target))
-                .replace('{nextPageIndex}', (target.ns.curPageIndex + 1) <= target.ns.totalPage ? (target.ns.curPageIndex + 1) : target.ns.totalPage)
-                .replace('{nextDisabled}', self.isNextBtnDisabled(target) ? 'disabled' : '')
-                .replace('{lastPageIndex}', target.ns.totalPage)
-                .replace('{lastDisabled}', self.isLastBtnDisabled(target) ? 'disabled' : '')
-                .replace('{refreshHolder}', opts.withRefresh ? templateMap.refresh : '')
-                .replace('{selectHolder}', self.createSelectHtml(target, opts));
+            html += templateMap.shell && templateMap.shell
+                    .replace('{totalRecord}', target.ns.totalRecord)
+                    .replace('{totalPage}', target.ns.totalPage)
+                    .replace('{currentPage}', target.ns.curPageIndex)
+                    .replace('{firstPageIndex}', 1)
+                    .replace('{firstDisabled}', self.isFirstBtnDisabled(target) ? 'disabled' : '')
+                    .replace('{prevPageIndex}', (target.ns.curPageIndex - 1 > 0) ? (target.ns.curPageIndex - 1) : 1)
+                    .replace('{prevDisabled}', self.isPrevBtnDisabled(target) ? 'disabled' : '')
+                    .replace('{btnListHolder}', self.createBtnListHtml(target))
+                    .replace('{nextPageIndex}', (target.ns.curPageIndex + 1) <= target.ns.totalPage ? (target.ns.curPageIndex + 1) : target.ns.totalPage)
+                    .replace('{nextDisabled}', self.isNextBtnDisabled(target) ? 'disabled' : '')
+                    .replace('{lastPageIndex}', target.ns.totalPage)
+                    .replace('{lastDisabled}', self.isLastBtnDisabled(target) ? 'disabled' : '')
+                    .replace('{refreshHolder}', opts.withRefresh ? templateMap.refresh : '')
+                    .replace('{selectHolder}', self.createSelectHtml(target, opts)) || '';
 
             return html;
         },
@@ -110,22 +110,22 @@
             }
 
             if (isShowPrevEllipsis) {
-                btnListHtml += templateMap.ellipsis;
+                btnListHtml += templateMap.ellipsis || '';
             }
 
             for (var i = 0; i < target.ns.pageBtnCount; i++) {
 
                 if (pageNum > 0 && pageNum <= target.ns.totalPage) {
 
-                    btnListHtml += templateMap.btn
-                        .replace(/\{pageIndex\}/g, pageNum)
-                        .replace('{active}', self.isBtnActive(target, pageNum) ? 'active' : '');
+                    btnListHtml += templateMap.btn && templateMap.btn
+                            .replace(/\{pageIndex\}/g, pageNum)
+                            .replace('{active}', self.isBtnActive(target, pageNum) ? 'active' : '') || '';
                     pageNum++;
                 }
             }
 
             if (isShowNextEllipsis) {
-                btnListHtml += templateMap.ellipsis;
+                btnListHtml += templateMap.ellipsis || '';
             }
 
             return btnListHtml;
@@ -136,13 +136,13 @@
             var templateMap = target.ns.templateMap;
 
             if (opts.withSelect) {
-                html += templateMap.select.begin;
+                html += templateMap.select && templateMap.select.begin || '';
                 for (var i = 0; i < target.ns.pageSizeList.length; i++) {
-                    html += templateMap.option
+                    html += (templateMap.option || '')
                         .replace(/\{value\}/g, target.ns.pageSizeList[i])
                         .replace('{isSelected}', target.ns.pageSizeList[i] === target.ns.pageSize ? 'selected' : '');
                 }
-                html += templateMap.select.end;
+                html += templateMap.select && templateMap.select.end || '';
             }
 
             return html;
@@ -154,7 +154,12 @@
             var prevPageIndex = pageIndex - 1;
             var nextPageIndex = pageIndex + 1;
 
-            target.jq.$currentPage.html(pageIndex);
+            if (target.ns.mode === 'mode1') {
+                target.jq.$currentPage.html(pageIndex);
+            } else {
+                target.jq.$input.val(pageIndex);
+            }
+
             target.jq.$btnPrev.data('page-index', prevPageIndex > 0 ? prevPageIndex : 1);
             target.jq.$btnNext.data('page-index', nextPageIndex <= target.ns.totalPage ? nextPageIndex : target.ns.totalPage);
 
@@ -399,7 +404,8 @@
                 },
                 option: '<option value="{value}" {isSelected}>{value}</option>'
             },
-            mode2: {  // 暂无
+            mode2: {
+                shell: '<div class="{cssPrefix}pagination-wrapper"><div class="{cssPrefix}pagination-info"><span class="{cssPrefix}pagination-page">共<span class="{cssPrefix}pagination-page-total">{totalPage}</span>页</span><span class="{cssPrefix}pagination-slash">/</span><span class="{cssPrefix}pagination-record">共<span class="{cssPrefix}pagination-record-total">{totalRecord}</span>条记录</span></div><div class="{cssPrefix}pagination-function"><a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-first {firstDisabled}" data-page-index="{firstPageIndex}" href="javascript:;"></a><a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-prev {prevDisabled}" data-page-index="{prevPageIndex}" href="javascript:;"></a><span class="{cssPrefix}pagination-btn-list">{btnListHolder}</span><a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-next {nextDisabled}" data-page-index="{nextPageIndex}" href="javascript:;"></a><a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-last {lastDisabled}" data-page-index="{lastPageIndex}" href="javascript:;"></a>{refreshHolder}{selectHolder}<span class="{cssPrefix}pagination-current">当前页码:</span><input class="{cssPrefix}pagination-input" type="text" /><a class="{cssPrefix}pagination-jump" href="javascript:;">跳转</a></div></div>'
             }
         }
     };

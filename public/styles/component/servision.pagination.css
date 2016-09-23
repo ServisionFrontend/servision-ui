@@ -46,6 +46,9 @@ input, textarea, select, a {
   height: 26px;
   font-size: 0;
 }
+.s-pagination-wrapper .s-pagination-function span {
+  font-size: 12px;
+}
 .s-pagination-wrapper .s-pagination-function .s-pagination-btn {
   display: inline-block;
   cursor: pointer;

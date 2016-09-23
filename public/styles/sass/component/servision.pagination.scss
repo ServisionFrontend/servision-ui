@@ -2,153 +2,156 @@
 @import "./core/reset";
 @import "./core/config";
 
-.s-pagination-wrapper {
-  width: 100%;
+.s-pagination-wrapper{
+  width:100%;
   font-family: 'Microsoft Yahei', Arial, STHeiti, sans-serif;
-  font-size: 12px;
-  color: $paginationFontColor;
+  font-size:12px;
+  color:$paginationFontColor;
   @include setHeightGroup(26px);
   @include boxSizing(border-box);
-  a {
-    color: inherit;
+  a{
+    color:inherit;
     text-decoration: none;
   }
-  .s-pagination-info {
-    float: left;
-    .s-pagination-record-total {
+  .s-pagination-info{
+    float:left;
+    .s-pagination-record-total{
       color: $paginationThemeColor;
-      margin: 0 2px;
+      margin:0 2px;
       font-weight: bold;
     }
-    .s-pagination-slash, .s-pagination-page-total, .s-pagination-page-current {
-      margin: 0 2px;
+    .s-pagination-slash, .s-pagination-page-total, .s-pagination-page-current{
+      margin:0 2px;
     }
   }
-  .s-pagination-function {
-    float: right;
-    height: 26px;
-    font-size: 0;
-    .s-pagination-btn {
+  .s-pagination-function{
+    float:right;
+    height:26px;
+    font-size:0;
+    span{
+      font-size:12px;
+    }
+    .s-pagination-btn{
       display: inline-block;
       cursor: pointer;
       vertical-align: top;
-      font-size: 12px;
+      font-size:12px;
     }
-    .s-pagination-ellipsis {
+    .s-pagination-ellipsis{
       display: inline-block;
-      font-size: 12px;
-      width: 26px;
-      height: 26px;
+      font-size:12px;
+      width:26px;
+      height:26px;
       font-weight: bold;
       text-align: center;
       vertical-align: top;
     }
-    .s-pagination-btn-list {
-      margin-left: 10px;
-      .s-pagination-btn {
-        padding: 0 10px;
-        &.active {
+    .s-pagination-btn-list{
+      margin-left:10px;
+      .s-pagination-btn{
+        padding:0 10px;
+        &.active{
           background: $paginationThemeColor;
-          color: #fff;
+          color:#fff;
         }
       }
     }
-    .s-pagination-select {
+    .s-pagination-select{
       height: 26px;
-      line-height: 26px;
-      background: transparent;
-      margin-left: 10px;
+      line-height:26px;
+      background:transparent;
+      margin-left:10px;
     }
-    .s-pagination-input {
+    .s-pagination-input{
       vertical-align: top;
       letter-spacing: normal;
       word-spacing: normal;
-      border: 1px solid $paginationBdColor;
+      border:1px solid $paginationBdColor;
       width: 60px;
-      padding: 0 5px;
+      padding:0 5px;
       text-align: center;
-      height: 26px;
+      height:26px;
       line-height: 24px;
-      margin-left: 10px;
+      margin-left:10px;
       @include transition(all 0.3s ease-in-out);
-      &:focus {
+      &:focus{
         @include boxShadow(0 0 3px $paginationThemeColor);
         border-color: $paginationThemeColor;
       }
     }
-    .s-pagination-jump {
+    .s-pagination-jump{
       display: inline-block;
       cursor: pointer;
       vertical-align: top;
-      font-size: 12px;
+      font-size:12px;
       background: $paginationThemeColor;
-      color: #fff;
-      padding: 0 10px;
-      margin-left: 10px;
+      color:#fff;
+      padding:0 10px;
+      margin-left:10px;
       @include setHeightGroup(26px);
       @include transition(all 0.3s ease-in-out);
     }
-    .s-pagination-btn-first {
-      width: 26px;
+    .s-pagination-btn-first{
+      width:26px;
       height: 26px;
-      border: 1px solid $paginationBdColor;
-      margin-left: 10px;
+      border:1px solid $paginationBdColor;
+      margin-left:10px;
       background: url(../images/pagination/paginition_icons.png) 7px 6px no-repeat;
-      &:hover {
+      &:hover{
         background: $paginationThemeColor url(../images/pagination/paginition_icons.png) 7px -15px no-repeat;
       }
-      &.disabled {
+      &.disabled{
         background: $paginationBgColor url(../images/pagination/paginition_icons.png) 7px 6px no-repeat;
       }
     }
-    .s-pagination-btn-last {
-      width: 26px;
+    .s-pagination-btn-last{
+      width:26px;
       height: 26px;
-      border: 1px solid $paginationBdColor;
-      margin-left: 10px;
+      border:1px solid $paginationBdColor;
+      margin-left:10px;
       background: url(../images/pagination/paginition_icons.png) -53px 6px no-repeat;
-      &:hover {
+      &:hover{
         background: $paginationThemeColor url(../images/pagination/paginition_icons.png) -53px -15px no-repeat;
       }
-      &.disabled {
+      &.disabled{
         background: $paginationBgColor url(../images/pagination/paginition_icons.png) -53px 6px no-repeat;
       }
     }
-    .s-pagination-btn-prev {
-      width: 26px;
+    .s-pagination-btn-prev{
+      width:26px;
       height: 26px;
-      border: 1px solid $paginationBdColor;
-      margin-left: 10px;
+      border:1px solid $paginationBdColor;
+      margin-left:10px;
       background: url(../images/pagination/paginition_icons.png) -13px 6px no-repeat;
-      &:hover {
+      &:hover{
         background: $paginationThemeColor url(../images/pagination/paginition_icons.png) -13px -15px no-repeat;
       }
-      &.disabled {
+      &.disabled{
         background: $paginationBgColor url(../images/pagination/paginition_icons.png) -13px 6px no-repeat;
       }
     }
-    .s-pagination-btn-next {
-      width: 26px;
+    .s-pagination-btn-next{
+      width:26px;
       height: 26px;
-      border: 1px solid $paginationBdColor;
-      margin-left: 10px;
+      border:1px solid $paginationBdColor;
+      margin-left:10px;
       background: url(../images/pagination/paginition_icons.png) -33px 6px no-repeat;
-      &:hover {
+      &:hover{
         background: $paginationThemeColor url(../images/pagination/paginition_icons.png) -33px -15px no-repeat;
       }
-      &.disabled {
+      &.disabled{
         background: $paginationBgColor url(../images/pagination/paginition_icons.png) -33px 6px no-repeat;
       }
     }
-    .s-pagination-refresh {
-      width: 26px;
+    .s-pagination-refresh{
+      width:26px;
       height: 26px;
       display: inline-block;
       cursor: pointer;
       vertical-align: top;
-      margin-left: 10px;
+      margin-left:10px;
       background: url(../images/pagination/refresh.png) center center no-repeat;
-      &.disabled {
+      &.disabled{
         background: $paginationBgColor url(../images/pagination/refresh.png) center center no-repeat;
       }
     }

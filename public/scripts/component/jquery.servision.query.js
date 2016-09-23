@@ -143,8 +143,9 @@
             html += templateMap.content.end;
 
             html += templateMap.operation.begin;
-            html += templateMap.query;
-            html += templateMap.reset;
+
+            html += self.createOperationHtml(target, opts);
+
             html += templateMap.operation.end;
 
             html += templateMap.wrapper.end;
@@ -179,6 +180,18 @@
                         .replace('{options}', self.createOptionsHtml(target, opts, temp.config || []));
                 }
                 html += templateMap.item.end;
+            }
+
+            return html;
+        },
+
+        createOperationHtml: function (target, opts) {
+            var self = this;
+            var templateMap = target.ns.templateMap;
+            var html = '';
+
+            for (var i = 0; i < opts.operationBtnList.length; i++) {
+                html += templateMap[opts.operationBtnList[i]];
             }
 
             return html;
@@ -422,6 +435,7 @@
         cache: false,
         timeout: 3000,
         params: null,
+        operationBtnList: ['query', 'reset'],
         onAjaxBeforeSend: null,
         onAjaxComplete: null,
         onAjaxError: null,
