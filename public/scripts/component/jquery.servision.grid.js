@@ -688,6 +688,7 @@
 
             if (opts.url) {
 
+
                 if (query && query.query && query.query('isRequiredIsEmpty')) return;
 
                 var paginationParams = {
@@ -698,13 +699,20 @@
 
                 $.extend(target.ns.params, paginationParams, params);
 
-                var queryString = opts.rebuildAjaxParams ? (opts.rebuildAjaxParams.call(target, target.ns.params) || '?args=' + JSON.stringify(target.ns.params)) : '?args=' + JSON.stringify(target.ns.params);
+                var queryString = '';
+                var tempParams = null;
+                if (opts.method.toLowerCase() === 'get') {
+                    queryString = opts.rebuildAjaxParams ? (opts.rebuildAjaxParams.call(target, target.ns.params) || '?args=' + JSON.stringify(target.ns.params)) : '?args=' + JSON.stringify(target.ns.params);
+                } else {
+                    tempParams = opts.rebuildAjaxParams ? (opts.rebuildAjaxParams.call(target, target.ns.params) || target.ns.params) : target.ns.params;
+                }
 
                 $.ajax({
                     url: encodeURI(opts.url + queryString),
                     type: opts.method,
                     cache: opts.cache,
                     timeout: opts.timeout,
+                    data: tempParams,
                     dataType: 'json',
                     beforeSend: opts.onAjaxBeforeSend,
                     complete: opts.onAjaxComplete,
