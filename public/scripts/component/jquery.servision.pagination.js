@@ -364,18 +364,14 @@
             } else {
                 if (isNotTriggerChangePage) {
                     self.render(target);
+                    self.updatePagination(target);
                     return;
                 }
                 target.jq.$boxBtnList.html(self.createBtnListHtml(target));
                 self.updatePagination(target);
             }
 
-            if (isNotTriggerChangePage) {
-                self.updatePagination(target);
-            } else {
-                $target.triggerHandler('changePage', params);
-            }
-
+            if (!isNotTriggerChangePage) $target.triggerHandler('changePage', params);
             opts.onAfterChangePage && opts.onAfterChangePage.call(null, target);
         },
 
