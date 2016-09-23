@@ -370,7 +370,12 @@
                 self.updatePagination(target);
             }
 
-            if (!isNotTriggerChangePage) $target.triggerHandler('changePage', params);
+            if (isNotTriggerChangePage) {
+                self.updatePagination(target);
+            } else {
+                $target.triggerHandler('changePage', params);
+            }
+
             opts.onAfterChangePage && opts.onAfterChangePage.call(null, target);
         },
 
