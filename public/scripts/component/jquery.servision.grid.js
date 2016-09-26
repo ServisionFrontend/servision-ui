@@ -51,7 +51,10 @@
             target.ns.unFrozenColsW = 0;
             target.ns.unFrozenColsWrapperW = 0;
             target.ns.store = null;
-            target.ns.templateMap = $.parseJSON(JSON.stringify(self.templateMap).replace(/\{cssPrefix\}/g, target.ns.cssPrefix));
+            target.ns.templateMap = JSON.parse(
+                JSON.stringify(self.templateMap)
+                    .replace(/\{cssPrefix\}/g, target.ns.cssPrefix)
+            );
             target.ns.multiSelect = opts.multiSelect;
             target.ns.params = {
                 paging: {},
@@ -557,7 +560,7 @@
                     .replace('{theadLineHeight}', parseInt(opts.theadHeight) - 1 + 'px');
 
                 htmlGridTable += templateMap.gridText
-                    .replace('{title}', '序号');
+                    .replace('{title}', opts.lang.toLowerCase() === 'en_us' ? 'NO.' : '序号');
                 htmlGridTable += templateMap.tableColumn.end;
             }
 
@@ -688,6 +691,7 @@
 
             if (opts.url) {
 
+
                 if (query && query.query && query.query('isRequiredIsEmpty')) return;
 
                 var paginationParams = {
@@ -698,13 +702,20 @@
 
                 $.extend(target.ns.params, paginationParams, params);
 
-                var queryString = opts.rebuildAjaxParams ? (opts.rebuildAjaxParams.call(target, target.ns.params) || '?args=' + JSON.stringify(target.ns.params)) : '?args=' + JSON.stringify(target.ns.params);
+                var queryString = '';
+                var tempParams = null;
+                if (opts.method.toLowerCase() === 'get') {
+                    queryString = opts.rebuildAjaxParams ? (opts.rebuildAjaxParams.call(target, target.ns.params) || '?args=' + JSON.stringify(target.ns.params)) : '?args=' + JSON.stringify(target.ns.params);
+                } else {
+                    tempParams = opts.rebuildAjaxParams ? (opts.rebuildAjaxParams.call(target, target.ns.params) || target.ns.params) : target.ns.params;
+                }
 
                 $.ajax({
                     url: encodeURI(opts.url + queryString),
                     type: opts.method,
                     cache: opts.cache,
                     timeout: opts.timeout,
+                    data: tempParams,
                     dataType: 'json',
                     beforeSend: opts.onAjaxBeforeSend,
                     complete: opts.onAjaxComplete,
@@ -977,9 +988,11 @@
         options = options || {};
 
         return this.each(function () {
+            var tempW = $(this).width();
             $.data(this, 'grid', {
                 options: $.extend(true, {}, $.fn.grid.defaults, {
-                    width: ($(this).width() || 0) + 'px'
+                    width: tempW ? tempW + 'px' : '800px',
+                    height: parseInt(options.theadHeight || 24) + parseInt(options.trHeight || 24) * parseInt(options.size || 20)
                 }, options)
             });
 
@@ -996,8 +1009,9 @@
 
     $.fn.grid.defaults = {
         cssPrefix: 's-',
-        width: '800px',
-        height: '200px',
+        lang: 'zh_CN',  // 'en_US ' | 'zh_CN'
+        width: '',
+        height: '',
         size: 20,
         autoLoad: false,
         withCheckbox: true,

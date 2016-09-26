@@ -34,7 +34,12 @@
             target.ns = {};
 
             target.ns.cssPrefix = opts.cssPrefix;
-            target.ns.templateMap = $.parseJSON(JSON.stringify(self.templateMap).replace(/\{cssPrefix\}/g, target.ns.cssPrefix));
+            target.ns.templateMap = JSON.parse(
+                JSON.stringify(self.templateMap)
+                    .replace(/\{cssPrefix\}/g, target.ns.cssPrefix)
+                    .replace(/\{queryText\}/g, opts.lang.toLowerCase() === 'en_us' ? 'query' : '查询')
+                    .replace(/\{resetText\}/g, opts.lang.toLowerCase() === 'en_us' ? 'reset' : '重置')
+            );
         },
 
         render: function (target) {
@@ -143,8 +148,9 @@
             html += templateMap.content.end;
 
             html += templateMap.operation.begin;
-            html += templateMap.query;
-            html += templateMap.reset;
+
+            html += self.createOperationHtml(target, opts);
+
             html += templateMap.operation.end;
 
             html += templateMap.wrapper.end;
@@ -161,7 +167,7 @@
                 temp = opts.items[i];
                 html += templateMap.item.begin
                     .replace('{required}', temp.required ? target.ns.cssPrefix + 'query-required' : '')
-                    .replace('{label}', temp.label);
+                    .replace(/\{label\}/g, temp.label);
 
                 if (temp.type !== 'select') {
                     html += templateMap.input.replace('{name}', temp.name).replace('{id}', temp.id);
@@ -179,6 +185,18 @@
                         .replace('{options}', self.createOptionsHtml(target, opts, temp.config || []));
                 }
                 html += templateMap.item.end;
+            }
+
+            return html;
+        },
+
+        createOperationHtml: function (target, opts) {
+            var self = this;
+            var templateMap = target.ns.templateMap;
+            var html = '';
+
+            for (var i = 0; i < opts.operationBtnList.length; i++) {
+                html += templateMap[opts.operationBtnList[i]];
             }
 
             return html;
@@ -377,13 +395,13 @@
                 end: '</div>'
             },
             item: {
-                begin: '<div class="{cssPrefix}query-item {required}"><span class="{cssPrefix}query-label"><label>{label}：</label></span><span class="{cssPrefix}query-input-wrapper">',
+                begin: '<div class="{cssPrefix}query-item {required}"><span class="{cssPrefix}query-label"><label title="{label}">{label}：</label></span><span class="{cssPrefix}query-input-wrapper">',
                 end: '</span></div>'
             },
             input: '<input type="text" class="{cssPrefix}query-input" name="{name}" id="{id}">',
             select: '<select class="{cssPrefix}query-input" name="{name}" id="{id}" data-withall="{withAll}" data-withalltext="{withAllText}" data-preload="{preload}" data-dependenciesids="{dependenciesIds}"  data-clearids="{clearIds}" data-next="{next}" data-url="{url}">{options}</select>',
-            query: '<a class="{cssPrefix}query-btn {cssPrefix}query-action" href="javascript:;">查询</a>',
-            reset: '<a class="{cssPrefix}query-btn {cssPrefix}query-reset" href="javascript:;">重置</a>'
+            query: '<a class="{cssPrefix}query-btn {cssPrefix}query-action" href="javascript:;">{queryText}</a>',
+            reset: '<a class="{cssPrefix}query-btn {cssPrefix}query-reset" href="javascript:;">{resetText}</a>'
         }
     };
 
@@ -415,6 +433,7 @@
 
     $.fn.query.defaults = {
         cssPrefix: 's-',
+        lang: 'zh_CN',  // 'en_US ' | 'zh_CN'
         withAll: true,
         withAllText: '全部',
         url: '',
@@ -422,6 +441,7 @@
         cache: false,
         timeout: 3000,
         params: null,
+        operationBtnList: ['query', 'reset'],
         onAjaxBeforeSend: null,
         onAjaxComplete: null,
         onAjaxError: null,
