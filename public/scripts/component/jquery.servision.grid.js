@@ -691,7 +691,6 @@
 
             if (opts.url) {
 
-
                 if (query && query.query && query.query('isRequiredIsEmpty')) return;
 
                 var paginationParams = {
@@ -801,14 +800,14 @@
                     if (tempCol['renderer'] && typeof tempCol['renderer'] === 'function') {
                         temp = tempCol['renderer'].apply(null, [list[i][index], list[i], list]);
                     } else {
-                        temp = list[i][index];
+                        temp = list[i][index] || '';
                     }
 
                     htmlTbody += templateMap.td
                         .replace('{className}', tempCol.className ? 'class="' + tempCol['className'] + '"' : '')
                         .replace('{trHeight}', opts.trHeight)
                         .replace('{trLineHeight}', parseInt(opts.trHeight) - 1 + 'px')
-                        .replace('{content}', temp);
+                        .replace(/\{content\}/g, temp);
                 }
                 htmlTbody += templateMap.tr.end;
             }
@@ -933,7 +932,7 @@
                 begin: '<tr data-row-index="{rowIndex}">',
                 end: '</tr>'
             },
-            td: '<td {className} style="height:{trHeight};line-height:{trLineHeight};">{content}</td>',
+            td: '<td {className} style="height:{trHeight};line-height:{trLineHeight};" title="{content}">{content}</td>',
             tdCheckbox: '<td class="{cssPrefix}grid-checkbox" style="height:{trHeight};line-height:{trLineHeight};"><span class="{cssPrefix}grid-check-wrapper"><span class="{cssPrefix}grid-check"></span></span></td>',
             tdRowNumber: '<td class="{cssPrefix}grid-rownumber" style="height:{trHeight};line-height:{trLineHeight};">{number}</td>',
             loading: '<div class="{cssPrefix}grid-loading-mask" style="top:{top};"><span class="{cssPrefix}grid-loading"></span></div>'
