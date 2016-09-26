@@ -800,7 +800,7 @@
                     if (tempCol['renderer'] && typeof tempCol['renderer'] === 'function') {
                         temp = tempCol['renderer'].apply(null, [list[i][index], list[i], list]);
                     } else {
-                        temp = list[i][index] || '';
+                        temp = list[i][index] ? list[i][index] : (list[i][index] == '0' ? list[i][index] : '');
                     }
 
                     htmlTbody += templateMap.td
