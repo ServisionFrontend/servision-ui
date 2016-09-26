@@ -398,7 +398,7 @@
         },
 
         templateMap: {
-            'zh_cn': {
+            'zh': {
                 mode1: {
                     shell: '<div class="{cssPrefix}pagination-wrapper"><div class="{cssPrefix}pagination-info"><span class="{cssPrefix}pagination-record">共<span class="{cssPrefix}pagination-record-total">{totalRecord}</span>条记录</span><span class="{cssPrefix}pagination-slash">/</span><span class="{cssPrefix}pagination-page">共<span class="{cssPrefix}pagination-page-total">{totalPage}</span>页</span><span class="{cssPrefix}pagination-current">（当前第<span class="{cssPrefix}pagination-page-current">{currentPage}</span>页）</span></div><div class="{cssPrefix}pagination-function"><a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-first {firstDisabled}" data-page-index="{firstPageIndex}" href="javascript:;"></a><a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-prev {prevDisabled}" data-page-index="{prevPageIndex}" href="javascript:;"></a><span class="{cssPrefix}pagination-btn-list">{btnListHolder}</span><a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-next {nextDisabled}" data-page-index="{nextPageIndex}" href="javascript:;"></a><a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-last {lastDisabled}" data-page-index="{lastPageIndex}" href="javascript:;"></a>{refreshHolder}{selectHolder}<input class="{cssPrefix}pagination-input" type="text" /><a class="{cssPrefix}pagination-jump" href="javascript:;">跳转</a></div></div>',
                     btn: '<a class="{cssPrefix}pagination-btn {active}" data-page-index="{pageIndex}" href="javascript:;">{pageIndex}</a>',
@@ -414,7 +414,7 @@
                     shell: '<div class="{cssPrefix}pagination-wrapper"><div class="{cssPrefix}pagination-info"><span class="{cssPrefix}pagination-page">共<span class="{cssPrefix}pagination-page-total">{totalPage}</span>页</span><span class="{cssPrefix}pagination-slash">/</span><span class="{cssPrefix}pagination-record">共<span class="{cssPrefix}pagination-record-total">{totalRecord}</span>条记录</span></div><div class="{cssPrefix}pagination-function"><a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-first {firstDisabled}" data-page-index="{firstPageIndex}" href="javascript:;"></a><a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-prev {prevDisabled}" data-page-index="{prevPageIndex}" href="javascript:;"></a><a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-next {nextDisabled}" data-page-index="{nextPageIndex}" href="javascript:;"></a><a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-last {lastDisabled}" data-page-index="{lastPageIndex}" href="javascript:;"></a>{refreshHolder}{selectHolder}<span class="{cssPrefix}pagination-current">当前页码:</span><input class="{cssPrefix}pagination-input" type="text" /><a class="{cssPrefix}pagination-jump" href="javascript:;">跳转</a></div></div>'
                 }
             },
-            'en_us': {
+            'en': {
                 mode1: {
                     shell: '<div class="{cssPrefix}pagination-wrapper"><div class="{cssPrefix}pagination-info"><span class="{cssPrefix}pagination-record">Total<span class="{cssPrefix}pagination-record-total">{totalRecord}</span>records</span><span class="{cssPrefix}pagination-slash">/</span><span class="{cssPrefix}pagination-page">Total<span class="{cssPrefix}pagination-page-total">{totalPage}</span>pages</span><span class="{cssPrefix}pagination-current">（Current page:<span class="{cssPrefix}pagination-page-current">{currentPage}</span>）</span></div><div class="{cssPrefix}pagination-function"><a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-first {firstDisabled}" data-page-index="{firstPageIndex}" href="javascript:;"></a><a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-prev {prevDisabled}" data-page-index="{prevPageIndex}" href="javascript:;"></a><span class="{cssPrefix}pagination-btn-list">{btnListHolder}</span><a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-next {nextDisabled}" data-page-index="{nextPageIndex}" href="javascript:;"></a><a class="{cssPrefix}pagination-btn {cssPrefix}pagination-btn-last {lastDisabled}" data-page-index="{lastPageIndex}" href="javascript:;"></a>{refreshHolder}{selectHolder}<input class="{cssPrefix}pagination-input" type="text" /><a class="{cssPrefix}pagination-jump" href="javascript:;">Go</a></div></div>',
                     btn: '<a class="{cssPrefix}pagination-btn {active}" data-page-index="{pageIndex}" href="javascript:;">{pageIndex}</a>',
@@ -469,7 +469,7 @@
 
     $.fn.pagination.defaults = {
         cssPrefix: 's-',
-        lang: 'zh_CN',  // 'en_US ' | 'zh_CN'
+        lang: 'zh',  // 'en' | 'zh'
         mode: 'mode1',
         pageSize: 20,
         pageBtnCount: 3,

@@ -560,7 +560,7 @@
                     .replace('{theadLineHeight}', parseInt(opts.theadHeight) - 1 + 'px');
 
                 htmlGridTable += templateMap.gridText
-                    .replace('{title}', opts.lang.toLowerCase() === 'en_us' ? 'NO.' : '序号');
+                    .replace('{title}', opts.lang.toLowerCase() === 'en' ? 'NO.' : '序号');
                 htmlGridTable += templateMap.tableColumn.end;
             }
 
@@ -1008,7 +1008,7 @@
 
     $.fn.grid.defaults = {
         cssPrefix: 's-',
-        lang: 'zh_CN',  // 'en_US ' | 'zh_CN'
+        lang: 'zh',  // 'en' | 'zh'
         width: '',
         height: '',
         size: 20,
