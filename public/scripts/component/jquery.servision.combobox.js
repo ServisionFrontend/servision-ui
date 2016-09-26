@@ -227,8 +227,10 @@
 	}
 
 	function close(target) {
-		var state = $.data(target, 'combobox'),
-			opts = state.options;
+		var state = $.data(target, 'combobox');
+		if (!state) return;
+
+		var opts = state.options;
 
 		if (state.panel && state.panel.is(":visible")) {
 
