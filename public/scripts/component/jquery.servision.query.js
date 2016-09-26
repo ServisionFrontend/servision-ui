@@ -37,8 +37,8 @@
             target.ns.templateMap = JSON.parse(
                 JSON.stringify(self.templateMap)
                     .replace(/\{cssPrefix\}/g, target.ns.cssPrefix)
-                    .replace(/\{queryText\}/g, opts.lang.toLowerCase() === 'en_us' ? 'query' : '查询')
-                    .replace(/\{resetText\}/g, opts.lang.toLowerCase() === 'en_us' ? 'reset' : '重置')
+                    .replace(/\{queryText\}/g, opts.lang.toLowerCase() === 'en_us' ? 'Query' : '查询')
+                    .replace(/\{resetText\}/g, opts.lang.toLowerCase() === 'en_us' ? 'Reset' : '重置')
             );
         },
 
