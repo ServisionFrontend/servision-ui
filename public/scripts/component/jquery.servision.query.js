@@ -37,8 +37,8 @@
             target.ns.templateMap = JSON.parse(
                 JSON.stringify(self.templateMap)
                     .replace(/\{cssPrefix\}/g, target.ns.cssPrefix)
-                    .replace(/\{queryText\}/g, opts.lang.toLowerCase() === 'en_us' ? 'query' : '查询')
-                    .replace(/\{resetText\}/g, opts.lang.toLowerCase() === 'en_us' ? 'reset' : '重置')
+                    .replace(/\{queryText\}/g, opts.lang.toLowerCase() === 'en' ? 'Query' : '查询')
+                    .replace(/\{resetText\}/g, opts.lang.toLowerCase() === 'en' ? 'Reset' : '重置')
             );
         },
 
@@ -433,7 +433,7 @@
 
     $.fn.query.defaults = {
         cssPrefix: 's-',
-        lang: 'zh_CN',  // 'en_US ' | 'zh_CN'
+        lang: 'zh',  // 'en' | 'zh'
         withAll: true,
         withAllText: '全部',
         url: '',

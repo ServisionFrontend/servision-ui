@@ -206,6 +206,8 @@
 
                     if (query && query.query && query.query('isRequiredIsEmpty')) return;
 
+                    target.jq.$btnSelectAll.removeClass(cssPrefix + 'grid-row-selected');
+
                     for (var i = 0; i < len; i++) {
 
                         if (target.jq.$headerCols[i] !== $curCol[0]) {
@@ -560,7 +562,7 @@
                     .replace('{theadLineHeight}', parseInt(opts.theadHeight) - 1 + 'px');
 
                 htmlGridTable += templateMap.gridText
-                    .replace('{title}', opts.lang.toLowerCase() === 'en_us' ? 'NO.' : '序号');
+                    .replace('{title}', opts.lang.toLowerCase() === 'en' ? 'NO.' : '序号');
                 htmlGridTable += templateMap.tableColumn.end;
             }
 
@@ -691,7 +693,6 @@
 
             if (opts.url) {
 
-
                 if (query && query.query && query.query('isRequiredIsEmpty')) return;
 
                 var paginationParams = {
@@ -766,6 +767,7 @@
             var colsLen;
             var tempCol;
             var temp;
+            var title;
             var index;
 
             if (align === 'left') {
@@ -798,16 +800,19 @@
                 for (var j = 0; j < colsLen; j++) {
                     tempCol = cols[j];
                     index = tempCol['index'];
+
                     if (tempCol['renderer'] && typeof tempCol['renderer'] === 'function') {
+                        title = '';
                         temp = tempCol['renderer'].apply(null, [list[i][index], list[i], list]);
                     } else {
-                        temp = list[i][index];
+                        temp = title = list[i][index] ? list[i][index] : (list[i][index] == '0' ? list[i][index] : '');
                     }
 
                     htmlTbody += templateMap.td
                         .replace('{className}', tempCol.className ? 'class="' + tempCol['className'] + '"' : '')
                         .replace('{trHeight}', opts.trHeight)
                         .replace('{trLineHeight}', parseInt(opts.trHeight) - 1 + 'px')
+                        .replace('{title}', title)
                         .replace('{content}', temp);
                 }
                 htmlTbody += templateMap.tr.end;
@@ -933,7 +938,7 @@
                 begin: '<tr data-row-index="{rowIndex}">',
                 end: '</tr>'
             },
-            td: '<td {className} style="height:{trHeight};line-height:{trLineHeight};">{content}</td>',
+            td: '<td {className} style="height:{trHeight};line-height:{trLineHeight};" title="{title}">{content}</td>',
             tdCheckbox: '<td class="{cssPrefix}grid-checkbox" style="height:{trHeight};line-height:{trLineHeight};"><span class="{cssPrefix}grid-check-wrapper"><span class="{cssPrefix}grid-check"></span></span></td>',
             tdRowNumber: '<td class="{cssPrefix}grid-rownumber" style="height:{trHeight};line-height:{trLineHeight};">{number}</td>',
             loading: '<div class="{cssPrefix}grid-loading-mask" style="top:{top};"><span class="{cssPrefix}grid-loading"></span></div>'
@@ -945,6 +950,7 @@
         getScrollbarWidth: function () {
             var divA = document.createElement('div');
             var divB = document.createElement('div');
+            var result;
 
             divA.style.overflowY = 'hidden';
             divB.style.height = '1px';
@@ -952,8 +958,10 @@
             document.body.appendChild(divA);
             var tempWidth = divB.clientWidth;
             divA.style.overflowY = 'scroll';
+            result = tempWidth - divB.clientWidth;
+            document.body.removeChild(divA);
 
-            return tempWidth - divB.clientWidth;
+            return result;
         },
 
         getEventPosition: function (e) {
@@ -1003,13 +1011,13 @@
     $.fn.grid.methods = {
         loadData: function ($target, params) {
 
-            grid.loadData($target, params);
+            grid.loadData($target[0], params);
         }
     };
 
     $.fn.grid.defaults = {
         cssPrefix: 's-',
-        lang: 'zh_CN',  // 'en_US ' | 'zh_CN'
+        lang: 'zh',  // 'en' | 'zh'
         width: '',
         height: '',
         size: 20,
