@@ -948,6 +948,7 @@
         getScrollbarWidth: function () {
             var divA = document.createElement('div');
             var divB = document.createElement('div');
+            var result;
 
             divA.style.overflowY = 'hidden';
             divB.style.height = '1px';
@@ -955,8 +956,10 @@
             document.body.appendChild(divA);
             var tempWidth = divB.clientWidth;
             divA.style.overflowY = 'scroll';
+            result = tempWidth - divB.clientWidth;
+            document.body.removeChild(divA);
 
-            return tempWidth - divB.clientWidth;
+            return result;
         },
 
         getEventPosition: function (e) {
