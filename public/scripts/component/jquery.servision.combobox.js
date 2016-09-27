@@ -178,24 +178,7 @@
 
 		if (state.panel.is(":hidden")) {
 
-			//级联依赖项
-			if (opts.dependenciesIds) {
-				if (!$.isArray(opts.dependenciesIds))
-					opts.dependenciesIds = [opts.dependenciesIds];
-				var i = 0,
-					l = opts.dependenciesIds.length,
-					selector;
-				for (; selector = opts.dependenciesIds[i]; i++) {
-					var vv = $(selector).combobox("getValues"),
-						vs = opts.dependenciesParams ? opts.dependenciesParams.call(target, vv) : {
-							parentId: vv
-						};
-
-					opts.queryParams = $.extend(opts.queryParams, vs);
-
-					dependV = dependV.concat(vv);
-				}
-			}
+			dependV = getDependencies(target);
 
 			if (opts.onOpenPanel) {
 				opts.onOpenPanel.call(target);
@@ -224,6 +207,32 @@
 			}
 			doQuery(target, q);
 		}
+	}
+
+	function getDependencies(target) {
+		var state = $.data(target, 'combobox'),
+			opts = state.options,
+			dependV = [];
+		//级联依赖项
+		if (opts.dependenciesIds) {
+			if (!$.isArray(opts.dependenciesIds))
+				opts.dependenciesIds = [opts.dependenciesIds];
+			var i = 0,
+				l = opts.dependenciesIds.length,
+				selector;
+			for (; selector = opts.dependenciesIds[i]; i++) {
+
+				var vv = $(selector).combobox("getValues"),
+					vs = opts.dependenciesParams ? opts.dependenciesParams.call(target, vv) : {
+						parentId: vv
+					};
+
+				opts.queryParams = $.extend(opts.queryParams, vs);
+
+				dependV = dependV.concat(vv);
+			}
+		}
+		return dependV;
 	}
 
 	function close(target) {
@@ -371,6 +380,9 @@
 		if (url) {
 			opts.url = url;
 		}
+
+		getDependencies(target);
+
 		param = $.extend({}, opts.queryParams, param);
 
 		if (opts.onBeforeLoad.call(target, param) === false) return;
