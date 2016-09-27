@@ -1009,7 +1009,7 @@
     $.fn.grid.methods = {
         loadData: function ($target, params) {
 
-            grid.loadData($target, params);
+            grid.loadData($target[0], params);
         }
     };
 
