@@ -206,6 +206,8 @@
 
                     if (query && query.query && query.query('isRequiredIsEmpty')) return;
 
+                    target.jq.$btnSelectAll.removeClass(cssPrefix + 'grid-row-selected');
+
                     for (var i = 0; i < len; i++) {
 
                         if (target.jq.$headerCols[i] !== $curCol[0]) {
