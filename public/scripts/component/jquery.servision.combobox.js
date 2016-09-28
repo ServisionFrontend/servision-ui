@@ -454,7 +454,7 @@
 					var $el = opts.finder.getEl(target, v).show();
 					if (t.toLowerCase() == val.toLowerCase()) {
 						value = v;
-						select(target, v);
+						select(target, v, true);
 					}
 
 					if (opts.groupField && group != g) {
@@ -593,7 +593,7 @@
 		e.stopPropagation();
 	}
 
-	function select(target, value) {
+	function select(target, value, openflag) {
 		var state = $.data(target, 'combobox'),
 			opts = state.options,
 			values = $(target).combobox('getValues'),
@@ -607,7 +607,7 @@
 			if (key) {
 				values = [value];
 				if (!opts.multiple) {
-					setPrevAndClear(target, $(target).combobox("getText"));
+					setPrevAndClear(target, $(target).combobox("getText"), openflag);
 					$(target).combobox("setValues", values);
 				}
 			} else {
@@ -617,7 +617,7 @@
 					values = [value];
 				}
 
-				setPrevAndClear(target, $(target).combobox("getText"));
+				setPrevAndClear(target, $(target).combobox("getText"), openflag);
 				$(target).combobox("setValues", values);
 
 			}
@@ -639,7 +639,7 @@
 		}
 	}
 
-	function setPrevAndClear(target, q) {
+	function setPrevAndClear(target, q, openflag) {
 		var state = $.data(target, 'combobox'),
 			opts = state.options;
 		if (state.previous != q) {
@@ -650,7 +650,7 @@
 
 				$(opts.clearIds.join(',')).combobox("clear");
 
-				opts.onClearDependencies.call(target, $(opts.clearIds.join(',')));
+				!openflag && opts.onClearDependencies.call(target, $(opts.clearIds.join(',')));
 			}
 			state.previous = q;
 		}
