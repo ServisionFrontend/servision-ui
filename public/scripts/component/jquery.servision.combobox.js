@@ -322,7 +322,7 @@
 				state.timer = setTimeout(function() {
 					var q = $(target).combobox("getText");
 					if (state.previous != q) {
-						setPrevAndClear(state, q);
+						setPrevAndClear(target, q);
 						$target.combobox('open');
 						opts.keyHandler.query.call(target, q, e);
 					}
@@ -607,7 +607,7 @@
 			if (key) {
 				values = [value];
 				if (!opts.multiple) {
-					setPrevAndClear(state, $(target).combobox("getText"));
+					setPrevAndClear(target, $(target).combobox("getText"));
 					$(target).combobox("setValues", values);
 				}
 			} else {
@@ -617,7 +617,7 @@
 					values = [value];
 				}
 
-				setPrevAndClear(state, $(target).combobox("getText"));
+				setPrevAndClear(target, $(target).combobox("getText"));
 				$(target).combobox("setValues", values);
 
 			}
@@ -635,12 +635,13 @@
 			values.splice(idx, 1);
 			$(target).combobox("setValues", values);
 
-			setPrevAndClear(state, $(target).combobox("getText"));
+			setPrevAndClear(target, $(target).combobox("getText"));
 		}
 	}
 
-	function setPrevAndClear(state, q) {
-		var opts = state.options;
+	function setPrevAndClear(target, q) {
+		var state = $.data(target, 'combobox'),
+			opts = state.options;
 		if (state.previous != q) {
 			//级联清除项
 			if (opts.clearIds) {
@@ -648,6 +649,8 @@
 					opts.clearIds = [opts.clearIds];
 
 				$(opts.clearIds.join(',')).combobox("clear");
+
+				opts.onClearDependencies.call(target, $(opts.clearIds.join(',')));
 			}
 			state.previous = q;
 		}
@@ -1108,6 +1111,7 @@
 		loadFilter: function(data) {
 			return data;
 		},
+		onClearDependencies: function(list) {},
 		onHidePanel: function() {},
 		onOpenPanel: function() {},
 		onBeforeLoad: function(param) {},
