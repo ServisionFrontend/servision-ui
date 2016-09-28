@@ -95,8 +95,8 @@
 			opts = state.options,
 			$panel = state.panel,
 			$target = $(target),
-			tw = $target.outerWidth(),
-			th = $target.outerHeight(),
+			tw = $target.innerWidth(),
+			th = $target.innerHeight(),
 			p = {
 				top: $target.css('paddingTop'),
 				left: $target.css('paddingLeft'),
@@ -125,7 +125,7 @@
 			margin = ['0', $arrow.outerWidth(true) + 'px', '0', '0'];
 
 		$input.css({
-			width: tw - $arrow.outerWidth(true) - parseFloat(p.left) - parseFloat(p.right),
+			width: tw - $arrow.outerWidth(true) - (tw - $target.width()),
 			padding: padding.join(' '),
 			height: th,
 			lineHeight: th + 'px',
@@ -185,15 +185,10 @@
 		if (!target) return;
 
 		var state = $.data(target, 'combobox'),
-			dependV = [],
-			opts = state.options;
+			opts = state.options,
+			q;
 
 		if (state.panel.is(":hidden")) {
-
-			if (opts.onOpenPanel) {
-				opts.onOpenPanel.call(target);
-			}
-
 			COMBOBOX_SERNO++;
 			state.panel.css({
 				'zIndex': COMBOBOX_SERNO,
@@ -203,19 +198,13 @@
 
 			state.comboTarget.find(".s-textbox-text").focus();
 
-			dependV = getDependencies(target);
-			if (opts.dependenciesIds && opts.dependenciesIds.length && !dependV.length) {
-				if (opts.mode == 'local') {
-					state.panel.children().children('.s-combobox-item,.s-combobox-group').hide();
-				} else if (opts.mode == 'remote') {
-					opts.view.render.call(opts.view, target, state.panel.children(':eq(0)'), []);
-				}
-				$(target).combobox("clear");
-				$(target).combobox('fixPosition');
-				return;
-			}
-			var q = $(target).combobox("getText");
+			q = $(target).combobox("getText");
+
 			doQuery(target, q);
+
+			if (opts.onOpenPanel) {
+				opts.onOpenPanel.call(target);
+			}
 		}
 	}
 
@@ -242,7 +231,18 @@
 				dependV = dependV.concat(vv);
 			}
 		}
-		return dependV;
+
+		if (opts.dependenciesIds && opts.dependenciesIds.length && !dependV.length) {
+			if (opts.mode == 'local') {
+				state.panel.children().children('.s-combobox-item,.s-combobox-group').hide();
+			} else if (opts.mode == 'remote') {
+				opts.view.render.call(opts.view, target, state.panel.children(':eq(0)'), []);
+			}
+			$(target).combobox("clear");
+			$(target).combobox('fixPosition');
+			return false;
+		}
+		return true;
 	}
 
 	function close(target) {
@@ -333,8 +333,11 @@
 					var q = $(target).combobox("getText");
 					if (state.previous != q) {
 						setPrevAndClear(target, q);
-						$target.combobox('open');
-						opts.keyHandler.query.call(target, q, e);
+						if (state.panel.is(":hidden")) {
+							$target.combobox('open');
+						} else {
+							opts.keyHandler.query.call(target, q, e);
+						}
 					}
 				}, opts.delay);
 				break;
@@ -352,7 +355,6 @@
 		$(e.target).closest('div.s-combobox-item').removeClass('s-combobox-item-hover');
 		e.stopPropagation();
 	}
-
 
 	function loadData(target, data, remainText) {
 		var state = $.data(target, 'combobox'),
@@ -386,17 +388,16 @@
 
 	function request(target, url, param, remainText) {
 		var state = $.data(target, 'combobox'),
-			opts = state.options;
+			opts = state.options,
+			hasDependencies = getDependencies(target);
 		if (url) {
 			opts.url = url;
 		}
-
-		getDependencies(target);
+		if (!hasDependencies) return;
 
 		param = $.extend({}, opts.queryParams, param);
 
 		if (opts.onBeforeLoad.call(target, param) === false) return;
-
 
 		opts.loader.call(target, param, function(data) {
 			loadData(target, data, remainText);
@@ -408,7 +409,6 @@
 
 	function doQuery(target, q) {
 		var state = $.data(target, 'combobox'),
-			$target = $(target),
 			opts = state.options,
 			$panel = state.panel,
 			query = opts.multiple ? q.split(opts.separator) : [q];
@@ -420,7 +420,6 @@
 				q: query
 			}, null);
 		} else {
-
 			var vv = setLimitItem(target, query);
 			//重置选中样式
 			_setValue(vv);
