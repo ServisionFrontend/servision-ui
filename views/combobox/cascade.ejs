@@ -26,6 +26,7 @@
 		$("#series").combobox({
 				url: '/combobox/getComboList/series',
 				mode: 'remote',
+				disabled:true,
 				textField: 'Description',
 				valueField: 'Code',
 				dependenciesIds: ["#brand"],
@@ -35,10 +36,7 @@
 					return data.Data;
 				},
 				onClearDependencies:function(){
-					// setTimeout(function(){$("#year").combobox("setValue","年份");},2*1000);
-					alert('a')
-					// $("#series").combobox("setValue","series");
-					$("#year").combobox("setValue","year");
+					$("#year").combobox("setValue","2016");
 				}
 		});
 
@@ -55,7 +53,7 @@
 		});
 // debugger;
 		$("#brand").combobox("setValue","Wuling");
-		$("#series").combobox("setValue","CN201");
+		$("#series").combobox("setValue","CN100");
 		$("#brand").combobox("reload");
 		$("#series").combobox("reload");
 	});

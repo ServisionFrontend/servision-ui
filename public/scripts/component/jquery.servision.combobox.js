@@ -145,9 +145,20 @@
 		$arrow.on("click.s-combobox", {
 			target: target
 		}, function(e) {
+			toggleOpen(e);
+		});
+
+		if (opts.disabled) {
+			$comboTarget.off('.s-combobox').on("click.s-combobox", {
+				target: target
+			}, function(e) {
+				toggleOpen(e);
+			});
+		}
+
+		function toggleOpen(e) {
 			var $target = $(e.data.target),
 				stateIner = $.data(e.data.target, 'combobox');
-
 
 			var cacheTags = GLOBAL_TARGET_CACHE.get();
 
@@ -160,7 +171,8 @@
 			}
 
 			e.stopPropagation();
-		});
+		}
+
 
 		for (var event in opts.inputEvents) {
 			$input.on(event + '.s-combobox', {
@@ -178,8 +190,6 @@
 
 		if (state.panel.is(":hidden")) {
 
-			dependV = getDependencies(target);
-
 			if (opts.onOpenPanel) {
 				opts.onOpenPanel.call(target);
 			}
@@ -193,8 +203,7 @@
 
 			state.comboTarget.find(".s-textbox-text").focus();
 
-			var q = $(target).combobox("getText");
-
+			dependV = getDependencies(target);
 			if (opts.dependenciesIds && opts.dependenciesIds.length && !dependV.length) {
 				if (opts.mode == 'local') {
 					state.panel.children().children('.s-combobox-item,.s-combobox-group').hide();
@@ -205,6 +214,7 @@
 				$(target).combobox('fixPosition');
 				return;
 			}
+			var q = $(target).combobox("getText");
 			doQuery(target, q);
 		}
 	}
@@ -346,12 +356,11 @@
 
 	function loadData(target, data, remainText) {
 		var state = $.data(target, 'combobox'),
+			query = $(target).combobox('getText'),
 			opts = state.options,
 			$target = $(target),
 			$panel = state.panel,
-			query = $(target).combobox('getText'),
 			vv;
-
 
 		state.data = opts.loadFilter.call(target, data) || [];
 
@@ -607,8 +616,8 @@
 			if (key) {
 				values = [value];
 				if (!opts.multiple) {
-					setPrevAndClear(target, $(target).combobox("getText"), openflag);
 					$(target).combobox("setValues", values);
+					setPrevAndClear(target, $(target).combobox("getText"), openflag);
 				}
 			} else {
 				if (opts.multiple) {
@@ -616,12 +625,9 @@
 				} else {
 					values = [value];
 				}
-
-				setPrevAndClear(target, $(target).combobox("getText"), openflag);
 				$(target).combobox("setValues", values);
-
+				setPrevAndClear(target, $(target).combobox("getText"), openflag);
 			}
-
 		}
 	}
 
@@ -642,15 +648,19 @@
 	function setPrevAndClear(target, q, openflag) {
 		var state = $.data(target, 'combobox'),
 			opts = state.options;
+
 		if (state.previous != q) {
 			//级联清除项
 			if (opts.clearIds) {
-				if (!$.isArray(opts.clearIds))
+				if (!$.isArray(opts.clearIds)) {
 					opts.clearIds = [opts.clearIds];
+				}
+				//打开下拉框不做事
+				if (!openflag) {
+					$(opts.clearIds.join(',')).combobox("clear");
+					opts.onClearDependencies.call(target, $(opts.clearIds.join(',')));
+				}
 
-				$(opts.clearIds.join(',')).combobox("clear");
-
-				!openflag && opts.onClearDependencies.call(target, $(opts.clearIds.join(',')));
 			}
 			state.previous = q;
 		}
@@ -975,11 +985,9 @@
 					state = $.data(target, 'combobox'),
 					opts = state.options;
 
-				if (state.panel.is(":visible")) {
+				if (state.panel.is(":visible") && !opts.disabled) {
 					e.stopPropagation();
 				}
-
-
 			},
 			blur: function(e) {
 				var target = e.data.target,
