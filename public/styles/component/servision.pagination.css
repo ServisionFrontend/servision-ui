@@ -1,18 +1,10 @@
-body, div, ul, dl, ol, dt, dd, li, p, a, label, span, i, img, input, textarea, header, footer, article, section, nav, aside, figure, h1, h2, h3, h4, h5, h6, table, thead, tbody, tr, td, th {
+.s-pagination-wrapper * {
   padding: 0;
   margin: 0;
   border: 0;
   -webkit-box-sizing: inherit;
   -moz-box-sizing: inherit;
   box-sizing: inherit;
-}
-
-ul, dl, ol {
-  list-style: none;
-}
-
-input, textarea, select, a {
-  outline: none;
 }
 
 .s-pagination-wrapper {
@@ -25,6 +17,12 @@ input, textarea, select, a {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+}
+.s-pagination-wrapper ul, .s-pagination-wrapper dl, .s-pagination-wrapper ol {
+  list-style: none;
+}
+.s-pagination-wrapper input, .s-pagination-wrapper textarea, .s-pagination-wrapper select, .s-pagination-wrapper a {
+  outline: none;
 }
 .s-pagination-wrapper a {
   color: inherit;

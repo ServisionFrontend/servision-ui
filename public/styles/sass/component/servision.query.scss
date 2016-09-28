@@ -1,6 +1,12 @@
 @import "./core/base";
-@import "./core/reset";
 @import "./core/config";
+
+.s-query-wrapper * {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  @include boxSizing(inherit);
+}
 
 .s-query-wrapper{
   width:100%;
@@ -9,6 +15,12 @@
   color:$paginationFontColor;
   line-height: 26px;
   @include boxSizing(content-box);
+  ul, dl, ol {
+    list-style: none;
+  }
+  input, textarea, select, a {
+    outline: none;
+  }
   a{
     color:inherit;
     text-decoration: none;
