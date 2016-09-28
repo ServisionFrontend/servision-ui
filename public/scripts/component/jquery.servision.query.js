@@ -170,7 +170,7 @@
                     .replace(/\{label\}/g, temp.label);
 
                 if (temp.type !== 'select') {
-                    html += templateMap.input.replace('{name}', temp.name).replace('{id}', temp.id);
+                    html += templateMap.input.replace('{name}', temp.name).replace('{id}', temp.id).replace('{value}', (temp.value || temp.value == '0') ? temp.value : '');
                 } else {
                     html += templateMap.select
                         .replace('{name}', temp.name)
@@ -398,7 +398,7 @@
                 begin: '<div class="{cssPrefix}query-item {required}"><span class="{cssPrefix}query-label"><label title="{label}">{label}：</label></span><span class="{cssPrefix}query-input-wrapper">',
                 end: '</span></div>'
             },
-            input: '<input type="text" class="{cssPrefix}query-input" name="{name}" id="{id}">',
+            input: '<input type="text" class="{cssPrefix}query-input" name="{name}" value="{value}" id="{id}">',
             select: '<select class="{cssPrefix}query-input" name="{name}" id="{id}" data-withall="{withAll}" data-withalltext="{withAllText}" data-preload="{preload}" data-dependenciesids="{dependenciesIds}"  data-clearids="{clearIds}" data-next="{next}" data-url="{url}">{options}</select>',
             query: '<a class="{cssPrefix}query-btn {cssPrefix}query-action" href="javascript:;">{queryText}</a>',
             reset: '<a class="{cssPrefix}query-btn {cssPrefix}query-reset" href="javascript:;">{resetText}</a>'

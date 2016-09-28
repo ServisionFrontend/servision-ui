@@ -699,9 +699,13 @@
                     paging: pagination && pagination.pagination && pagination.pagination('getParams')
                 };
 
+                var queryParams = {
+                    filters: query && query.query && query.query('getParams')
+                };
+
                 target.jq.$loading.show();
 
-                $.extend(target.ns.params, paginationParams, params);
+                $.extend(target.ns.params, queryParams, paginationParams, params);
 
                 var queryString = '';
                 var tempParams = null;
