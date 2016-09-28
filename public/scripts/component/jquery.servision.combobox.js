@@ -351,7 +351,7 @@
 			$target = $(target),
 			$panel = state.panel,
 			query = $(target).combobox('getText'),
-			vv = $(target).combobox('getValues');
+			vv;
 
 
 		state.data = opts.loadFilter.call(target, data) || [];
@@ -361,6 +361,8 @@
 		query = opts.multiple ? query.split(opts.separator) : [query];
 
 		setLimitItem(target, query);
+
+		vv = $(target).combobox('getValues');
 
 		if (opts.multiple) {
 			setValues(target, vv, remainText);
