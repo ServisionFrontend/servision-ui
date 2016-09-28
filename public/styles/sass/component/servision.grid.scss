@@ -1,6 +1,12 @@
 @import "./core/base";
-@import "./core/reset";
 @import "./core/config";
+
+.s-grid-wrapper-outer * {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  @include boxSizing(inherit);
+}
 
 .s-grid-wrapper-outer {
   width: 100%;
@@ -11,6 +17,12 @@
   @include boxSizing(border-box);
   border: 1px solid $gridBdColor;
   overflow: hidden;
+  ul, dl, ol {
+    list-style: none;
+  }
+  input, textarea, select, a {
+    outline: none;
+  }
   .s-grid-loading-mask {
     top: 0;
     bottom: 0;

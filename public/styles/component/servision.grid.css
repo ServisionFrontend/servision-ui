@@ -4,21 +4,13 @@
   text-overflow: ellipsis;
 }
 
-body, div, ul, dl, ol, dt, dd, li, p, a, label, span, i, img, input, textarea, header, footer, article, section, nav, aside, figure, h1, h2, h3, h4, h5, h6, table, thead, tbody, tr, td, th {
+.s-grid-wrapper-outer * {
   padding: 0;
   margin: 0;
   border: 0;
   -webkit-box-sizing: inherit;
   -moz-box-sizing: inherit;
   box-sizing: inherit;
-}
-
-ul, dl, ol {
-  list-style: none;
-}
-
-input, textarea, select, a {
-  outline: none;
 }
 
 .s-grid-wrapper-outer {
@@ -32,6 +24,12 @@ input, textarea, select, a {
   box-sizing: border-box;
   border: 1px solid #e4e4e4;
   overflow: hidden;
+}
+.s-grid-wrapper-outer ul, .s-grid-wrapper-outer dl, .s-grid-wrapper-outer ol {
+  list-style: none;
+}
+.s-grid-wrapper-outer input, .s-grid-wrapper-outer textarea, .s-grid-wrapper-outer select, .s-grid-wrapper-outer a {
+  outline: none;
 }
 .s-grid-wrapper-outer .s-grid-loading-mask {
   top: 0;
