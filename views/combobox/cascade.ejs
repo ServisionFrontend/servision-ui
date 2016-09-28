@@ -33,6 +33,10 @@
 				clearIds: ["#year"],
 				loadFilter: function(data) {
 					return data.Data;
+				},
+				onHidePanel:function(){
+					// setTimeout(function(){$("#year").combobox("setValue","年份");},2*1000);
+					$("#year").combobox("setValue","年份");
 				}
 		});
 

@@ -328,7 +328,6 @@
 					}
 				}, opts.delay);
 				break;
-
 		}
 	}
 
@@ -404,8 +403,6 @@
 			opts = state.options,
 			$panel = state.panel,
 			query = opts.multiple ? q.split(opts.separator) : [q];
-
-		setPrevAndClear(state, q);
 
 		if (opts.mode == 'remote') {
 			//此步骤必须，异步获取成功后会再次读取文本框值并再次赋值
@@ -602,8 +599,6 @@
 			values = $(target).combobox('getValues'),
 			key;
 
-
-
 		if (typeof value != 'string') {
 			key = value.key;
 			value = value.v;
@@ -612,9 +607,8 @@
 			if (key) {
 				values = [value];
 				if (!opts.multiple) {
-					$(target).combobox("setValues", values);
-
 					setPrevAndClear(state, $(target).combobox("getText"));
+					$(target).combobox("setValues", values);
 				}
 			} else {
 				if (opts.multiple) {
@@ -622,10 +616,12 @@
 				} else {
 					values = [value];
 				}
-				$(target).combobox("setValues", values);
 
 				setPrevAndClear(state, $(target).combobox("getText"));
+				$(target).combobox("setValues", values);
+
 			}
+
 		}
 	}
 
@@ -688,7 +684,7 @@
 		if (!$item.size()) {
 			$item = $panel.children('div.s-combobox-selected');
 		}
-		// debugger;
+
 		$item.removeClass("s-combobox-item-hover");
 
 		if (!$item.size()) {
