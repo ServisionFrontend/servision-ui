@@ -156,13 +156,20 @@
 			});
 		}
 
+		for (var event in opts.inputEvents) {
+			$input.on(event + '.s-combobox', {
+				target: target
+			}, opts.inputEvents[event]);
+		}
+
 		function toggleOpen(e) {
-			var $target = $(e.data.target),
-				stateIner = $.data(e.data.target, 'combobox');
+			var target = e.data.target,
+				$target = $(target),
+				stateIner = $.data(target, 'combobox');
 
 			var cacheTags = GLOBAL_TARGET_CACHE.get();
 
-			$(cacheTags).not(e.data.target).combobox('close');
+			$(cacheTags).not(target).combobox('close');
 
 			if (stateIner.panel.is(":hidden")) {
 				$target.combobox("open");
@@ -173,12 +180,8 @@
 			e.stopPropagation();
 		}
 
-
-		for (var event in opts.inputEvents) {
-			$input.on(event + '.s-combobox', {
-				target: target
-			}, opts.inputEvents[event]);
-		}
+		if ($.trim(opts.originalValue).length > 0)
+			setValues(target, opts.originalValue);
 	}
 
 	function open(target) {
@@ -238,7 +241,6 @@
 			} else if (opts.mode == 'remote') {
 				opts.view.render.call(opts.view, target, state.panel.children(':eq(0)'), []);
 			}
-			$(target).combobox("clear");
 			$(target).combobox('fixPosition');
 			return false;
 		}
@@ -835,6 +837,8 @@
 			return vs;
 		},
 
+
+
 		reload: function(jq, url) {
 			return jq.each(function(idx, val) {
 				if (typeof url == 'string') {
@@ -852,6 +856,17 @@
 		fixPosition: function(jq) {
 			return jq.each(function(idx, val) {
 				fixPosition(val);
+			});
+		},
+
+		reset: function(jq) {
+			return jq.each(function(idx, val) {
+				var opts = $(this).combobox('options');
+				if (opts.multiple) {
+					$(this).combobox('setValues', opts.originalValue);
+				} else {
+					$(this).combobox('setValue', opts.originalValue);
+				}
 			});
 		},
 
@@ -943,6 +958,7 @@
 	$.fn.combobox.defaults = {
 		valueField: 'value',
 		textField: 'text',
+		originalValue: '',
 		groupField: '',
 		//渲染分组时自定义
 		groupFormatter: function(g) {
