@@ -7,7 +7,10 @@
 		.content-view {
 		  padding: 20px;
 		  overflow: hidden;
-		  border: 1px solid #eee; }
+		  border: 1px solid #eee;
+		position: relative;
+		height: 500px;
+		   }
 		 .content-view input{height:26px;}
 
 		.source-title {
@@ -76,8 +79,65 @@
 		}]
 	};
 	$(function() {
+
+		function drag(target, $parent, e, callback) {
+				var self = this,
+					$target = $(target),
+					pos = {
+						top: e.pageY - $target.position().top,
+						left: e.pageX - $target.position().left
+					},
+					maxX = $parent && $parent.width() - $target.width(),
+					maxY = $parent && $parent.height() - $target.height();
+				if (window.attachEvent) {
+					$target.one('selectstart', function() {
+						return false;
+					});
+				} else {
+					$target.css({
+						"-moz-user-select": 'none',
+						"-webkit-user-select": 'none'
+					});
+				}
+				$(document).on({
+					"mousemove.drag": function(evt) {
+
+						var px = evt.pageX,
+							py = evt.pageY,
+							moveDisX = px - pos.left,
+							moveDisY = py - pos.top;
+
+						if ($parent) {
+							moveDisX < 0 && (moveDisX = 0);
+							moveDisX > maxX && (moveDisX = maxX);
+							moveDisY < 0 && (moveDisY = 0);
+							moveDisY > maxY && (moveDisY = maxY);
+						}
+
+						$target.css({
+							top: moveDisY,
+							left: moveDisX
+						});
+						if (callback && typeof callback.move == "function") {
+							callback.move.call(null, evt, {
+								moveDisX: moveDisX + $target.width(),
+								moveDisY: moveDisY + $target.height(),
+								disX: moveDisX,
+								disY: moveDisY
+							});
+						}
+
+						evt.preventDefault();
+					},
+					"mouseup.drag": function(e) {
+						$(document).off(".drag");
+						e.preventDefault();
+					}
+				});
+			}
 		$("#brand").combobox({
 			data: data,
+			originalValue:"originalValue",
 			textField: 'Description',
 			valueField: 'Code',
 			queryMatch:'Description',
@@ -85,17 +145,31 @@
 				return data.Data;
 			}
 		});
-		// $("#btn").on("click",function(){
-		// 	alert($("#brand").combobox("getValue"));
-		// })
+
+		$(".wrap-w").on("mousedown",function(e){
+
+			drag(this,$("body"),e,function(){
+				console.log('abcd');
+			});
+		})
+
+		
+		// setTimeout(function(){
+		// 	$("#brand").combobox("options").originalValue="replace";
+		// 	$("#brand").combobox("reset");
+		// }, 3*1000);
 	});
 	</script>
-
-
+<style>
+.wrap-w{border:2px solid red;height:200px;width:500px;position: absolute;top:0;left:0;}
+.title{background: #ccc;}
+</style>
 	<div class="content-view">
-
+<div class="wrap-w">
+<div class="title">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
 		品牌：<input type="text" id="brand">
 		<!-- <button id="btn">Click</button> -->
+</div>
 	</div>
 	<div class="source-title"><h4>Source Code:</h4></div>
 	<div class="source-content">

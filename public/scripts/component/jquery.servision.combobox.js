@@ -28,10 +28,29 @@
 					return caches;
 				}
 			};
-		})();
+		})(),
+		debounce = function(fn, wait, immediait) {
+			var timer;
+			return function() {
+				var context = this,
+					args = arguments,
+					later = function() {
+						timer = null;
+						if (!immediait) {
+							fn.apply(context, args);
+						}
+					};
+				var callNow = immediait && !timer;
+				clearTimeout(timer);
+				timer = setTimeout(later, wait);
+				if (callNow) {
+					fn.apply(context, args);
+				}
+			};
+		};
 
 	(function() {
-		$(document).off(".s-combobox-p").on("click.s-combobox-p", function(e) {
+		$(document).off(".s-combobox-p").on("mousedown.s-combobox-p", function(e) {
 			var $panel = $(e.target).closest('.s-combobox-p');
 			if ($panel.size()) {
 				return;
@@ -42,6 +61,32 @@
 			$(cacheTags).combobox('close');
 
 		});
+		// .on("mousedown.s-combobox-p", function(e) {
+		// 	var $panel = $(e.target).closest('.s-combobox-p'),
+		// 		$textBox = $(e.target).closest('.s-textbox');
+		// 	if ($panel.length || $textBox.length) {
+		// 		return;
+		// 	}
+
+		// 	debounce(function() {
+		// 		var cacheTags = GLOBAL_TARGET_CACHE.get();
+		// 		$(cacheTags).combobox('close');
+		// 	}, 2 * 1000)();
+		// });
+
+		$(window).off(".s-combobox-p").on("resize.s-combobox-p", debounce(function() {
+			var $panel = $('.s-combobox-p:visible');
+			if ($panel.length) {
+
+				var cacheTags = GLOBAL_TARGET_CACHE.get();
+				$.each(cacheTags, function(idx, val) {
+					if ($.data(val, "combobox").panel[0] == $panel[0]) {
+						$(val).combobox('fixPosition');
+						return false;
+					}
+				});
+			}
+		}, 300));
 	})();
 
 	function scrollTo(target, value) {
@@ -65,7 +110,7 @@
 			panel = state.panel,
 			opts = state.options;
 
-		initTextBox(target);
+		initTextBox(target, state);
 
 		GLOBAL_TARGET_CACHE.add(target);
 
@@ -90,9 +135,8 @@
 		}
 	}
 
-	function initTextBox(target) {
-		var state = $.data(target, 'combobox'),
-			opts = state.options,
+	function initTextBox(target, state) {
+		var opts = state.options,
 			$panel = state.panel,
 			$target = $(target),
 			tw = $target.innerWidth(),
@@ -121,14 +165,14 @@
 			'_height': opts.height || 200
 		});
 
-		var padding = ['0', p.right, '0', p.left],
+		var padding = [p.top, p.right, p.bottom, p.left],
 			margin = ['0', $arrow.outerWidth(true) + 'px', '0', '0'];
 
 		$input.css({
-			width: tw - $arrow.outerWidth(true) - (tw - $target.width()),
+			width: $target.width() - $arrow.outerWidth(true),
 			padding: padding.join(' '),
-			height: th,
-			lineHeight: th + 'px',
+			height: $target.height(),
+			lineHeight: $target.height() + 'px',
 			margin: margin.join(' ')
 		}).attr("readOnly", opts.disabled).addClass(opts.disabled ? 's-textbox-disabled' : '');
 
@@ -1010,7 +1054,6 @@
 					opts = state.options,
 					p = $(target).combobox("getText");
 				//state.previous = p;
-
 			},
 			keydown: bindKeyHandlerEvent,
 			paste: no0p,
