@@ -339,7 +339,7 @@
                     } else if (i === 'query') {
                         $temp.on({
                             'query': function (e, params) {
-                                self.loadData(target, {filters: params});
+                                self.loadData(target, {filters: params}, true);
                             }
                         });
                     }
