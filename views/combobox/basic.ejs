@@ -146,14 +146,16 @@
 			}
 		});
 
-		$(".wrap-w").on("mousedown",function(e){
+		// $(".wrap-w").on("mousedown",function(e){
+		// 	 e.stopPropagation();
+		// 	//e.preventDefault();
+		// 	drag(this,$("body"),e,{move:function(){
+		// 		console.log('abcd');
+		// 		$("#brand").combobox("fixPosition");
+		// 	}});
 
-			drag(this,$("body"),e,function(){
-				console.log('abcd');
-			});
-		})
+		// });
 
-		
 		// setTimeout(function(){
 		// 	$("#brand").combobox("options").originalValue="replace";
 		// 	$("#brand").combobox("reset");
@@ -161,12 +163,12 @@
 	});
 	</script>
 <style>
-.wrap-w{border:2px solid red;height:200px;width:500px;position: absolute;top:0;left:0;}
-.title{background: #ccc;}
+/* .wrap-w{border:2px solid red;height:200px;width:500px;position: absolute;top:0;left:0;}
+.title{background: #ccc;} */
 </style>
 	<div class="content-view">
 <div class="wrap-w">
-<div class="title">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+<!-- <div class="title">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div> -->
 		品牌：<input type="text" id="brand">
 		<!-- <button id="btn">Click</button> -->
 </div>
