@@ -96,7 +96,7 @@
             var isShowNextEllipsis;
 
             if (target.ns.curPageIndex <= 0) target.ns.curPageIndex = 1;
-            if (target.ns.curPageIndex > target.ns.totalPage) target.ns.curPageIndex = target.ns.totalPage;
+            if (target.ns.totalPage && target.ns.curPageIndex > target.ns.totalPage) target.ns.curPageIndex = target.ns.totalPage;
 
             temp = target.ns.pageBtnCount / 2;
 

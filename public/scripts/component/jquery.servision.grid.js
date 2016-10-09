@@ -684,7 +684,7 @@
                 .replace('{overflowMode}', overflowMode);
         },
 
-        loadData: function (target, params) {
+        loadData: function (target, params, isClickedQuery) {
             var self = this;
             var $target = $(target);
             var opts = $target.data('grid').options;
@@ -702,6 +702,8 @@
                 var queryParams = {
                     filters: query && query.query && query.query('getParams')
                 };
+
+                if (isClickedQuery) paginationParams.paging.page = 1;
 
                 target.jq.$loading.show();
 
