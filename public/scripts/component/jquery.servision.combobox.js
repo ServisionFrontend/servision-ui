@@ -855,14 +855,11 @@
 				opts = state.options,
 				$comboTarget = state.comboTarget,
 				vs = $comboTarget.find("input.s-textbox-value").val();
-			if ($.trim(vs)) {
-				if (opts.multiple) {
-					vs = vs.split(opts.separator);
-				} else {
-					vs = [vs];
-				}
+
+			if (opts.multiple) {
+				vs = vs.split(opts.separator);
 			} else {
-				vs = [];
+				vs = [vs];
 			}
 			return vs;
 		},
