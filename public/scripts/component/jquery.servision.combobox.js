@@ -861,6 +861,7 @@
 			} else {
 				vs = [vs];
 			}
+
 			return vs;
 		},
 
