@@ -205,7 +205,7 @@
 					timer = setTimeout(function() {
 						self.moveStart(opts, e);
 					}, 1000);
-					return false;
+					//return false;
 				});
 				$(document).on('mousemove' + spaceName, function(e) {
 					if ((new Date()).getTime() - time < 1000 && (Math.abs(e.clientX - pos.x) > 20 || Math.abs(e.clientY - pos.y) > 20)) {
@@ -216,13 +216,12 @@
 						}
 					}
 					self.moveDom(opts, e);
-					return false;
+					//					return false;
 				});
 				$(document).on('mouseup' + spaceName, function() {
 					clearTimeout(timer);
 					timer = null;
 					self.moveEnd(opts);
-					return false;
 				});
 			},
 
@@ -323,7 +322,7 @@
 				}
 			},
 
-			reset: function(nameArr) { //注销关闭的层已注册的事件
+			reset: function(nameArr, options) { //注销关闭的层已注册的事件
 				var self = this;
 
 				$.each(nameArr, function(index, name) {
@@ -338,6 +337,7 @@
 						overLayer = null;
 					}
 
+					$('#' + options.name + ' ' + options.closeBtn).off('click' + '.' + name);
 					$(global).off('resize' + '.' + name);
 					$(document).off('click' + '.' + name);
 					$(document).off('mousedown' + '.' + name);
@@ -347,13 +347,19 @@
 			},
 			close: function(options) {
 				var self = this,
-					name = options.name || 'default',
-					layers = [openedLayers[name]],
-					nameArr = [name];
+					name = options.name || 'default';
+
+				var targeLayer = openedLayers[name];
+				layers = [targeLayer],
+					nameArr = [name],
+					options = $.extend(true, {}, options, targeLayer.opts);
 
 				if (!openedLayers[name]) {
 					return;
 				}
+				/*if(!openedLayers[name].opts.layers[1].is(':focus')) {
+				    return;
+				}*/
 				self.getParentLayer(name);
 				layers = self.layers.concat(layers).reverse(); //获得正确的关闭顺序
 				nameArr = nameArr.concat(self.nameArr).reverse();
@@ -365,22 +371,22 @@
 				$.each(layers, function(index, item) {
 					canOpen = false;
 					var exsitLayers = item.opts.layers;
-					
+
 					$.each(exsitLayers, function(index, item) {
 						item.fadeOut(options.speed, function() {
-							item.remove();
 							if (index === exsitLayers.length - 1) {
-							    	if (options.msgParent) {
-								    options.msgParent.append(options.message.hide())
-								} 
+								if (options.msgParent) {
+									options.msgParent.append(options.message.hide())
+								}
 								canOpen = true;
 								clearTimeout(self.timer);
 							}
+							item.remove();
 						});
 					})
 				});
 
-				self.reset(nameArr);
+				self.reset(nameArr, options);
 
 				if (typeof options.onAfterClose === 'function') {
 					options.onAfterClose.apply(self, [options]);
@@ -471,8 +477,7 @@
 		};
 
 		(function initGlobalEvents() {
-			$(document).on('keyup', function(e) {
-
+			$(document).on('keydown', function(e) {
 				if (e.which == 27 && currentLayerId) {
 					window.close({
 						name: window.getBodyparent(currentLayerId)
@@ -501,8 +506,8 @@
 
 		};
 		$.window = function(options, param) {
-
 			var opts = $.extend(true, {}, $.fn.window.defaults, options || {});
+
 			window.init(opts);
 		};
 		$.unWindow = function(options) {
