@@ -1014,7 +1014,7 @@
 		//本地数据加载
 		data: null,
 		//按键输入延迟查询
-		delay: 200,
+		delay: 500,
 		multiple: false,
 		disabled: false,
 		//级联父级以下(所有子级)必须填写
