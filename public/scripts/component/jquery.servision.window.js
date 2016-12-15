@@ -126,6 +126,9 @@
 				if (layer1 && !isEmptyObject(self.opts.overlayCss)) {
 					layer1.css(self.opts.overlayCss);
 				}
+				if (layer2 && !isEmptyObject(self.opts.contentLayerCss)) {
+					layer2.css(self.opts.contentLayerCss);
+				}
 				if (!isEmptyObject(self.opts.css)) {
 					self.opts.msgBox.css(self.opts.css);
 				}
@@ -190,7 +193,11 @@
 					};
 				opts.draggable = false;
 				opts.$blockDom = $('<div style="position:absolute;width:100%;height:100%;top:0;left:0;background:#eee;opacity:0.5;cursor:move;z-index:19000;display:none"></div>');
-
+				
+				if(!isEmptyObject(self.opts.blockDomCss)) {
+					opts.$blockDom.css(self.opts.blockDomCss)
+				}
+				
 				if ($draggableDom.length <= 0) {
 					return;
 				}
@@ -216,7 +223,7 @@
 						}
 					}
 					self.moveDom(opts, e);
-					//					return false;
+//					return false;
 				});
 				$(document).on('mouseup' + spaceName, function() {
 					clearTimeout(timer);
@@ -336,7 +343,7 @@
 					} else {
 						overLayer = null;
 					}
-
+			
 					$('#' + options.name + ' ' + options.closeBtn).off('click' + '.' + name);
 					$(global).off('resize' + '.' + name);
 					$(document).off('click' + '.' + name);
@@ -349,8 +356,8 @@
 				var self = this,
 					name = options.name || 'default';
 
-				var targeLayer = openedLayers[name];
-				layers = [targeLayer],
+					var targeLayer = openedLayers[name];
+					layers = [targeLayer],
 					nameArr = [name],
 					options = $.extend(true, {}, options, targeLayer.opts);
 
@@ -371,13 +378,13 @@
 				$.each(layers, function(index, item) {
 					canOpen = false;
 					var exsitLayers = item.opts.layers;
-
+					
 					$.each(exsitLayers, function(index, item) {
 						item.fadeOut(options.speed, function() {
 							if (index === exsitLayers.length - 1) {
-								if (options.msgParent) {
-									options.msgParent.append(options.message.hide())
-								}
+							    	if (options.msgParent) {
+								    options.msgParent.append(options.message.hide())
+								} 
 								canOpen = true;
 								clearTimeout(self.timer);
 							}
@@ -507,7 +514,7 @@
 		};
 		$.window = function(options, param) {
 			var opts = $.extend(true, {}, $.fn.window.defaults, options || {});
-
+			
 			window.init(opts);
 		};
 		$.unWindow = function(options) {
@@ -532,6 +539,11 @@
 			draggable: true,
 			dragController: '[data-action="drag"]',
 			overlayCss: {},
+			contentLayerCss: {
+				width: 'auto',
+				height: 'auto'
+			},
+			blockDomCss: {},
 			css: {},
 			layerWrapper: 'body',
 			needCloseBtn: false,
