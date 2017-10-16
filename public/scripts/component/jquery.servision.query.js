@@ -345,7 +345,7 @@
                     return;
                 }
                 if (value != '') {
-                    result[$input[0].name] = value;
+                    result[$input[0].name] = $.trim(value);
                 }
             }
 

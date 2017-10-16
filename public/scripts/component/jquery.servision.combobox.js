@@ -856,15 +856,13 @@
 				opts = state.options,
 				$comboTarget = state.comboTarget,
 				vs = $comboTarget.find("input.s-textbox-value").val();
-			if ($.trim(vs)) {
-				if (opts.multiple) {
-					vs = vs.split(opts.separator);
-				} else {
-					vs = [vs];
-				}
+
+			if (opts.multiple) {
+				vs = vs.split(opts.separator);
 			} else {
-				vs = [];
+				vs = [vs];
 			}
+
 			return vs;
 		},
 
@@ -1018,7 +1016,7 @@
 		//本地数据加载
 		data: null,
 		//按键输入延迟查询
-		delay: 200,
+		delay: 500,
 		multiple: false,
 		disabled: false,
 		//级联父级以下(所有子级)必须填写
